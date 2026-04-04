@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a293ce7bbc071d43ab1cd3fe05f0e20, type: 3}
+  m_Name: HallWay_NS
+  m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCData
+  prefab: {fileID: 8499273069316162532, guid: 4878aef0e69b88742925cf840fe3541f, type: 3}
+  tileType: 2
+  north: 1
+  east: 0
+  south: 1
+  west: 0
+  weight: 0.335
