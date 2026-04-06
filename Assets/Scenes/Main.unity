@@ -181,9 +181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99f9d4ad3f47cb649b9a7c9160ec4771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerController
-  walkSpeed: 2
-  runSpeed: 4
-  sprintSpeed: 6
+  walkSpeed: 1
+  runSpeed: 2
+  sprintSpeed: 4
   moveAcceleration: 28
   moveDeceleration: 38
   rotationSpeed: 10
@@ -240,8 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4d77d1e1ff7b34c9bb6aa49cee66e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combat.CombatController
-  comboResetTime: 1.2
-  maxComboRight: 4
+  maxComboCount: 4
   lockOnRadius: 5
   enemyLayer:
     serializedVersion: 2
@@ -1316,6 +1315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 253014606693118102}
   - component: {fileID: 6152708349584501484}
+  - component: {fileID: 6152708349584501485}
   m_Layer: 0
   m_Name: HumanM_Model
   m_TagString: Untagged
@@ -2512,6 +2512,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6152708349584501485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633094247446080044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b8a1335570bf642b3aa7d11e6e51e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventRelay
 --- !u!4 &6296527638917008916
 Transform:
   m_ObjectHideFlags: 0

@@ -9,6 +9,8 @@ namespace Player
     public class PlayerController : MonoBehaviour
     {
         [Header("Movement (Souls-like)")]
+        [Tooltip("Ngưỡng stick để hủy attack và chuyển sang locomotion (0–1).")]
+        public float attackCancelMoveThreshold = 0.12f;
         [Tooltip("Strafe / locked-on jog speed.")]
         public float walkSpeed = 2f;
         [Tooltip("Default run when not locked on.")]
@@ -56,8 +58,27 @@ namespace Player
             _interact = GetComponentInChildren<InteractionDetector>();
         }
 
+        void OnEnable() => _sm.OnStateChanged += OnPlayerStateChanged;
+        void OnDisable() => _sm.OnStateChanged -= OnPlayerStateChanged;
+
+        void OnPlayerStateChanged(PlayerState prev, PlayerState next)
+        {
+            if (next == PlayerState.Attacking
+                || next == PlayerState.Blocking
+                || next == PlayerState.Parrying)
+                _horizontalVelocity = Vector3.zero;
+        }
+
         void Update()
         {
+            if (_combat != null && _combat.ParryInProgress)
+            {
+                FreezeLocomotionForBlockOrParry();
+                ApplyGravity();
+                _cc.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
+                return;
+            }
+
             switch (_sm.Current)
             {
                 case PlayerState.Idle:
@@ -68,9 +89,24 @@ namespace Player
                     break;
 
                 case PlayerState.Dodging:
-                case PlayerState.Attacking:
+                    ApplyGravity();
+                    break;
+
                 case PlayerState.Blocking:
-                    // root motion drives movement, chỉ apply gravity
+                case PlayerState.Parrying:
+                    FreezeLocomotionForBlockOrParry();
+                    ApplyGravity();
+                    _cc.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
+                    break;
+
+                case PlayerState.Attacking:
+                    if (_moveInput.sqrMagnitude >= attackCancelMoveThreshold * attackCancelMoveThreshold
+                        && _combat != null
+                        && _combat.TryCancelAttackForMovement())
+                    {
+                        HandleLocomotion();
+                        break;
+                    }
                     ApplyGravity();
                     break;
             }
@@ -163,6 +199,11 @@ namespace Player
                 float turn = rotationSpeed * Time.deltaTime;
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turn);
             }
+        }
+
+        void FreezeLocomotionForBlockOrParry()
+        {
+            _anim.SetLocomotion(Vector2.zero, 0f, IsLockedOn, false);
         }
 
         void ApplyGravity()

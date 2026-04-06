@@ -21,6 +21,8 @@ namespace Player
         static readonly int TrigDeath = Animator.StringToHash("Death");
         static readonly int DeathIdx = Animator.StringToHash("DeathIndex");
         static readonly int IsStunned = Animator.StringToHash("IsStunned");
+        const string AttackLayerName = "AttackLayer";
+        const string AttackLayerEmptyState = "New State";
 
         void Awake() => _anim = GetComponentInChildren<Animator>();
 
@@ -37,6 +39,15 @@ namespace Player
         {
             _anim.SetInteger(AttackIdx, comboIdx);
             _anim.SetTrigger(TrigAttack);
+        }
+
+        /// <summary>Thoát clip trên AttackLayer (ví dụ khi người chơi bấm di chuyển giữa đòn).</summary>
+        public void ResetAttackLayer()
+        {
+            _anim.ResetTrigger(TrigAttack);
+            int layer = _anim.GetLayerIndex(AttackLayerName);
+            if (layer < 0) return;
+            _anim.Play(AttackLayerEmptyState, layer, 0f);
         }
 
         public void TriggerDodge(Vector2 dir)
