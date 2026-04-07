@@ -28,8 +28,10 @@ namespace Player
 
         public void SetLocomotion(Vector2 input, float speed, bool strafe, bool sprinting)
         {
-            _anim.SetFloat(MoveX, input.x, 0.12f, Time.deltaTime);
-            _anim.SetFloat(MoveY, input.y, 0.12f, Time.deltaTime);
+            float mx = sprinting ? input.x * 2f : input.x;
+            float my = sprinting ? input.y * 2f : input.y;
+            _anim.SetFloat(MoveX, mx, 0.12f, Time.deltaTime);
+            _anim.SetFloat(MoveY, my, 0.12f, Time.deltaTime);
             _anim.SetFloat(Speed, speed, 0.12f, Time.deltaTime);
             _anim.SetBool(IsStrafe, strafe);
             _anim.SetBool(IsSprint, sprinting);

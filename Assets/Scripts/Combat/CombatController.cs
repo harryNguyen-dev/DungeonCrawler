@@ -7,8 +7,8 @@ namespace Combat
     {
         [Header("Settings")]
         public int maxComboCount = 4; // số combo tối đa
-        [Tooltip("Sau mỗi lần bắt đầu nhát đánh, không cho hủy attack bằng di chuyển trong khoảng này (tránh giữ stick + bấm đánh bị hủy ngay).")]
-        public float movementCancelLockoutAfterAttackStart = 0.12f;
+        [Tooltip("Sau khi một đòn kết thúc: trong khoảng này bấm đánh tiếp sẽ lên đòn combo kế; quá lâu không đánh thì về đòn 0.")]
+        public float comboResetTimeout = 5f;
 
         [Header("Lock-on")]
         public float lockOnRadius = 12f;
@@ -18,8 +18,8 @@ namespace Combat
         PlayerAnimator _anim;
         HitboxController _hitbox;
         int _comboIndex;
-        bool _attackQueued;
-        float _attackMovementCancelAllowedTime;
+        /// <summary>Time.time mà sau đó (khi không đang Attacking) combo memory hết — về đòn 0.</summary>
+        float _comboMemoryExpireTime;
         bool _parryInProgress;
         public Transform LockOnTarget { get; private set; }
         /// <summary>True từ khi bắt đầu parry đến khi AE_ParryEnd — dùng để khóa locomotion/IsBlock kể cả khi state machine hoặc animator lệch một frame.</summary>
@@ -29,6 +29,14 @@ namespace Combat
             _sm = GetComponent<PlayerStateMachine>();
             _anim = GetComponent<PlayerAnimator>();
             _hitbox = GetComponentInChildren<HitboxController>();
+        }
+
+        void Update()
+        {
+            if (_comboMemoryExpireTime <= 0f) return;
+            if (_sm.Current == PlayerState.Attacking) return;
+            if (Time.time <= _comboMemoryExpireTime) return;
+            ResetComboMemory();
         }
 
         void LateUpdate()
@@ -43,39 +51,29 @@ namespace Combat
 
             if (_sm.Current != PlayerState.Attacking)
             {
-                // Bắt đầu combo từ đầu
-                _comboIndex = 0;
+                if (_comboMemoryExpireTime > 0f && Time.time > _comboMemoryExpireTime)
+                    ResetComboMemory();
                 ExecuteAttack();
             }
-            else
-            {
-                if (_comboIndex < maxComboCount - 1) {
-                    _attackQueued = true;   // Buffer: nhớ input
-                    Debug.Log("Attack queued");
-                }
-            }
+        }
+
+        void ResetComboMemory()
+        {
+            _comboIndex = 0;
+            _comboMemoryExpireTime = 0f;
         }
 
         void ExecuteAttack()
         {
             _sm.TryTransition(PlayerState.Attacking);
             _anim.TriggerAttack(_comboIndex);
-            _attackQueued = false;
-            _attackMovementCancelAllowedTime = Time.time + movementCancelLockoutAfterAttackStart;
-        }
-
-        /// <summary>
-        /// Hủy đòn đang swing khi có input di chuyển — đồng bộ state machine với locomotion.
-        /// </summary>
-        public bool TryCancelAttackForMovement()
-        {
-            if (_sm.Current != PlayerState.Attacking) return false;
-            if (Time.time < _attackMovementCancelAllowedTime) return false;
-            _attackQueued = false;
-            _comboIndex = 0;
-            _anim.ResetAttackLayer();
-            if (_hitbox != null) _hitbox.SetActive(false);
-            return true;
+            
+            if(_comboIndex == 2 || _comboIndex == 3) 
+            {
+                _hitbox.damage = 40;
+            } else {
+                _hitbox.damage = 30;
+            }
         }
 
         // ── Animation Events (gắn vào clip trong Animation window) ──
@@ -83,17 +81,16 @@ namespace Combat
         {
             if (_sm.Current != PlayerState.Attacking) return;
 
-            if (_attackQueued && _comboIndex < maxComboCount - 1)
+            int finished = _comboIndex;
+            if (finished < maxComboCount - 1)
             {
-                _comboIndex++;
-                ExecuteAttack();        // tiếp tục combo
+                _comboIndex = finished + 1;
+                _comboMemoryExpireTime = Time.time + comboResetTimeout;
             }
             else
-            {
-                _comboIndex = 0;
-                _attackQueued = false;
-                _sm.TryTransition(PlayerState.CombatIdle);
-            }
+                ResetComboMemory();
+
+            _sm.TryTransition(PlayerState.CombatIdle);
         }
         public void AE_HitboxOn() => _hitbox.SetActive(true);
         public void AE_HitboxOff() => _hitbox.SetActive(false);

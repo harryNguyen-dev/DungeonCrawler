@@ -9,8 +9,6 @@ namespace Player
     public class PlayerController : MonoBehaviour
     {
         [Header("Movement (Souls-like)")]
-        [Tooltip("Ngưỡng stick để hủy attack và chuyển sang locomotion (0–1).")]
-        public float attackCancelMoveThreshold = 0.12f;
         [Tooltip("Strafe / locked-on jog speed.")]
         public float walkSpeed = 2f;
         [Tooltip("Default run when not locked on.")]
@@ -100,14 +98,10 @@ namespace Player
                     break;
 
                 case PlayerState.Attacking:
-                    if (_moveInput.sqrMagnitude >= attackCancelMoveThreshold * attackCancelMoveThreshold
-                        && _combat != null
-                        && _combat.TryCancelAttackForMovement())
-                    {
-                        HandleLocomotion();
-                        break;
-                    }
+                    _horizontalVelocity = Vector3.zero;
+                    FreezeLocomotionForBlockOrParry();
                     ApplyGravity();
+                    _cc.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
                     break;
             }
         }

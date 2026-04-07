@@ -40,7 +40,7 @@ namespace Core
 
             // Subscribe callbacks
             _actions.Player.Attack.performed += _ => _player.OnAttackInput();
-            _actions.Player.Dodge.performed += _ => _player.OnDodgeInput();
+            // _actions.Player.Dodge.performed += _ => _player.OnDodgeInput();
             _actions.Player.Parry.performed += _ => _player.OnParryInput();
             _actions.Player.Interact.performed += _ => _player.OnInteractInput();
             _actions.Player.LockOn.performed += _ => _player.OnLockOnInput();

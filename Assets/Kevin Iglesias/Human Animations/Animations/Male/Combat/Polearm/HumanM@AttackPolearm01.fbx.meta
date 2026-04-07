@@ -62,7 +62,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.9823321
+      - time: 0.32862192
+        functionName: AE_HitboxOn
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.42402828
+        functionName: AE_HitboxOff
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.7564438
         functionName: AE_AttackEnd
         data: 
         objectReferenceParameter: {instanceID: 0}
