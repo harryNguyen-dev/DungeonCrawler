@@ -1,3 +1,4 @@
+using Global;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,11 +25,14 @@ namespace Core
             controls.Enable();
             controls.CameraControls.MouseZoom.performed += HandleMouseScroll;
 
-            Cursor.lockState = CursorLockMode.Locked;
             cam = GetComponent<CinemachineCamera>();
             orbital = cam.GetComponent<CinemachineOrbitalFollow>();
 
             targetZoom = currentZoom = orbital.Radius;
+
+            GlobalEvents.OnStartGame += (isStart) => {
+                Cursor.lockState = CursorLockMode.Locked;
+            };
         }
         private void HandleMouseScroll(InputAction.CallbackContext context)
         {

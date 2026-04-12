@@ -3,8 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-using Core;
-
+using Global;
 namespace WFC
 {
     public class WFCGeneration : MonoBehaviour
@@ -63,12 +62,12 @@ namespace WFC
         private void Awake()
         {
             roomPlacer = new RoomPlacer(wfc);
+            InitializeGrid();
         }
 
         private void Start()
         {
-            InitializeGrid();
-            GenerateWithRetry(5).Forget();
+            // GenerateWithRetry(5).Forget();
         }
 #if UNITY_EDITOR
         [ContextMenu("Run Batch Test 100x")]
@@ -108,6 +107,7 @@ namespace WFC
                     success = true;
                     Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
                     GlobalEvents.TriggerDungeonGeneratedSuccess(LastStats.seed);
+                    GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
                 }
                 else

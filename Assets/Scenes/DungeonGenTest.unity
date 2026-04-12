@@ -378,67 +378,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &220901209
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 97.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -28.81
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1234891995958461280, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2461818794025216573, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_Name
-      value: Hallway_NE
-      objectReference: {fileID: 0}
-    - target: {fileID: 2461818794025216573, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c417ed32da663264f8e60a9c32a2230a, type: 3}
 --- !u!1 &246448068
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,10 +499,6 @@ PrefabInstance:
     - target: {fileID: 2704419518544093238, guid: a2ef54230abe457478a83389afc0aedc, type: 3}
       propertyPath: m_Name
       value: Hallway_EWS
-      objectReference: {fileID: 0}
-    - target: {fileID: 2704419518544093238, guid: a2ef54230abe457478a83389afc0aedc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5643922704744381100, guid: a2ef54230abe457478a83389afc0aedc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -734,10 +669,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_WN
       objectReference: {fileID: 0}
-    - target: {fileID: 761317334333017116, guid: ceb2dad2bcb94624abb7005fa3dafb4f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3308176553106226689, guid: ceb2dad2bcb94624abb7005fa3dafb4f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -65.29
@@ -860,10 +791,6 @@ PrefabInstance:
     - target: {fileID: 1881567973507110906, guid: 9d7c0312db09f24469a7874f4bddf82e, type: 3}
       propertyPath: m_Name
       value: Room_WS
-      objectReference: {fileID: 0}
-    - target: {fileID: 1881567973507110906, guid: 9d7c0312db09f24469a7874f4bddf82e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6442191211325922492, guid: 9d7c0312db09f24469a7874f4bddf82e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1033,10 +960,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_S
       objectReference: {fileID: 0}
-    - target: {fileID: 2768632650454043129, guid: 4e1582cab907ffc4fb6a13c244841a06, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5942897562881216604, guid: 4e1582cab907ffc4fb6a13c244841a06, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1134,10 +1057,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hallway_NW
       objectReference: {fileID: 0}
-    - target: {fileID: 1167634661018289378, guid: 9fae207eb24ccc7498b82cdce3576423, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1154,10 +1073,6 @@ PrefabInstance:
     - target: {fileID: 1512766229434153472, guid: e4903d606c400ea458e1ba4e49f7cf8e, type: 3}
       propertyPath: m_Name
       value: Hallway_SE
-      objectReference: {fileID: 0}
-    - target: {fileID: 1512766229434153472, guid: e4903d606c400ea458e1ba4e49f7cf8e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2109176907400619664, guid: e4903d606c400ea458e1ba4e49f7cf8e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1215,10 +1130,6 @@ PrefabInstance:
     - target: {fileID: 2033829418722871101, guid: c5ae646f1597337468a135da669a46b8, type: 3}
       propertyPath: m_Name
       value: Hallway_W
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033829418722871101, guid: c5ae646f1597337468a135da669a46b8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7679653560252129384, guid: c5ae646f1597337468a135da669a46b8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1581,10 +1492,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hallway_NS
       objectReference: {fileID: 0}
-    - target: {fileID: 8499273069316162532, guid: 4878aef0e69b88742925cf840fe3541f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1601,10 +1508,6 @@ PrefabInstance:
     - target: {fileID: 1781456778079417145, guid: 26a9aaaf287eb2b49a1ab49766ed8f99, type: 3}
       propertyPath: m_Name
       value: Room_E
-      objectReference: {fileID: 0}
-    - target: {fileID: 1781456778079417145, guid: 26a9aaaf287eb2b49a1ab49766ed8f99, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6913419121910965263, guid: 26a9aaaf287eb2b49a1ab49766ed8f99, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1665,7 +1568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2210151944592091852, guid: 3a90eefdd220bf74490dc118ba15dc9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 36.68
+      value: 45.67
       objectReference: {fileID: 0}
     - target: {fileID: 2210151944592091852, guid: 3a90eefdd220bf74490dc118ba15dc9e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1702,10 +1605,6 @@ PrefabInstance:
     - target: {fileID: 6681935524904608265, guid: 3a90eefdd220bf74490dc118ba15dc9e, type: 3}
       propertyPath: m_Name
       value: Hallway_EWSN
-      objectReference: {fileID: 0}
-    - target: {fileID: 6681935524904608265, guid: 3a90eefdd220bf74490dc118ba15dc9e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1790,10 +1689,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hallway_E
       objectReference: {fileID: 0}
-    - target: {fileID: 2118167977357627952, guid: 75f6c90ced3bc0449861156dafdb524a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6880081683290955155, guid: 75f6c90ced3bc0449861156dafdb524a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 97.06
@@ -1850,10 +1745,6 @@ PrefabInstance:
     - target: {fileID: 1711508780311874445, guid: 768b3261ef6fb51459282ca93fcfe16b, type: 3}
       propertyPath: m_Name
       value: Hallway_S
-      objectReference: {fileID: 0}
-    - target: {fileID: 1711508780311874445, guid: 768b3261ef6fb51459282ca93fcfe16b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9141898910547371249, guid: 768b3261ef6fb51459282ca93fcfe16b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2018,10 +1909,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hallway_N
       objectReference: {fileID: 0}
-    - target: {fileID: 8024332500405158559, guid: fe64aa5ad0fe6b4459c579bd8a5bfc8a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2038,10 +1925,6 @@ PrefabInstance:
     - target: {fileID: 249570222175641466, guid: f8c4c8258f1e4c04dbdd0ebcd6236cd3, type: 3}
       propertyPath: m_Name
       value: Hallway_NES
-      objectReference: {fileID: 0}
-    - target: {fileID: 249570222175641466, guid: f8c4c8258f1e4c04dbdd0ebcd6236cd3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3124982706344827712, guid: f8c4c8258f1e4c04dbdd0ebcd6236cd3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2470,10 +2353,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_SN
       objectReference: {fileID: 0}
-    - target: {fileID: 5950822155874254649, guid: c6515e48714c5a544bc2cb201253a787, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2490,10 +2369,6 @@ PrefabInstance:
     - target: {fileID: 3787551265329486209, guid: e33ab08a5402a754e89bf94fd03d5eb1, type: 3}
       propertyPath: m_Name
       value: Hallway_SW
-      objectReference: {fileID: 0}
-    - target: {fileID: 3787551265329486209, guid: e33ab08a5402a754e89bf94fd03d5eb1, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8359430914228002452, guid: e33ab08a5402a754e89bf94fd03d5eb1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2665,10 +2540,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hallway_NSW
       objectReference: {fileID: 0}
-    - target: {fileID: 5177672510896914676, guid: 7188e7b50688a0248a8d4b43c1f505bb, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2783,10 +2654,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_WE
       objectReference: {fileID: 0}
-    - target: {fileID: 39625841923160167, guid: fb27543d2b93b6c489646967b13f88ca, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 254309948163157940, guid: fb27543d2b93b6c489646967b13f88ca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 40.8
@@ -2884,10 +2751,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_W
       objectReference: {fileID: 0}
-    - target: {fileID: 7047804717406831009, guid: e2a157f77709fc74b9579a1d45cd185e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2945,10 +2808,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hallway_NEW
       objectReference: {fileID: 0}
-    - target: {fileID: 677428779756453970, guid: 5eb829240a5c90c46b1ab90ca4cd6090, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2965,10 +2824,6 @@ PrefabInstance:
     - target: {fileID: 2826773501959107240, guid: df0ae14ef941bd54b8bbe156193f01f2, type: 3}
       propertyPath: m_Name
       value: Room_ES
-      objectReference: {fileID: 0}
-    - target: {fileID: 2826773501959107240, guid: df0ae14ef941bd54b8bbe156193f01f2, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8061917627385664023, guid: df0ae14ef941bd54b8bbe156193f01f2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3067,10 +2922,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_EN
       objectReference: {fileID: 0}
-    - target: {fileID: 4667890210683910069, guid: 2b7ecdec634591641919df59fac9fd03, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3127,10 +2978,6 @@ PrefabInstance:
     - target: {fileID: 5961895520704421718, guid: 7ddfcc9fe9f9bd345a831b00f84f3870, type: 3}
       propertyPath: m_Name
       value: Hallway_EW
-      objectReference: {fileID: 0}
-    - target: {fileID: 5961895520704421718, guid: 7ddfcc9fe9f9bd345a831b00f84f3870, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3189,10 +3036,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_N
       objectReference: {fileID: 0}
-    - target: {fileID: 5862880122762342913, guid: d6e79320c2e1c3344b2cd9ed5262fe19, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3228,7 +3071,6 @@ SceneRoots:
   - {fileID: 947647853}
   - {fileID: 2035512875}
   - {fileID: 1231113028}
-  - {fileID: 220901209}
   - {fileID: 1216425225}
   - {fileID: 1022467701}
   - {fileID: 265906882}

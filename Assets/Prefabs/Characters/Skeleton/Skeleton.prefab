@@ -234,7 +234,7 @@ MonoBehaviour:
           m_Value0: 15575837050113253461
           m_Value1: 15455876389815446872
         Name: Speed
-        m_Value: 1.2
+        m_Value: 2.1
     - rid: 8902656791435805219
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:

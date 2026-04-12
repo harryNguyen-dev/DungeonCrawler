@@ -16,7 +16,7 @@ namespace WFC
             // Khung bao toàn bộ lưới (cạnh ngoài các ô, tâm tại nửa bù trừ)
             Vector3 gridCenter = new Vector3((gridSize - 1) * cellSize * 0.5f, 0.01f, (gridSize - 1) * cellSize * 0.5f);
             Gizmos.color = new Color(1f, 0.75f, 0.1f, 1f);
-            Gizmos.DrawWireCube(gridCenter, new Vector3(gridSize * cellSize, 0.02f, gridSize * cellSize));
+            // Gizmos.DrawWireCube(gridCenter, new Vector3(gridSize * cellSize, 0.02f, gridSize * cellSize));
 
             for (int x = 0; x < gridSize; x++)
             {
@@ -28,7 +28,7 @@ namespace WFC
 
                     if (tile.IsCollapsed && tile.CollapsedTile != null)
                     {
-                        DrawTileShape(pos, tile.CollapsedTile, cellSize);
+                        // DrawTileShape(pos, tile.CollapsedTile, cellSize);
                     }
                     else
                     {
@@ -39,8 +39,8 @@ namespace WFC
                 }
             }
 
-            DrawMSTEdges(cellSize);
-            DrawRoomLabels(cellSize);
+            // DrawMSTEdges(cellSize);
+            // DrawRoomLabels(cellSize);
             // Gizmos.color = Color.yellow;
             // foreach (var room in wfcGeneration.DebugRooms)
             // {

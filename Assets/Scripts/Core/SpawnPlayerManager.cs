@@ -3,6 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using WFC;
 using Player;
+using Global;
 namespace Core
 {
     public class SpawnPlayerManager : MonoBehaviour

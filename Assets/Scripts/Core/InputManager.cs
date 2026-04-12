@@ -53,6 +53,10 @@ namespace Core
 
         void Update()
         {
+            if(_player == null)
+            {
+                return;
+            }
             _player.SetMoveInput(_actions.Player.Move.ReadValue<Vector2>());
             _player.SetSprintInput(_actions.Player.Sprint.IsPressed());
             _player.SetBlockInput(_actions.Player.Block.IsPressed());
