@@ -76,5 +76,7 @@ namespace Player
         // Gọi từ Animation Event trong clip
         public void OnRootMotionToggle(int useRoot) =>
             _anim.applyRootMotion = useRoot == 1;
+
+        public void TriggerTakeDamage() => _anim.SetTrigger(TrigHit);
     }
 }

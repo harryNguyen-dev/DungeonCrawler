@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
+using Core;
 
 namespace WFC
 {
@@ -106,6 +107,8 @@ namespace WFC
                 {
                     success = true;
                     Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
+                    GlobalEvents.TriggerDungeonGeneratedSuccess(LastStats.seed);
+                    return;
                 }
                 else
                 {
@@ -226,7 +229,7 @@ namespace WFC
                 wfc.CollapseTile(nextTile);
                 nextTile.SpawnObject(cellSize, spawnParent);
                 wfc.Propagation(nextTile);
-                await UniTask.Yield();
+                await UniTask.Delay(20);
             }
         }
 

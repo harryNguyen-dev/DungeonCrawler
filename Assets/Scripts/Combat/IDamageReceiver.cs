@@ -11,13 +11,16 @@ namespace Combat
         public Vector3 KnockbackDirection { get; }
         public float KnockbackImpulse { get; }
         public float VerticalImpulse { get; }
+        /// <summary>Root của bên gây đòn (vd. hitbox trên player → root là player). Null nếu không gắn.</summary>
+        public GameObject Attacker { get; }
 
-        public DamageHitInfo(int damage, Vector3 knockbackDirection, float knockbackImpulse, float verticalImpulse)
+        public DamageHitInfo(int damage, Vector3 knockbackDirection, float knockbackImpulse, float verticalImpulse, GameObject attacker = null)
         {
             Damage = damage;
             KnockbackDirection = knockbackDirection;
             KnockbackImpulse = knockbackImpulse;
             VerticalImpulse = verticalImpulse;
+            Attacker = attacker;
         }
     }
 

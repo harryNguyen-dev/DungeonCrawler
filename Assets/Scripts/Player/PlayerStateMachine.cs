@@ -31,6 +31,7 @@ namespace Player
                 (PlayerState.Dead, _)        => false,  // Dead là terminal
                 (PlayerState.Attacking, PlayerState.Attacking) => true, // combo
                 (PlayerState.Stunned, _)     => to == PlayerState.Idle,
+                (PlayerState.HitReaction, _) => to is PlayerState.Idle or PlayerState.CombatIdle or PlayerState.Dead,
                 _                            => true
             };
         }

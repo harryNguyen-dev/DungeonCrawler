@@ -1,12 +1,18 @@
 using Core;
 using UnityEngine;
 using Player;
+using System;
+using System.Collections.Generic;
+using UnityEngine.TextCore.Text;
 namespace Combat
 {
-    public class CombatController : MonoBehaviour
+    public class CombatController : MonoBehaviour, ICombatEvents, ICombatable
     {
         [Header("Settings")]
         public int maxComboCount = 4; // số combo tối đa
+
+        public List<int> DamagePerCombo;
+
         [Tooltip("Sau khi một đòn kết thúc: trong khoảng này bấm đánh tiếp sẽ lên đòn combo kế; quá lâu không đánh thì về đòn 0.")]
         public float comboResetTimeout = 5f;
 
@@ -22,6 +28,9 @@ namespace Combat
         float _comboMemoryExpireTime;
         bool _parryInProgress;
         public Transform LockOnTarget { get; private set; }
+
+        bool isParry;
+
         /// <summary>True từ khi bắt đầu parry đến khi AE_ParryEnd — dùng để khóa locomotion/IsBlock kể cả khi state machine hoặc animator lệch một frame.</summary>
         public bool ParryInProgress => _parryInProgress;
         void Awake()
@@ -47,7 +56,7 @@ namespace Combat
         // ── Input từ PlayerController ──────────────────────
         public void OnAttackInput()
         {
-            if (_sm.Current == PlayerState.Dead) return;
+            if (_sm.Current is PlayerState.Dead or PlayerState.HitReaction or PlayerState.Stunned) return;
 
             if (_sm.Current != PlayerState.Attacking)
             {
@@ -67,13 +76,6 @@ namespace Combat
         {
             _sm.TryTransition(PlayerState.Attacking);
             _anim.TriggerAttack(_comboIndex);
-            
-            if(_comboIndex == 2 || _comboIndex == 3) 
-            {
-                _hitbox.damage = 40;
-            } else {
-                _hitbox.damage = 30;
-            }
         }
 
         // ── Animation Events (gắn vào clip trong Animation window) ──
@@ -98,7 +100,7 @@ namespace Combat
         // ── Block & Parry ─────────────────────────────────
         public void SetBlocking(bool value)
         {
-            if (_sm.Current == PlayerState.Dead) return;
+            if (_sm.Current is PlayerState.Dead or PlayerState.HitReaction or PlayerState.Stunned) return;
 
             if (value)
             {
@@ -117,7 +119,7 @@ namespace Combat
 
         public void TryParry()
         {
-            if (_sm.Current == PlayerState.Dead) return;
+            if (_sm.Current is PlayerState.Dead or PlayerState.HitReaction or PlayerState.Stunned) return;
             if (_sm.Current != PlayerState.Blocking) return;
             if (!_sm.TryTransition(PlayerState.Parrying)) return;
             _parryInProgress = true;
@@ -127,6 +129,7 @@ namespace Combat
         /// <summary>Animation Event cuối clip Parry — đồng bộ gameplay state với input block.</summary>
         public void AE_ParryEnd()
         {
+            Debug.Log("AE_ParryEnd");
             if (_sm.Current != PlayerState.Parrying)
             {
                 _parryInProgress = false;
@@ -140,10 +143,22 @@ namespace Combat
                 _sm.TryTransition(PlayerState.CombatIdle);
             _parryInProgress = false;
         }
-
+        public void AE_HitReactionEnd()
+        {
+            if (_sm == null || _sm.Current != PlayerState.HitReaction) return;
+            bool locked = LockOnTarget != null;
+            if(_parryInProgress)
+            {
+                _parryInProgress = false;
+                _anim.SetBlocking(false);
+            }
+            _sm.TryTransition(locked ? PlayerState.CombatIdle : PlayerState.Idle);
+        }
         // ── Lock-on ───────────────────────────────────────
         public void ToggleLockOn()
         {
+            if (_sm.Current is PlayerState.HitReaction or PlayerState.Stunned) return;
+
             if (LockOnTarget != null) { LockOnTarget = null; return; }
 
             var hits = Physics.OverlapSphere(transform.position, lockOnRadius, enemyLayer);
@@ -157,7 +172,8 @@ namespace Combat
             LockOnTarget = best;
         }
 
-        private void OnDrawGizmos() {
+        private void OnDrawGizmos()
+        {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, lockOnRadius);
             if (LockOnTarget != null)
@@ -165,6 +181,26 @@ namespace Combat
                 Gizmos.color = Color.green;
                 Gizmos.DrawLine(transform.position, LockOnTarget.position);
             }
+        }
+
+        public int GetDamageThisAttack()
+        {
+            return DamagePerCombo[_comboIndex];
+        }
+
+        public bool IsParry()
+        {
+            return isParry;
+        }
+
+        public void AE_ParryStart()
+        {
+            isParry = true;
+        }
+
+        public void AE_ParryStop()
+        {
+            isParry = false;
         }
     }
 }

@@ -7,5 +7,11 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        if (health <= 0)
+        {
+            Die();
+        }
     }
+
+    public virtual void Die() {}
 }

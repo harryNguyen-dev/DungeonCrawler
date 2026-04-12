@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
 {
     [Tooltip("If > 0, applied to the agent on Awake. Otherwise use the value already set on NavMeshAgent.")]
     [SerializeField] float _stoppingDistance = 1.75f;
-
+    [SerializeField] float _attackRange = 15f;
     [Header("Debug gizmos")]
     [SerializeField] bool _drawGizmos = true;
     [SerializeField] Color _movementGizmoColor = new Color(0f, 0.85f, 1f, 0.95f);
@@ -74,6 +74,8 @@ public class EnemyController : MonoBehaviour
 
         if (!TryGetComponent(out NavMeshAgent agent))
             return;
+
+        Gizmos.DrawWireSphere(transform.position, _attackRange);
 
         float stopR = ResolveStoppingDistance(_stoppingDistance, agent);
 

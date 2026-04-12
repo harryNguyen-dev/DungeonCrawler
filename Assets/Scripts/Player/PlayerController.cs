@@ -63,7 +63,9 @@ namespace Player
         {
             if (next == PlayerState.Attacking
                 || next == PlayerState.Blocking
-                || next == PlayerState.Parrying)
+                || next == PlayerState.Parrying
+                || next == PlayerState.HitReaction
+                || next == PlayerState.Stunned)
                 _horizontalVelocity = Vector3.zero;
         }
 
@@ -99,6 +101,20 @@ namespace Player
 
                 case PlayerState.Attacking:
                     _horizontalVelocity = Vector3.zero;
+                    FreezeLocomotionForBlockOrParry();
+                    ApplyGravity();
+                    _cc.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
+                    break;
+
+                case PlayerState.HitReaction:
+                case PlayerState.Stunned:
+                    FreezeLocomotionForBlockOrParry();
+                    ApplyGravity();
+                    _cc.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
+                    break;
+
+                case PlayerState.Dead:
+                case PlayerState.Interacting:
                     FreezeLocomotionForBlockOrParry();
                     ApplyGravity();
                     _cc.Move(new Vector3(0f, _velocity.y, 0f) * Time.deltaTime);
@@ -212,7 +228,7 @@ namespace Player
 
         void TryDodge()
         {
-            if (_sm.Current is PlayerState.Dead or PlayerState.Stunned) return;
+            if (_sm.Current is PlayerState.Dead or PlayerState.Stunned or PlayerState.HitReaction) return;
             _sm.TryTransition(PlayerState.Dodging);
             _anim.TriggerDodge(_moveInput);
         }

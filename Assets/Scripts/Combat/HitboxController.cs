@@ -9,7 +9,7 @@ namespace Combat
     {
         [SerializeField] Collider _collider;
         [SerializeField] CameraShakeController _cameraShake;
-        public int damage = 30;
+        private int damage = 30;
         public float knockback = 5f;
         public float verticalKnockback = 1.5f;
 
@@ -25,7 +25,9 @@ namespace Combat
             _collider.enabled = value;
             if (!value) _hitThisSwing.Clear();
         }
-
+        public void SetDamageThisAttack(int damage) {
+            this.damage = damage;
+        }
         void OnTriggerEnter(Collider other) {
             if (!other.TryGetComponent<IDamageReceiver>(out var receiver)) return;
             if (_hitThisSwing.Contains(receiver)) return;
@@ -37,11 +39,17 @@ namespace Combat
             if (dir.sqrMagnitude > 0.0001f)
                 dir.Normalize();
 
-            var info = new DamageHitInfo(damage, dir, knockback, verticalKnockback);
+            GameObject attackerRoot = transform.root != null ? transform.root.gameObject : null;
+            var info = new DamageHitInfo(damage, dir, knockback, verticalKnockback, attackerRoot);
+
+            var target = other.gameObject;
+            if (target.TryGetComponent<ICombatable>(out var targetCombat) && targetCombat.IsParry())
+            {
+                return;
+            }
             CombatUtils.HitStop(0.07f).Forget();
             receiver.ReceiveHit(in info);
             _cameraShake?.PlayHitShake();
-
             SpawnHitVfx(other, dir);
         }
 

@@ -29,6 +29,11 @@ namespace Core
 
         InputSystem_Actions _actions;
         [SerializeField] PlayerController _player;
+
+        public void SetPlayer(GameObject player)
+        {
+            _player = player.GetComponent<PlayerController>();
+        }
         void Awake()
         {
             if (Instance != null) { Destroy(gameObject); return; }
