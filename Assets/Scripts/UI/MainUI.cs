@@ -15,7 +15,7 @@ public class MainUI : MonoBehaviour
 
     private void OnStartBtnClick()
     {
-        GlobalEvents.TriggerStartGame(true);
+        GlobalEvents.RaiseGameStart();
         _wfcGeneration.GenerateWithRetry(5).Forget();
         startBtn.gameObject.SetActive(false);
     }

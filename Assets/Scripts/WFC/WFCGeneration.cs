@@ -106,7 +106,7 @@ namespace WFC
                 {
                     success = true;
                     Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
-                    GlobalEvents.TriggerDungeonGeneratedSuccess(LastStats.seed);
+                    GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
                     GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
                 }

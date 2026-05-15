@@ -9,7 +9,7 @@ namespace Core
 
         private void Awake() 
         {
-            GlobalEvents.OnDungeonGeneratedSuccess += BuildNavmesh;
+            GlobalEvents.OnDungeonGenerated += BuildNavmesh;
         }
 
         private void BuildNavmesh(int seed)
@@ -19,7 +19,7 @@ namespace Core
 
         private void OnDestroy()
         {
-            GlobalEvents.OnDungeonGeneratedSuccess -= BuildNavmesh;
+            GlobalEvents.OnDungeonGenerated -= BuildNavmesh;
         }
     }
 }

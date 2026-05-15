@@ -30,7 +30,7 @@ namespace Core
 
             targetZoom = currentZoom = orbital.Radius;
 
-            GlobalEvents.OnStartGame += (isStart) => {
+            GlobalEvents.OnGameStart += () => {
                 Cursor.lockState = CursorLockMode.Locked;
             };
         }

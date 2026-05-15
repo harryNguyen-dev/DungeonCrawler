@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.019607844, g: 0.011764706, b: 0.039215688, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.03
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7d25b2ed122ab4248a4c7b82f9fb1b8f, type: 2}
   - {fileID: 11400000, guid: e21d431983d9e364cb24f0d880f93276, type: 2}
   - {fileID: 11400000, guid: 4a1530ddcbb0cd3438ef1d7df023399c, type: 2}
-  roomsToPlace: 10
+  roomsToPlace: 5
   roomEdgeMargin: 1
   spawnParent: {fileID: 386692113}
   branchingFactor: 2
@@ -1603,7 +1603,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1753246953}
-  - component: {fileID: 1753246952}
+  - component: {fileID: 1753246954}
   m_Layer: 0
   m_Name: SpawnPlayerManager
   m_TagString: Untagged
@@ -1611,22 +1611,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1753246952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1753246951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11741eaf2b079ef4cb044733fd14118b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnPlayerManager
-  _playerPrefab: {fileID: 4691084095780444986, guid: 5459e9ab204dcfa4d987e106f86516a4, type: 3}
-  _dungeon: {fileID: 820313532}
-  _inputManager: {fileID: 1916175439}
-  _camera: {fileID: 1606085800}
 --- !u!4 &1753246953
 Transform:
   m_ObjectHideFlags: 0
@@ -1642,6 +1626,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1753246954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753246951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d2525e1cebee5f4d800d90557aacb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.SpawnPlayerManager
 --- !u!1 &1916175437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1651,7 +1647,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1916175438}
-  - component: {fileID: 1916175439}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -1674,19 +1669,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1916175439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916175437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb52a55b1fdb0e46a79622c8db9c5f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Core.InputManager
-  _player: {fileID: 0}
 --- !u!1 &1978307818
 GameObject:
   m_ObjectHideFlags: 0
