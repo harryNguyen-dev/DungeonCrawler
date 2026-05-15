@@ -956,8 +956,8 @@ GameObject:
   - component: {fileID: 8145816685107473997}
   - component: {fileID: 466526061673669173}
   - component: {fileID: 1668952072588029503}
-  - component: {fileID: 324645419965874469}
   - component: {fileID: 5371269416919443819}
+  - component: {fileID: 9048419741539612303}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1083,19 +1083,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d4278f4926ec8543b12fe7021fed13b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerAnimator
---- !u!114 &324645419965874469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4691084095780444986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a66e053536b03324aba8675d6ec876f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
-  health: 0
 --- !u!114 &5371269416919443819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1108,10 +1095,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51aa47fe96a49ed44a0c6ff3c01f2cbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerCombat
-  _health: {fileID: 324645419965874469}
+  _health: {fileID: 0}
   _playerAnimator: {fileID: 1668952072588029503}
   _characterController: {fileID: 0}
   _drag: 5
+--- !u!114 &9048419741539612303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4691084095780444986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f09a10f68400684981e3aece945376a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerHealth
+  health: 300
 --- !u!1 &4817174551309381751
 GameObject:
   m_ObjectHideFlags: 0

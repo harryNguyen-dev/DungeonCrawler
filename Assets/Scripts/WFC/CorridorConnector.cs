@@ -62,7 +62,7 @@ namespace WFC
                     extraSuccess++;
 
                 edgeIndex++;
-                await UniTask.Delay(20);
+                await UniTask.Delay(10);
             }
 
             var corridorStats = new CorridorConnectionStats(mstCount, extraTotal, mstSuccess, extraSuccess);
@@ -134,7 +134,7 @@ namespace WFC
 
                 wfc.LightPropagation(tile);
 
-                await UniTask.Delay(20);
+                await UniTask.Delay(10);
             }
         }
 

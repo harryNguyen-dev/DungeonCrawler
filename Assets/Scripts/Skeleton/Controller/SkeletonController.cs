@@ -59,7 +59,6 @@ public class SkeletonController : MonoBehaviour, IDamageReceiver, ICombatEvents
 
 
     public void ReceiveHit(in DamageHitInfo info)
-
     {
 
         if (_health != null)

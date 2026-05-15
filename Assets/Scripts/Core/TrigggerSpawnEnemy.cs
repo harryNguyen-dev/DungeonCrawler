@@ -9,18 +9,18 @@ public class TrigggerSpawnEnemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SpawnEnemy(other.transform);
+            // SpawnEnemy(other.transform);
         }
     }
     public void SpawnEnemy(Transform player)
     {
-        Vector3 spawnPosition = player.position + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10));
+        // Vector3 spawnPosition = player.position + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10));
 
-        GameObject enemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
+        // GameObject enemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
 
-        // Truyền player instance thật vào skeleton
-        SkeletonAI ai = enemy.GetComponent<SkeletonAI>();
-        if (ai != null)
-            ai.SetTarget(player);
+        // // Truyền player instance thật vào skeleton
+        // SkeletonAI ai = enemy.GetComponent<SkeletonAI>();
+        // if (ai != null)
+        //     ai.SetTarget(player);
     }
 }

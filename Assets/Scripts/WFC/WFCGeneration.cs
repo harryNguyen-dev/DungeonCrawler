@@ -229,7 +229,7 @@ namespace WFC
                 wfc.CollapseTile(nextTile);
                 nextTile.SpawnObject(cellSize, spawnParent);
                 wfc.Propagation(nextTile);
-                await UniTask.Delay(20);
+                await UniTask.Delay(10);
             }
         }
 

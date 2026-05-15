@@ -37,7 +37,7 @@ namespace WFC
                     wfc.LightPropagation(tile);
 
                     placedRooms.Add(tile);
-                    await UniTask.Delay(20);
+                    await UniTask.Delay(10);
                 }
             }
 
