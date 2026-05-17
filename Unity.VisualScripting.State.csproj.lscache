@@ -373,6 +373,7 @@ Library/ScriptAssemblies/
  UnityEditor.UI.dll
  UnityEngine.UI.dll
 Temp/bin/Debug/
+ Unity.InputSystem.dll
  Unity.VisualScripting.Core.dll
  Unity.VisualScripting.Flow.dll
 

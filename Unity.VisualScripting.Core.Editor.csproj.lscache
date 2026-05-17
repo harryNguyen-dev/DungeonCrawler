@@ -871,7 +871,9 @@ Library/ScriptAssemblies/
  UnityEditor.UI.dll
  UnityEngine.TestRunner.dll
  UnityEngine.UI.dll
-Temp/bin/Debug/Unity.VisualScripting.Core.dll
+Temp/bin/Debug/
+ Unity.InputSystem.dll
+ Unity.VisualScripting.Core.dll
 
 [analyzerReferences]
 C:/Program Files/Unity/Hub/Editor/6000.3.9f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/

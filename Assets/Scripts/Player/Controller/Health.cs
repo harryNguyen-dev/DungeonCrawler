@@ -6,14 +6,20 @@ namespace PlayerController
     public class Health : MonoBehaviour
     {
         PlayerStats playerStats;
-        float currentHealth = 0;
+        int currentHealth = 0;
+        int maxHealth = 0;
         private void Start()
         {
             playerStats = GetComponent<PlayerStats>();
-            currentHealth = playerStats.GetHealth();
+            maxHealth = playerStats.GetMaxHealth();
+            currentHealth = maxHealth;
+            playerStats.OnMaxHealthChanged += SetMaxHealth;
+            playerStats.OnHealHealth += SetHealHealth;
         }
+        private void SetMaxHealth(int maxHealth) => currentHealth = maxHealth;
+        private void SetHealHealth(int amount) => currentHealth += amount;
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(int damage)
         {
             currentHealth -= damage;
             if (currentHealth <= 0)
@@ -25,6 +31,9 @@ namespace PlayerController
         {
             Global.GlobalEvents.RaisePlayerEliminated();
             Debug.Log("Player died!");
+            
+            playerStats.OnMaxHealthChanged -= SetMaxHealth;
+            playerStats.OnHealHealth -= SetHealHealth;
             Time.timeScale = 0f;
             Global.GlobalEntities.Instance.ClearPlayer();
         }

@@ -465,6 +465,7 @@ Library/
   UnityEngine.UI.dll
 Temp/bin/Debug/
  Unity.AppUI.dll
+ Unity.AppUI.InternalAPIBridge.dll
  Unity.Behavior.SerializableGUID.dll
  Unity.InputSystem.dll
 

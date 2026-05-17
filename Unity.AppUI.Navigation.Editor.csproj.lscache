@@ -358,6 +358,7 @@ Temp/bin/Debug/
  Unity.AppUI.Editor.dll
  Unity.AppUI.InternalAPIBridge.dll
  Unity.AppUI.Navigation.dll
+ Unity.InputSystem.dll
 
 [analyzerReferences]
 C:/Program Files/Unity/Hub/Editor/6000.3.9f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/

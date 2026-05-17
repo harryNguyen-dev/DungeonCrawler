@@ -485,6 +485,7 @@ Library/ScriptAssemblies/
  UnityEditor.UI.dll
  UnityEngine.UI.dll
 Temp/bin/Debug/
+ Unity.Burst.dll
  Unity.InputSystem.dll
  Unity.Mathematics.dll
  Unity.Splines.dll

@@ -372,10 +372,16 @@ Library/ScriptAssemblies/
  UnityEngine.UI.dll
 Temp/bin/Debug/
  Unity.AppUI.dll
+ Unity.AppUI.InternalAPIBridge.dll
  Unity.Behavior.Authoring.dll
  Unity.Behavior.dll
  Unity.Behavior.GraphFramework.dll
  Unity.Behavior.SerializableGUID.dll
+ Unity.Behavior.Serialization.dll
+ Unity.Burst.dll
+ Unity.Collections.dll
+ Unity.InputSystem.dll
+ Unity.Mathematics.dll
 
 [analyzerReferences]
 C:/Program Files/Unity/Hub/Editor/6000.3.9f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/

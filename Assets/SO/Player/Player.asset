@@ -16,3 +16,8 @@ MonoBehaviour:
   AttackDamage: 30
   MoveSpeed: 10
   MaxHealth: 150
+  WeaponEffectsSetup:
+  - EffectType: 0
+    Value: 0
+  - EffectType: 4
+    Value: 0

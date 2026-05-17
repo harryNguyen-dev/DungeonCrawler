@@ -5,9 +5,14 @@ namespace PlayerController
 {
     public class PlayerStats : MonoBehaviour
     {
+        public event Action<int> OnAttackDamageChanged;
         public event Action<float> OnAttackSpeedChanged;
+        public event Action<int> OnMaxHealthChanged;
+        public event Action<int> OnHealHealth;
+        public event Action<int> OnIncreaseAmor;
+        public event Action<int> OnIncreaseMoveSpeed;
 
-        public SO.PlayerSO playerSO;
+        public SO.PlayerSO configData;
         private SO.PlayerSO runtimeStats; // Bản sao để chạy runtime
 
         public int currentLevel = 1;
@@ -16,7 +21,8 @@ namespace PlayerController
 
         private void Awake()
         {
-            runtimeStats = Instantiate(playerSO);
+            runtimeStats = Instantiate(configData);
+            runtimeStats.InitializeRuntimeDictionary();
         }
 
         private void OnEnable() => Global.GlobalEvents.OnEnemyDie += AddExperience;
@@ -24,7 +30,7 @@ namespace PlayerController
 
         private void AddExperience()
         {
-            currentExp += 20; // Mỗi quái cho 20 Exp
+            currentExp += Mathf.RoundToInt(20 * runtimeStats.DefaultExpGainMultiplier); // Mỗi quái cho 20 Exp
             Debug.Log($"Exp: {currentExp}/{expToNextLevel}");
 
             if (currentExp >= expToNextLevel)
@@ -54,18 +60,54 @@ namespace PlayerController
             currentExp = 0;
             expToNextLevel = 100;
             Time.timeScale = 1f;
-            runtimeStats = Instantiate(playerSO);
+            runtimeStats = Instantiate(configData);
         }
         // Hàm bổ trợ để các Script khác lấy chỉ số đã được nâng cấp
         public float GetAttackCooldown() => runtimeStats.AttackCooldown;
-        public float GetAttackDamage() => runtimeStats.AttackDamage;
-        public float GetMoveSpeed() => runtimeStats.MoveSpeed;
-        public float GetHealth() => runtimeStats.MaxHealth;
+        public int GetAttackDamage() => runtimeStats.AttackDamage;
+        public int GetMoveSpeed() => runtimeStats.MoveSpeed;
+        public int GetMaxHealth() => runtimeStats.MaxHealth;
+
         public void UpgradeAttackSpeed(float amount)
         {
             runtimeStats.AttackCooldown -= amount;
             OnAttackSpeedChanged?.Invoke(runtimeStats.AttackCooldown);
         }
-        public void UpgradeAttackDamage(float amount) => runtimeStats.AttackDamage += amount;
+        
+        public void UpgradeAttackDamage(int amount)
+        {
+            runtimeStats.AttackDamage += amount;
+            OnAttackDamageChanged?.Invoke(runtimeStats.AttackDamage);
+        }
+
+        public void UpgradeMaxHealth(int amount)
+        {
+            runtimeStats.MaxHealth += amount;
+            OnMaxHealthChanged?.Invoke(runtimeStats.MaxHealth);
+        }
+
+        public void HealHealth(int amount)
+        {
+            OnHealHealth?.Invoke(amount);
+        }
+
+        public void UpgradeIncreaseAmor(int amount)
+        {
+            runtimeStats.Amor += amount;
+            OnIncreaseAmor?.Invoke(runtimeStats.Amor);
+        }
+        public void UpgradeIncreaseRunSpeed(float amount)
+        {
+            runtimeStats.MoveSpeed += Mathf.RoundToInt(amount);
+            OnIncreaseMoveSpeed?.Invoke(runtimeStats.MoveSpeed);
+        }
+        public void UpgradeIncreaseExpGain(float amount)
+        {
+            runtimeStats.DefaultExpGainMultiplier += amount;
+        }
+        public void UpgradeIncreaseGoldGain(float amount)
+        {
+            runtimeStats.DefaultGoldGainMultiplier += amount;
+        }
     }
 }

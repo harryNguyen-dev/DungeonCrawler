@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.SpawnManager;
+using SO;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -21,6 +22,10 @@ namespace Global
 
         [Header("Camera")]
         public CinemachineCamera CinemachineCamera;
+        
+
+        [Header("CardSO")]
+        public List<CardSO> AllCards;
 
         // Dùng List để quản lý tất cả quái đang sống
         List<GameObject> AvaiableEnemies = new List<GameObject>();
@@ -72,5 +77,6 @@ namespace Global
             }
             AvaiableEnemies.Clear();
         }
+        public List<CardSO> GetAllCards() => AllCards;
     }
 }

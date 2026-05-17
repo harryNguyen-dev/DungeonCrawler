@@ -350,7 +350,10 @@ Library/ScriptAssemblies/
  UnityEditor.UI.dll
  UnityEngine.TestRunner.dll
  UnityEngine.UI.dll
-Temp/bin/Debug/Unity.Collections.dll
+Temp/bin/Debug/
+ Unity.Burst.dll
+ Unity.Collections.dll
+ Unity.Mathematics.dll
 
 [analyzerReferences]
 C:/Program Files/Unity/Hub/Editor/6000.3.9f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/

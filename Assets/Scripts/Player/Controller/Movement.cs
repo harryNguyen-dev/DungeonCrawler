@@ -12,6 +12,15 @@ namespace PlayerController
         {
             playerStats = GetComponent<PlayerStats>();
             moveSpeed = playerStats.GetMoveSpeed();
+            playerStats.OnIncreaseMoveSpeed += ModifyMoveSpeed;
+        }
+        private void OnDestroy()
+        {
+            playerStats.OnIncreaseMoveSpeed -= ModifyMoveSpeed;
+        }
+        private void ModifyMoveSpeed(int moveSpeed)
+        {
+            this.moveSpeed = moveSpeed;
         }
         private void Update()
         {
