@@ -13,6 +13,7 @@ namespace Global
         [Header("Player Reference")]
         public GameObject PlayerPrefab;
         [HideInInspector] public PlayerController.PlayerStats PlayerStats;
+        [HideInInspector] public PlayerController.PlayerEffect PlayerEffect;
         [HideInInspector] public PlayerController.Health PlayerHealth;
 
         [HideInInspector] public GameObject PlayerInstance;
@@ -55,6 +56,7 @@ namespace Global
             PlayerInstance = player;
             PlayerStats = PlayerInstance.GetComponent<PlayerController.PlayerStats>();
             PlayerHealth = PlayerInstance.GetComponent<PlayerController.Health>();
+            PlayerEffect = PlayerInstance.GetComponent<PlayerController.PlayerEffect>();
             CinemachineCamera.Target.TrackingTarget = PlayerInstance.transform;
         }
         private void Start()

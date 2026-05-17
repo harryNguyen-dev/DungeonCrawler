@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace PlayerController
@@ -11,9 +12,10 @@ namespace PlayerController
         public event Action<int> OnHealHealth;
         public event Action<int> OnIncreaseAmor;
         public event Action<int> OnIncreaseMoveSpeed;
+        public event Action<int> OnNumberOfProjectileChanged;
 
         public SO.PlayerSO configData;
-        private SO.PlayerSO runtimeStats; // Bản sao để chạy runtime
+        public SO.PlayerSO runtimeStats; // Bản sao để chạy runtime
 
         public int currentLevel = 1;
         public int currentExp = 0;
@@ -108,6 +110,53 @@ namespace PlayerController
         public void UpgradeIncreaseGoldGain(float amount)
         {
             runtimeStats.DefaultGoldGainMultiplier += amount;
+        }
+        public void AddOneProjectile(int amount)
+        {
+            Debug.Log($"[PlayerStats] Add {amount} projectiles");
+            var weaponModify = new SO.WeaponEffectModifier()
+            {
+                EffectType = SO.WeaponEffectType.NumberOfProjectiles,
+                Value = amount
+            };
+            runtimeStats.AddpendWeaponModifier(weaponModify);
+            OnNumberOfProjectileChanged?.Invoke(Mathf.RoundToInt(runtimeStats.RuntimeEffects[SO.WeaponEffectType.NumberOfProjectiles]));
+        }
+        public void AddProjectileFireOnHit(int amount)
+        {
+            var weaponModify = new SO.WeaponEffectModifier()
+            {
+                EffectType = SO.WeaponEffectType.FireDamage,
+                Value = amount
+            };
+            runtimeStats.AddpendWeaponModifier(weaponModify);
+        }
+        public void AddProjectileFrozenOnHit(int amount)
+        {
+            var weaponModify = new SO.WeaponEffectModifier()
+            {
+                EffectType = SO.WeaponEffectType.FrozenDuration,
+                Value = amount
+            };
+            runtimeStats.AddpendWeaponModifier(weaponModify);
+        }
+        public void AddProjectilePierce()
+        {
+            var weaponModify = new SO.WeaponEffectModifier()
+            {
+                EffectType = SO.WeaponEffectType.PierceCount,
+                Value = 1
+            };
+            runtimeStats.AddpendWeaponModifier(weaponModify);
+        }
+        public void AddProjectileBoomerange()
+        {
+            var weaponModify = new SO.WeaponEffectModifier()
+            {
+                EffectType = SO.WeaponEffectType.BoomerangMode,
+                Value = 1
+            };
+            runtimeStats.AddpendWeaponModifier(weaponModify);
         }
     }
 }

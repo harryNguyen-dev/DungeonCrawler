@@ -2,7 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using EnemyController;
 
-namespace Enemy.Controller
+namespace EnemyController
 {
     public class Movement : MonoBehaviour
     {
@@ -28,6 +28,14 @@ namespace Enemy.Controller
             attackComponent = GetComponent<EnemyController.Attack>();
             attackComponent.SetPlayer(player);
             UpdateAIBehaviour().Forget();
+        }
+        public void UpdateAgentSpeed(float speed)
+        {
+            agent.speed = speed;
+        }
+        public void ReturnMoveSpeed()
+        {
+            agent.speed = moveSpeed;
         }
         private async UniTaskVoid UpdateAIBehaviour()
         {

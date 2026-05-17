@@ -64,33 +64,43 @@ namespace CustomUI
             // Giới hạn số lượt pick để tránh crash nếu tổng số Card trong game ít hơn 3
             int actualPickCount = Mathf.Min(totalPick, pool.Count);
 
-            for (int i = 0; i < actualPickCount; i++)
+            // for (int i = 0; i < actualPickCount; i++)
+            // {
+            //     // 2. Tính lại tổng trọng số của những thẻ còn lại trong Pool
+            //     int totalWeight = 0;
+            //     foreach (CardSO card in pool)
+            //     {
+            //         totalWeight += (int)card.CardTierWeight;
+            //     }
+
+            //     if (totalWeight <= 0) break;
+
+            //     // 3. Tiến hành Roll cho lượt này
+            //     int randomRoll = UnityEngine.Random.Range(0, totalWeight);
+            //     int currentWeightWindow = 0;
+
+            //     foreach (CardSO card in pool)
+            //     {
+            //         currentWeightWindow += (int)card.CardTierWeight;
+            //         if (randomRoll < currentWeightWindow)
+            //         {
+            //             // Tìm thấy thẻ trúng tuyển
+            //             pickedCards.Add(card);
+
+            //             // 4. CHÌA KHÓA: Xóa thẻ này khỏi pool để lượt sau không bị trùng
+            //             pool.Remove(card);
+            //             break; // Thoát foreach để chạy lượt for tiếp theo với Pool mới
+            //         }
+            //     }
+            // }
+            foreach (CardSO card in pool)
             {
-                // 2. Tính lại tổng trọng số của những thẻ còn lại trong Pool
-                int totalWeight = 0;
-                foreach (CardSO card in pool)
+                if(card.Effect == CardEffect.ProjectileBoomerang)
                 {
-                    totalWeight += (int)card.CardTierWeight;
-                }
-
-                if (totalWeight <= 0) break;
-
-                // 3. Tiến hành Roll cho lượt này
-                int randomRoll = UnityEngine.Random.Range(0, totalWeight);
-                int currentWeightWindow = 0;
-
-                foreach (CardSO card in pool)
-                {
-                    currentWeightWindow += (int)card.CardTierWeight;
-                    if (randomRoll < currentWeightWindow)
-                    {
-                        // Tìm thấy thẻ trúng tuyển
-                        pickedCards.Add(card);
-
-                        // 4. CHÌA KHÓA: Xóa thẻ này khỏi pool để lượt sau không bị trùng
-                        pool.Remove(card);
-                        break; // Thoát foreach để chạy lượt for tiếp theo với Pool mới
-                    }
+                    pickedCards.Add(card);
+                    pickedCards.Add(card);
+                    pickedCards.Add(card);
+                    break;
                 }
             }
 

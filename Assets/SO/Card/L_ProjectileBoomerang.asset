@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd50d826419f4ca43850d01e50f8668e, type: 3}
   m_Name: L_ProjectileBoomerang
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
-  CardID: L03
-  CardName: Shockwave Impact
-  CardDescription: Energy waves detonate on impact, dealing massive area-of-effect
-    (AOE) damage.
-  Effect: 16
+  CardID: L02
+  CardName: Boomerang
+  CardDescription: Energy waves reverse direction at max range and fly back toward
+    your position.
+  Effect: 15
   CardTier: 3
   CardTierWeight: 5
-  Value: 3
+  Value: 1

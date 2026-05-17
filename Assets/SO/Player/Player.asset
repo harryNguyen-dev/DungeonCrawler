@@ -16,8 +16,13 @@ MonoBehaviour:
   AttackDamage: 30
   MoveSpeed: 10
   MaxHealth: 150
+  Amor: 0
+  DefaultExpGainMultiplier: 1
+  DefaultGoldGainMultiplier: 1
   WeaponEffectsSetup:
   - EffectType: 0
-    Value: 0
-  - EffectType: 4
-    Value: 0
+    Value: 1
+  - EffectType: 1
+    Value: 3
+  - EffectType: 5
+    Value: 3

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace SO {
     public enum WeaponEffectType
     {
+        NumberOfProjectiles,
         PierceCount,
         FireDamage,
         FrozenDuration,
         ExplosiveRadius,
-        AdditionalProjectile,
         BoomerangMode // Hiệu ứng này nếu kích hoạt thì điền Value = 1
     }
 
@@ -31,11 +31,22 @@ namespace SO {
         public float DefaultExpGainMultiplier = 1f;
         public float DefaultGoldGainMultiplier = 1f;
 
-        [Header("Weapon Dynamic Stats")]
+        [Header("Weapon Stats")]
         public List<WeaponEffectModifier> WeaponEffectsSetup = new List<WeaponEffectModifier>();
 
         public Dictionary<WeaponEffectType, float> RuntimeEffects { get; private set; } = new Dictionary<WeaponEffectType, float>();
 
+        public void AddpendWeaponModifier(WeaponEffectModifier modifier)
+        {
+            WeaponEffectsSetup.Add(modifier);
+            if(!RuntimeEffects.ContainsKey(modifier.EffectType))
+            {
+                RuntimeEffects.Add(modifier.EffectType, modifier.Value);
+            } else
+            {
+                RuntimeEffects[modifier.EffectType] += modifier.Value;
+            }
+        }
         public void InitializeRuntimeDictionary()
         {
             RuntimeEffects.Clear();
