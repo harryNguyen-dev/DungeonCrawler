@@ -129,6 +129,8 @@ GameObject:
   - component: {fileID: 1557200009919411185}
   - component: {fileID: 3212175880258453578}
   - component: {fileID: -4976674879071280294}
+  - component: {fileID: 5883815455670202925}
+  - component: {fileID: 1132631513331002957}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -165,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   configData: {fileID: 11400000, guid: 7eab017d1a62a624f85c8d226ec431e0, type: 2}
+  runtimeStats: {fileID: 0}
   currentLevel: 1
   currentExp: 0
   expToNextLevel: 100
@@ -230,6 +233,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 589df5c534b8d1a458af6aabdc9db974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController.PlayerEffect
+--- !u!114 &5883815455670202925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023443133490872029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9487b512f8ee7154f96447a6d38ab193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController.PlayerEvents
+--- !u!54 &1132631513331002957
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023443133490872029}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &5602701373790920133
 GameObject:
   m_ObjectHideFlags: 0

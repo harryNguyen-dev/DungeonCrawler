@@ -11,6 +11,7 @@ namespace PlayerController
         [SerializeField] private Transform firePoint; // Điểm xuất hiện sóng kiếm (gắn ở tay/kiếm)
 
         private PlayerStats playerStats;
+        private PlayerEvents playerEvents;
         private float attackCooldown;
         private int numberOfProjectiles = 1;
         private float lastAttackTime;
@@ -18,13 +19,14 @@ namespace PlayerController
         private void Start()
         {
             playerStats = GetComponent<PlayerStats>();
+            playerEvents = GetComponent<PlayerEvents>();
             attackCooldown = playerStats.GetAttackCooldown();
             if (playerStats.runtimeStats.TryGetEffect(SO.WeaponEffectType.NumberOfProjectiles, out var value))
             {
                 numberOfProjectiles = Mathf.RoundToInt(value);
             }
-            playerStats.OnAttackSpeedChanged += OnAttackChanged;
-            playerStats.OnNumberOfProjectileChanged += OnNumberOfProjectileChanged;
+            playerEvents.OnAttackSpeedChanged += OnAttackChanged;
+            playerEvents.OnNumberOfProjectileChanged += OnNumberOfProjectileChanged;
 
         }
         private void OnAttackChanged(float attackSpeed) => attackCooldown = attackSpeed;

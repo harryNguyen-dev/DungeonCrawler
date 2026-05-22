@@ -68,6 +68,8 @@ namespace WFC
         private void Start()
         {
             // GenerateWithRetry(5).Forget();
+            GlobalEvents.RaiseGameStart();
+            GenerateWithRetry(5).Forget();
         }
 #if UNITY_EDITOR
         [ContextMenu("Run Batch Test 100x")]
@@ -106,6 +108,16 @@ namespace WFC
                 {
                     success = true;
                     Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
+                    Tile startRoomTile = GetRandomStartRoom();
+                    if (startRoomTile != null)
+                    {
+                        // Tính toán vị trí thực tế trong không gian 3D của Unity để spawn Player hoặc Đánh dấu
+                        Vector3 worldPosition = new Vector3(startRoomTile.GridPosition.x * cellSize, 0, startRoomTile.GridPosition.y * cellSize);
+                        Debug.Log($"Vị trí World của Start Room: {worldPosition}");
+                        
+                        // Bạn có thể lưu vị trí này lại hoặc gọi Event truyền vị trí này đi
+                        GlobalVariable.PlayerSpawnPosition = worldPosition;
+                    }
                     GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
                     GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
@@ -304,6 +316,50 @@ namespace WFC
                       $"DeadEnds={LastStats.dead_end_count}, Branches={LastStats.branch_count}, " +
                       $"Success={LastStats.generation_success}, " +
                       $"Time={LastStats.ms_total:F1}ms (R:{LastStats.ms_place_rooms:F1} C:{LastStats.ms_connect_corridors:F1} W:{LastStats.ms_wfc_fill:F1})");
+        }
+    
+        /// <summary>
+        /// Lọc và lấy ra một ô phòng ngẫu nhiên có thể làm Start Room.
+        /// Trả về null nếu không tìm thấy phòng nào thỏa mãn điều kiện.
+        /// </summary>
+        public Tile GetRandomStartRoom()
+        {
+            if (placedRooms == null || placedRooms.Count == 0)
+            {
+                Debug.LogWarning("Chưa có phòng nào được đặt hoặc danh sách phòng trống!");
+                return null;
+            }
+
+            List<Tile> validStartRooms = new List<Tile>();
+
+            // Duyệt qua tất cả các ô phòng đã được đặt trong quá trình sinh dungeon
+            foreach (Tile tile in placedRooms)
+            {
+                // Kiểm tra xem ô đó đã sập (Collapse) chưa và có dữ liệu gạch không
+                if (tile.IsCollapsed && tile.CollapsedTile != null)
+                {
+                    // Sử dụng hàm điều kiện có sẵn trong WFCData của bạn
+                    if (tile.CollapsedTile.CanBeStartRoom())
+                    {
+                        validStartRooms.Add(tile);
+                    }
+                }
+            }
+
+            // Nếu tìm thấy các ứng viên phù hợp
+            if (validStartRooms.Count > 0)
+            {
+                // Sử dụng instance _rand đã được khởi tạo theo Seed của bạn để đảm bảo tính deterministic
+                int randomIndex = _rand.Next(0, validStartRooms.Count);
+                Tile startRoom = validStartRooms[randomIndex];
+                
+                Debug.Log($"<color=cyan>Đã chọn được Start Room tại vị trí: Grid({startRoom.GridPosition.x}, {startRoom.GridPosition.y})</color>");
+                return startRoom;
+            }
+
+            // Trường hợp xấu: Thuật toán chạy xong nhưng không có phòng nào chỉ có 1 cổng mở
+            Debug.LogWarning("Không tìm thấy phòng nào thỏa mãn điều kiện làm Start Room (Phòng Room và có đúng 1 cổng Open).");
+            return null;
         }
     }
 }

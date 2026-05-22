@@ -6,17 +6,19 @@ namespace PlayerController
     public class Movement : MonoBehaviour
     {
         private PlayerStats playerStats;
+        private PlayerEvents events;
         private float moveSpeed;
 
         private void Start()
         {
             playerStats = GetComponent<PlayerStats>();
+            events = GetComponent<PlayerEvents>();
             moveSpeed = playerStats.GetMoveSpeed();
-            playerStats.OnIncreaseMoveSpeed += ModifyMoveSpeed;
+            events.OnIncreaseMoveSpeed += ModifyMoveSpeed;
         }
         private void OnDestroy()
         {
-            playerStats.OnIncreaseMoveSpeed -= ModifyMoveSpeed;
+            events.OnIncreaseMoveSpeed -= ModifyMoveSpeed;
         }
         private void ModifyMoveSpeed(int moveSpeed)
         {

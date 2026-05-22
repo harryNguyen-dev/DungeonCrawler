@@ -7,15 +7,23 @@ public class RoomController : MonoBehaviour
     [SerializeField] private int _enemyCount;
     private bool isPlayerReached = false;
     public bool IsPlayerReached { get => isPlayerReached; set => isPlayerReached = value; }
-
+    
+    bool isStartRoom = false;
+    public void SetIsStartRoom(bool isStartRoom)
+    {
+        this.isStartRoom = isStartRoom;
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-        }
     }
 
     private void SpawnEnemy(Transform player)
     {
+        if(isStartRoom)
+        {
+            return;
+        }
+        
     }
 }

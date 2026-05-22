@@ -6,7 +6,7 @@ namespace Global
         public static event Action<int> OnDungeonGenerated; // Trả về Seed
         public static event Action OnGameStart;
         public static event Action OnGameOver;
-
+        public static event Action OnPlayerJoin;
         // --- COMBAT & PROGRESSION ---
         public static event Action OnEnemyDie; // Không cần bool, gọi là biết quái chết
         public static event Action OnPlayerEliminated;
@@ -25,5 +25,7 @@ namespace Global
         public static void RaiseGameStart() => OnGameStart?.Invoke();
         public static void RaiseLevelUp(int level) => OnLevelUp?.Invoke(level);
         public static void RaiseDungeonGenerated(int seed) => OnDungeonGenerated?.Invoke(seed);
+        public static void RaiseGameOver() => OnGameOver?.Invoke();
+        public static void RaisePlayerJoin() => OnPlayerJoin?.Invoke();
     }
 }

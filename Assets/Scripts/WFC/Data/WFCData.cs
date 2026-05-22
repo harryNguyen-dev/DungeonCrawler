@@ -44,6 +44,11 @@ namespace WFC
             if(west == ConnectorType.Open) openConnectors.Add(Direction.West);
             return openConnectors;
         }
+
+        public bool CanBeStartRoom()
+        {
+            return tileType == TileType.Room && GetOpenConnector().Count == 1;
+        }
     }
 
     public enum ConnectorType

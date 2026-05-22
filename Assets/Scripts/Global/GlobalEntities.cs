@@ -15,6 +15,7 @@ namespace Global
         [HideInInspector] public PlayerController.PlayerStats PlayerStats;
         [HideInInspector] public PlayerController.PlayerEffect PlayerEffect;
         [HideInInspector] public PlayerController.Health PlayerHealth;
+        [HideInInspector] public PlayerController.PlayerEvents PlayerEvents;
 
         [HideInInspector] public GameObject PlayerInstance;
 
@@ -48,6 +49,7 @@ namespace Global
             PlayerInstance = null;
             PlayerStats = null;
             PlayerHealth = null;
+            PlayerEffect = null;
             CinemachineCamera.Target.TrackingTarget = null;
         }
         public void SpawnPlayer()
@@ -57,11 +59,13 @@ namespace Global
             PlayerStats = PlayerInstance.GetComponent<PlayerController.PlayerStats>();
             PlayerHealth = PlayerInstance.GetComponent<PlayerController.Health>();
             PlayerEffect = PlayerInstance.GetComponent<PlayerController.PlayerEffect>();
+            PlayerEvents = PlayerInstance.GetComponent<PlayerController.PlayerEvents>();
             CinemachineCamera.Target.TrackingTarget = PlayerInstance.transform;
+            Global.GlobalEvents.RaisePlayerJoin();
         }
         private void Start()
         {
-            SpawnPlayer();
+            // SpawnPlayer();
         }
         public void RegisterEnemy(GameObject enemy)
         {

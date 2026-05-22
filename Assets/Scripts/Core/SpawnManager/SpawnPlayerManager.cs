@@ -5,16 +5,17 @@ namespace Core
 {
     public class SpawnPlayerManager : MonoBehaviour
     {
-        public GameObject playerPrefab;
-        
         public void OnEnable()
         {
-            // Global.GlobalEvents.OnDungeonGeneratedSuccess += SpawnPlayer;
+            Global.GlobalEvents.OnDungeonGenerated += SpawnPlayer;
         }
 
         public void SpawnPlayer(int seed)
         {
-            
+            Vector3 offset = Vector3.up * 2.5f;
+            Global.GlobalEntities.Instance.SpawnPlayer();
+            var spawnPoint = Global.GlobalVariable.PlayerSpawnPosition;
+            Global.GlobalEntities.Instance.PlayerInstance.transform.position = spawnPoint + offset;
         }
     }
 }

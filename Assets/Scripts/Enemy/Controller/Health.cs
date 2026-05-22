@@ -4,18 +4,20 @@ namespace EnemyController
 {
     public class Health : MonoBehaviour
     {
-        [SerializeField] private float maxHealth = 100;
-        [SerializeField] private float currentHealth;
+        [SerializeField] private int maxHealth = 100;
+        [SerializeField] private int currentHealth;
         
+        private EnemyEvents events;
         private void Start()
         {
+            events = GetComponent<EnemyEvents>();
             currentHealth = maxHealth;
         }
         
-        public void TakeDamage(float damage)
+        public void TakeDamage(int damage)
         {
-            Debug.Log($"[EnemyTakeDamage] {damage}");
             currentHealth -= damage;
+            events.ChangeHealth((int)currentHealth);
             if (currentHealth <= 0)
             {
                 Die();

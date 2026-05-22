@@ -1,18 +1,12 @@
 using System;
 using System.Linq;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace PlayerController
 {
     public class PlayerStats : MonoBehaviour
     {
-        public event Action<int> OnAttackDamageChanged;
-        public event Action<float> OnAttackSpeedChanged;
-        public event Action<int> OnMaxHealthChanged;
-        public event Action<int> OnHealHealth;
-        public event Action<int> OnIncreaseAmor;
-        public event Action<int> OnIncreaseMoveSpeed;
-        public event Action<int> OnNumberOfProjectileChanged;
 
         public SO.PlayerSO configData;
         public SO.PlayerSO runtimeStats; // Bản sao để chạy runtime
@@ -21,8 +15,12 @@ namespace PlayerController
         public int currentExp = 0;
         public int expToNextLevel = 100;
 
+        private PlayerEvents events;
+        private PlayerController.Health playerHealth;
         private void Awake()
         {
+            playerHealth = GetComponent<Health>();
+            events = GetComponent<PlayerEvents>();
             runtimeStats = Instantiate(configData);
             runtimeStats.InitializeRuntimeDictionary();
         }
@@ -73,35 +71,35 @@ namespace PlayerController
         public void UpgradeAttackSpeed(float amount)
         {
             runtimeStats.AttackCooldown -= amount;
-            OnAttackSpeedChanged?.Invoke(runtimeStats.AttackCooldown);
+            events.InvokeAttackSpeedChanged(runtimeStats.AttackCooldown);
         }
         
         public void UpgradeAttackDamage(int amount)
         {
             runtimeStats.AttackDamage += amount;
-            OnAttackDamageChanged?.Invoke(runtimeStats.AttackDamage);
+            events.InvokeAttackDamageChanged(runtimeStats.AttackDamage);
         }
 
         public void UpgradeMaxHealth(int amount)
         {
             runtimeStats.MaxHealth += amount;
-            OnMaxHealthChanged?.Invoke(runtimeStats.MaxHealth);
+            events.InvokeMaxHealthChanged(runtimeStats.MaxHealth);
         }
 
         public void HealHealth(int amount)
         {
-            OnHealHealth?.Invoke(amount);
+            events.InvokeHealHealth(amount);
         }
 
         public void UpgradeIncreaseAmor(int amount)
         {
             runtimeStats.Amor += amount;
-            OnIncreaseAmor?.Invoke(runtimeStats.Amor);
+            events.InvokeIncreaseAmor(runtimeStats.Amor);
         }
         public void UpgradeIncreaseRunSpeed(float amount)
         {
             runtimeStats.MoveSpeed += Mathf.RoundToInt(amount);
-            OnIncreaseMoveSpeed?.Invoke(runtimeStats.MoveSpeed);
+            events.InvokeIncreaseMoveSpeed(runtimeStats.MoveSpeed);
         }
         public void UpgradeIncreaseExpGain(float amount)
         {
@@ -120,7 +118,7 @@ namespace PlayerController
                 Value = amount
             };
             runtimeStats.AddpendWeaponModifier(weaponModify);
-            OnNumberOfProjectileChanged?.Invoke(Mathf.RoundToInt(runtimeStats.RuntimeEffects[SO.WeaponEffectType.NumberOfProjectiles]));
+            events.InvokeNumberOfProjectileChanged(Mathf.RoundToInt(runtimeStats.RuntimeEffects[SO.WeaponEffectType.NumberOfProjectiles]));
         }
         public void AddProjectileFireOnHit(int amount)
         {

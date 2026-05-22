@@ -701,37 +701,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 354993685}
   m_CullTransparentMesh: 1
---- !u!1 &386692112
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 386692113}
-  m_Layer: 8
-  m_Name: DungeonHolder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &386692113
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 386692112}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,8 +945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainUI
   startBtn: {fileID: 140252357}
-  _wfcGeneration: {fileID: 820313532}
---- !u!1 &685111385
+  _wfcGeneration: {fileID: 0}
+--- !u!1 &610035488
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -985,76 +954,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 685111387}
-  - component: {fileID: 685111386}
-  - component: {fileID: 685111388}
+  - component: {fileID: 610035490}
+  - component: {fileID: 610035489}
   m_Layer: 0
-  m_Name: Navmesh
+  m_Name: debug (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &685111386
+--- !u!114 &610035489
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685111385}
+  m_GameObject: {fileID: 610035488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Script: {fileID: 11500000, guid: fbfe254beb09f284a966a90228ffa6bf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
-  m_SerializedVersion: 0
-  m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
-  m_BuildHeightMesh: 0
---- !u!4 &685111387
+  m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCDebug
+  wfcGeneration: {fileID: 938841623}
+--- !u!4 &610035490
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685111385}
+  m_GameObject: {fileID: 610035488}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7.29693, y: 0, z: 19.33613}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &685111388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685111385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee1c3953d9d3f84fb1d8ff599b34dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Core.NavmeshController
-  _navMeshSurface: {fileID: 685111386}
 --- !u!1 &719337844
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,85 +1017,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 168.4, y: 77.9, z: -43.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &820313531
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 820313533}
-  - component: {fileID: 820313532}
-  m_Layer: 0
-  m_Name: DungeonGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &820313532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820313531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267220505da4b5347a9d8f053ed21139, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCGeneration
-  gridSize: 10
-  cellSize: 20
-  allTiles:
-  - {fileID: 11400000, guid: 55769585c42da3a4fb66e1cd7ff94b33, type: 2}
-  - {fileID: 11400000, guid: ff89efd5329767e4b900a08578c391c0, type: 2}
-  - {fileID: 11400000, guid: 655de8733854f8141a1abbac279f03c6, type: 2}
-  - {fileID: 11400000, guid: cd9f9e600765ada4f8e707d76fb99927, type: 2}
-  - {fileID: 11400000, guid: 24e60e026aa73ea42ba900686b3d1133, type: 2}
-  - {fileID: 11400000, guid: b4f3221bd208f124db7b55db7491dfd4, type: 2}
-  - {fileID: 11400000, guid: 623b5dced7cd6be488e63e3798eb75b3, type: 2}
-  - {fileID: 11400000, guid: 3f31682ebda0f6b4fb5806f1e4c2f067, type: 2}
-  - {fileID: 11400000, guid: 6080b342b33a3c340b59ecbbd606e7ce, type: 2}
-  - {fileID: 11400000, guid: 731dd0cd67e307c46a49a050c8ea9c7c, type: 2}
-  - {fileID: 11400000, guid: 8100fae9e2a553f4d83a0ecd0c3ad4ea, type: 2}
-  - {fileID: 11400000, guid: 24831242e26bc8c4790840aba36d3da0, type: 2}
-  - {fileID: 11400000, guid: 062b79ebd30b08645b6604f42bde187f, type: 2}
-  - {fileID: 11400000, guid: c473545bf9ffe854f895cc278d448310, type: 2}
-  - {fileID: 11400000, guid: 570950e60f127f747896fc5f6a8f45b0, type: 2}
-  - {fileID: 11400000, guid: 7c13f22c673d9f247a17f74722ed1bbd, type: 2}
-  - {fileID: 11400000, guid: ad06ab233da29d04481ed6b999eec742, type: 2}
-  - {fileID: 11400000, guid: a1649f19c93dcf5408db199f7761bbdf, type: 2}
-  - {fileID: 11400000, guid: 8516d516d32d9e746aaf7ad4b186d25d, type: 2}
-  - {fileID: 11400000, guid: 2e38e85758f1a6e49bfc11d28cbd4359, type: 2}
-  - {fileID: 11400000, guid: 7c97ec58ba060a34d8532242d04d873d, type: 2}
-  - {fileID: 11400000, guid: 252a38ca0758eaf4a8398cdc2f152360, type: 2}
-  - {fileID: 11400000, guid: 935533c1e7dd95e4691aa81024a24dc8, type: 2}
-  - {fileID: 11400000, guid: 7d25b2ed122ab4248a4c7b82f9fb1b8f, type: 2}
-  - {fileID: 11400000, guid: e21d431983d9e364cb24f0d880f93276, type: 2}
-  - {fileID: 11400000, guid: 4a1530ddcbb0cd3438ef1d7df023399c, type: 2}
-  roomsToPlace: 5
-  roomEdgeMargin: 1
-  spawnParent: {fileID: 386692113}
-  branchingFactor: 2
-  useFixedSeed: 0
-  randomSeed: 1181860801
---- !u!4 &820313533
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820313531}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1206,6 +1063,85 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832575517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &938841622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 938841624}
+  - component: {fileID: 938841623}
+  m_Layer: 0
+  m_Name: DungeonGenerator (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &938841623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938841622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 267220505da4b5347a9d8f053ed21139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCGeneration
+  gridSize: 10
+  cellSize: 20
+  allTiles:
+  - {fileID: 11400000, guid: 55769585c42da3a4fb66e1cd7ff94b33, type: 2}
+  - {fileID: 11400000, guid: ff89efd5329767e4b900a08578c391c0, type: 2}
+  - {fileID: 11400000, guid: 655de8733854f8141a1abbac279f03c6, type: 2}
+  - {fileID: 11400000, guid: cd9f9e600765ada4f8e707d76fb99927, type: 2}
+  - {fileID: 11400000, guid: 24e60e026aa73ea42ba900686b3d1133, type: 2}
+  - {fileID: 11400000, guid: b4f3221bd208f124db7b55db7491dfd4, type: 2}
+  - {fileID: 11400000, guid: 623b5dced7cd6be488e63e3798eb75b3, type: 2}
+  - {fileID: 11400000, guid: 3f31682ebda0f6b4fb5806f1e4c2f067, type: 2}
+  - {fileID: 11400000, guid: 6080b342b33a3c340b59ecbbd606e7ce, type: 2}
+  - {fileID: 11400000, guid: 731dd0cd67e307c46a49a050c8ea9c7c, type: 2}
+  - {fileID: 11400000, guid: 8100fae9e2a553f4d83a0ecd0c3ad4ea, type: 2}
+  - {fileID: 11400000, guid: 24831242e26bc8c4790840aba36d3da0, type: 2}
+  - {fileID: 11400000, guid: 062b79ebd30b08645b6604f42bde187f, type: 2}
+  - {fileID: 11400000, guid: c473545bf9ffe854f895cc278d448310, type: 2}
+  - {fileID: 11400000, guid: 570950e60f127f747896fc5f6a8f45b0, type: 2}
+  - {fileID: 11400000, guid: 7c13f22c673d9f247a17f74722ed1bbd, type: 2}
+  - {fileID: 11400000, guid: ad06ab233da29d04481ed6b999eec742, type: 2}
+  - {fileID: 11400000, guid: a1649f19c93dcf5408db199f7761bbdf, type: 2}
+  - {fileID: 11400000, guid: 8516d516d32d9e746aaf7ad4b186d25d, type: 2}
+  - {fileID: 11400000, guid: 2e38e85758f1a6e49bfc11d28cbd4359, type: 2}
+  - {fileID: 11400000, guid: 7c97ec58ba060a34d8532242d04d873d, type: 2}
+  - {fileID: 11400000, guid: 252a38ca0758eaf4a8398cdc2f152360, type: 2}
+  - {fileID: 11400000, guid: 935533c1e7dd95e4691aa81024a24dc8, type: 2}
+  - {fileID: 11400000, guid: 7d25b2ed122ab4248a4c7b82f9fb1b8f, type: 2}
+  - {fileID: 11400000, guid: e21d431983d9e364cb24f0d880f93276, type: 2}
+  - {fileID: 11400000, guid: 4a1530ddcbb0cd3438ef1d7df023399c, type: 2}
+  roomsToPlace: 5
+  roomEdgeMargin: 1
+  spawnParent: {fileID: 1251439879}
+  branchingFactor: 2
+  useFixedSeed: 0
+  randomSeed: 1181860801
+--- !u!4 &938841624
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938841622}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1360,7 +1296,7 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: beb6cf639e340cf4cb0d43df23f98929, type: 2}
   m_BuildHeightMesh: 0
---- !u!1 &1278525575
+--- !u!1 &1251439878
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1368,38 +1304,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1278525577}
-  - component: {fileID: 1278525576}
-  m_Layer: 0
-  m_Name: debug
+  - component: {fileID: 1251439879}
+  m_Layer: 8
+  m_Name: DungeonHolder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1278525576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278525575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbfe254beb09f284a966a90228ffa6bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCDebug
-  wfcGeneration: {fileID: 820313532}
---- !u!4 &1278525577
+--- !u!4 &1251439879
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278525575}
+  m_GameObject: {fileID: 1251439878}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.29693, y: -0, z: 19.33613}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1455,6 +1377,51 @@ MonoBehaviour:
     _prewarmCount: 5
     _maxSize: 5
   _poolRoot: {fileID: 1978307819}
+--- !u!1 &1435638248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1435638250}
+  - component: {fileID: 1435638249}
+  m_Layer: 0
+  m_Name: SpawnPlayerManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1435638249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435638248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d2525e1cebee5f4d800d90557aacb27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.SpawnPlayerManager
+  playerPrefab: {fileID: 0}
+--- !u!4 &1435638250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435638248}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1606085798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,7 +1561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8942a197bb8f6ed49aa56498f6d2e505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TopdownCamera
---- !u!1 &1753246951
+--- !u!1 &1909547905
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1602,22 +1569,68 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1753246953}
-  - component: {fileID: 1753246954}
+  - component: {fileID: 1909547908}
+  - component: {fileID: 1909547907}
+  - component: {fileID: 1909547906}
   m_Layer: 0
-  m_Name: SpawnPlayerManager
+  m_Name: Navmesh (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1753246953
+--- !u!114 &1909547906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909547905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dee1c3953d9d3f84fb1d8ff599b34dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.NavmeshController
+  _navMeshSurface: {fileID: 1909547907}
+--- !u!114 &1909547907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909547905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
+--- !u!4 &1909547908
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1753246951}
+  m_GameObject: {fileID: 1909547905}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1626,18 +1639,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1753246954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1753246951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d2525e1cebee5f4d800d90557aacb27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Core.SpawnPlayerManager
 --- !u!1 &1916175437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1712,11 +1713,11 @@ SceneRoots:
   - {fileID: 1606085799}
   - {fileID: 1330071230}
   - {fileID: 1978307819}
-  - {fileID: 386692113}
-  - {fileID: 1278525577}
-  - {fileID: 1753246953}
-  - {fileID: 820313533}
-  - {fileID: 685111387}
   - {fileID: 719337845}
   - {fileID: 561591915}
   - {fileID: 324643246}
+  - {fileID: 1435638250}
+  - {fileID: 610035490}
+  - {fileID: 938841624}
+  - {fileID: 1909547908}
+  - {fileID: 1251439879}
