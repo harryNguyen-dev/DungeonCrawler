@@ -1336,7 +1336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCGeneration
   gridSize: 10
-  cellSize: 20
+  cellSize: 40
   allTiles:
   - {fileID: 11400000, guid: 55769585c42da3a4fb66e1cd7ff94b33, type: 2}
   - {fileID: 11400000, guid: ff89efd5329767e4b900a08578c391c0, type: 2}
@@ -1368,8 +1368,8 @@ MonoBehaviour:
   roomEdgeMargin: 1
   spawnParent: {fileID: 386692113}
   branchingFactor: 2
-  useFixedSeed: 0
-  randomSeed: 1181860801
+  useFixedSeed: 1
+  randomSeed: 1107078218
 --- !u!4 &820313533
 Transform:
   m_ObjectHideFlags: 0
@@ -1515,6 +1515,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30979e99157c4ad43824e1b840cc7bdc, type: 2}
   - {fileID: 11400000, guid: aa36d6fe3395ab94ebf8b00d7d24e00e, type: 2}
   - {fileID: 11400000, guid: fc8e83c04d22d4c49aac974446925de2, type: 2}
+  EnemyPrefabs:
+  - {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+  AvailableEnemies: []
 --- !u!4 &1259669256
 Transform:
   m_ObjectHideFlags: 0

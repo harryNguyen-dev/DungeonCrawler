@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Get-ChildItem -Path Assets/Scenes -Filter *.unity\")",
+      "Bash(powershell -Command \"Get-Content -Path d:\\\\Unity\\\\DungeonCrawler\\\\Assets\\\\Scripts\\\\Core\\\\Input\\\\InputManager.cs\")"
+    ]
+  }
+}

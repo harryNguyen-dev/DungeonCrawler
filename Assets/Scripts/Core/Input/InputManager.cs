@@ -4,16 +4,15 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance { get; private set; }
-    InputSystem_Actions inputActions;
-    PlayerController.Movement movement;
-    public void Awake()
+
+    private InputSystem_Actions inputActions;
+
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            
-            // Khởi tạo instance của Input Actions
             inputActions = new InputSystem_Actions();
         }
         else
@@ -21,32 +20,46 @@ public class InputManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     private void OnEnable()
     {
+        if (Instance != this || inputActions == null) return;
         inputActions.Player.Enable();
     }
 
     private void OnDisable()
     {
+        if (Instance != this || inputActions == null) return;
         inputActions.Player.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance != this) return;
+
+        inputActions?.Dispose();
+        inputActions = null;
+        Instance = null;
     }
 
     public Vector2 GetMovementVector()
     {
-        // Đọc giá trị Vector2 từ Action "Move"
+        if (inputActions == null) return Vector2.zero;
         return inputActions.Player.Move.ReadValue<Vector2>();
     }
+
     public Vector2 GetMousePosition()
     {
-        return Mouse.current.position.ReadValue();
+        return Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
     }
+
     public bool IsAttacking()
     {
-        return inputActions.Player.Attack.IsPressed();
+        return inputActions != null && inputActions.Player.Attack.IsPressed();
     }
+
     public bool WasAttackPressed()
     {
-        // Chỉ trả về true vào đúng khung hình người chơi nhấn xuống
-        return inputActions.Player.Attack.WasPressedThisFrame();
+        return inputActions != null && inputActions.Player.Attack.WasPressedThisFrame();
     }
 }

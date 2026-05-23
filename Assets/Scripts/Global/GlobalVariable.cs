@@ -5,11 +5,18 @@ using UnityEngine;
 
 namespace Global
 {
+    public enum GameMode
+    {
+        Lobby,
+        InMatch
+    }
 
     public static class GlobalVariable
     {
         public static int CurrentSeed { get; set; }
         public static Vector3 PlayerSpawnPosition { get; set; }
+        public static int TotalRoomCount { get; set; }
+        public static GameMode CurrentGameMode { get; set; } = GameMode.Lobby;
 
         // 1. Màu Nền của Thẻ (Dành cho Image Component làm Background - Tông tối để nổi bật chữ)
         public static readonly Dictionary<CardTier, Color> CardBackgroundColor = new Dictionary<CardTier, Color>()

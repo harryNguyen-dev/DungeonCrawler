@@ -18,6 +18,12 @@ namespace PlayerController
             events.OnMaxHealthChanged += SetMaxHealth;
             events.OnHealHealth += SetHealHealth;
         }
+        private void OnDestroy()
+        {
+            if (events == null) return;
+            events.OnMaxHealthChanged -= SetMaxHealth;
+            events.OnHealHealth -= SetHealHealth;
+        }
         private void SetMaxHealth(int maxHealth) => currentHealth = maxHealth;
         private void SetHealHealth(int amount) => currentHealth += amount;
 
@@ -35,9 +41,6 @@ namespace PlayerController
         {
             Global.GlobalEvents.RaisePlayerEliminated();
             Debug.Log("Player died!");
-            
-            events.OnMaxHealthChanged -= SetMaxHealth;
-            events.OnHealHealth -= SetHealHealth;
             Time.timeScale = 0f;
             Global.GlobalEntities.Instance.ClearPlayer();
         }

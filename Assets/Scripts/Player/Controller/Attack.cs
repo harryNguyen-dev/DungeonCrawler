@@ -1,20 +1,19 @@
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PlayerController
 {
-
     public class Attack : MonoBehaviour
     {
         [SerializeField] private GameObject projectilePrefab;
-        [SerializeField] private Transform firePoint; // Điểm xuất hiện sóng kiếm (gắn ở tay/kiếm)
+        [SerializeField] private Transform firePoint;
 
         private PlayerStats playerStats;
         private PlayerEvents playerEvents;
         private float attackCooldown;
         private int numberOfProjectiles = 1;
         private float lastAttackTime;
+        private bool canAttack = true;
 
         private void Start()
         {
@@ -25,16 +24,35 @@ namespace PlayerController
             {
                 numberOfProjectiles = Mathf.RoundToInt(value);
             }
+
             playerEvents.OnAttackSpeedChanged += OnAttackChanged;
             playerEvents.OnNumberOfProjectileChanged += OnNumberOfProjectileChanged;
-
         }
+
+        private void OnDestroy()
+        {
+            if (playerEvents == null) return;
+            playerEvents.OnAttackSpeedChanged -= OnAttackChanged;
+            playerEvents.OnNumberOfProjectileChanged -= OnNumberOfProjectileChanged;
+        }
+
+        public void SetAttackEnabled(bool enabled)
+        {
+            canAttack = enabled;
+        }
+
         private void OnAttackChanged(float attackSpeed) => attackCooldown = attackSpeed;
-        private void OnNumberOfProjectileChanged(int num) {Debug.Log($"[PlayerController] OnNumberOfProjectileChanged {num}"); numberOfProjectiles = Mathf.RoundToInt(num);}
+
+        private void OnNumberOfProjectileChanged(int num)
+        {
+            Debug.Log($"[PlayerController] OnNumberOfProjectileChanged {num}");
+            numberOfProjectiles = Mathf.RoundToInt(num);
+        }
 
         private void Update()
         {
-            // Nếu người chơi đang nhấn giữ nút tấn công
+            if (!canAttack) return;
+
             if (InputManager.Instance.IsAttacking())
             {
                 if (Time.time >= lastAttackTime + attackCooldown)
@@ -44,30 +62,31 @@ namespace PlayerController
                 }
             }
         }
+
         private void PerformAttack()
         {
             Debug.Log("[PlayerController] Perform Attack");
             SpawnProjectile().Forget();
         }
+
         public async UniTask SpawnProjectile()
         {
-            if (projectilePrefab != null && firePoint != null)
+            if (projectilePrefab == null || firePoint == null) return;
+
+            Debug.Log($"[PlayerController] Spawn {numberOfProjectiles} projectiles");
+            for (int i = 0; i < numberOfProjectiles; i++)
             {
-                Debug.Log($"[PlayerController] Spawn {numberOfProjectiles} projectiles");
-                for (int i = 0; i < numberOfProjectiles; i++)
+                var projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+                var projectileController = projectile.GetComponent<Projectile.ProjectileController>();
+                if (projectileController != null)
                 {
-                    var projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-                    var projectileController = projectile.GetComponent<Projectile.ProjectileController>();
-                    if (projectileController != null)
-                    {
-                        projectileController.SetDamage(playerStats.GetAttackDamage());
-                        projectileController.SetEffects(playerStats.runtimeStats.RuntimeEffects);
-                        projectileController.SetProjectileActive();
-                    }
-                    await UniTask.Delay(100);
+                    projectileController.SetDamage(playerStats.GetAttackDamage());
+                    projectileController.SetEffects(playerStats.runtimeStats.RuntimeEffects);
+                    projectileController.SetProjectileActive();
                 }
+
+                await UniTask.Delay(100);
             }
         }
     }
-
 }

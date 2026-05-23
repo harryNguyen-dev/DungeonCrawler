@@ -63,12 +63,16 @@ namespace WFC
         {
             roomPlacer = new RoomPlacer(wfc);
             InitializeGrid();
+            Global.GlobalEvents.OnGameStart += HandleDungeonGenerated;
+        }
+        private void OnDestroy() 
+        {
+            Global.GlobalEvents.OnGameStart -= HandleDungeonGenerated;
         }
 
-        private void Start()
+        private void HandleDungeonGenerated()
         {
-            // GenerateWithRetry(5).Forget();
-            GlobalEvents.RaiseGameStart();
+            Debug.Log("[WFCGeneration] HandleDungeonGenerated");
             GenerateWithRetry(5).Forget();
         }
 #if UNITY_EDITOR
@@ -117,7 +121,15 @@ namespace WFC
                         
                         // Bạn có thể lưu vị trí này lại hoặc gọi Event truyền vị trí này đi
                         GlobalVariable.PlayerSpawnPosition = worldPosition;
+                        startRoomTile.SetStartRoom();
                     }
+                    
+                    // Đếm tất cả Room tiles thực tế trên grid (bao gồm cả những phòng được tạo bởi WFC)
+                    int actualRoomCount = CountAllRoomTiles();
+                    Debug.Log("[WFC] Placed rooms (from RoomPlacer): " + placedRooms.Count);
+                    Debug.Log("[WFC] Total room count (actual on grid): " + actualRoomCount);
+                    GlobalVariable.TotalRoomCount = actualRoomCount - 1; // trừ start room
+                    Debug.Log("[WFC] total room without start room: " + GlobalVariable.TotalRoomCount );
                     GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
                     GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
@@ -360,6 +372,22 @@ namespace WFC
             // Trường hợp xấu: Thuật toán chạy xong nhưng không có phòng nào chỉ có 1 cổng mở
             Debug.LogWarning("Không tìm thấy phòng nào thỏa mãn điều kiện làm Start Room (Phòng Room và có đúng 1 cổng Open).");
             return null;
+        }
+
+        /// <summary>
+        /// Đếm tất cả Room tiles thực tế trên grid (bao gồm cả những phòng được tạo thêm bởi WFC collapse).
+        /// </summary>
+        private int CountAllRoomTiles()
+        {
+            int count = 0;
+            foreach (Tile tile in wfc.Grid)
+            {
+                if (tile.IsCollapsed && tile.CollapsedTile != null && tile.CollapsedTile.tileType == TileType.Room)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
     }
 }

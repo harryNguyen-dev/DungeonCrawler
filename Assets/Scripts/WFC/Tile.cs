@@ -47,5 +47,9 @@ namespace WFC {
 
             SpawnedObject = null;
         }
+        public void SetStartRoom()
+        {
+            SpawnedObject.GetComponentInChildren<RoomController>().SetIsStartRoom(true);
+        }
     }
 }
