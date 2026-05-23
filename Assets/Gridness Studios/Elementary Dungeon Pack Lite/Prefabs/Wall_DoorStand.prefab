@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1510143991882835821}
   - component: {fileID: -1698255733152223389}
   - component: {fileID: 1103453854567171894}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wall_DoorStand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 0.85, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9109921968950884967}
@@ -142,7 +142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7936834669806457470, guid: 4adae8232505e0e45b64cc3b61e9d9e1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.69
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 7936834669806457470, guid: 4adae8232505e0e45b64cc3b61e9d9e1, type: 3}
       propertyPath: m_LocalPosition.y

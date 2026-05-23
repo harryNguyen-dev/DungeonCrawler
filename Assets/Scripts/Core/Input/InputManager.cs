@@ -30,7 +30,7 @@ public class InputManager : MonoBehaviour
     private void OnDisable()
     {
         if (Instance != this || inputActions == null) return;
-        inputActions.Player.Disable();
+        inputActions.Player.Disable
     }
 
     private void OnDestroy()
