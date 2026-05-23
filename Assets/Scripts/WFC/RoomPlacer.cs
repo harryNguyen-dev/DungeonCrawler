@@ -19,7 +19,8 @@ namespace WFC
             int roomsToPlace,
             int roomEdgeMargin,
             float cellSize,
-            Transform spawnParent)
+            Transform spawnParent,
+            int delayBetweenPrefabPlacementsMs)
         {
             int roomsPlaced = 0;
             int collapsedDelta = 0;
@@ -37,7 +38,7 @@ namespace WFC
                     wfc.LightPropagation(tile);
 
                     placedRooms.Add(tile);
-                    await UniTask.Delay(10);
+                    await UniTask.Delay(delayBetweenPrefabPlacementsMs);
                 }
             }
 

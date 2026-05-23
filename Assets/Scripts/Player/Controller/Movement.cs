@@ -2,24 +2,49 @@ using UnityEngine;
 
 namespace PlayerController
 {
-
+    [RequireComponent(typeof(PlayerStats))]
+    [RequireComponent(typeof(PlayerEvents))]
     public class Movement : MonoBehaviour
     {
         private PlayerStats playerStats;
         private PlayerEvents events;
         private float moveSpeed;
 
-        private void Start()
+        private void Awake()
         {
             playerStats = GetComponent<PlayerStats>();
             events = GetComponent<PlayerEvents>();
-            moveSpeed = playerStats.GetMoveSpeed();
-            events.OnIncreaseMoveSpeed += ModifyMoveSpeed;
         }
-        private void OnDestroy()
+
+        private void OnEnable()
         {
-            events.OnIncreaseMoveSpeed -= ModifyMoveSpeed;
+            if (events == null)
+            {
+                events = GetComponent<PlayerEvents>();
+            }
+
+            if (events != null)
+            {
+                events.OnIncreaseMoveSpeed += ModifyMoveSpeed;
+            }
         }
+
+        private void Start()
+        {
+            if (playerStats != null)
+            {
+                moveSpeed = playerStats.GetMoveSpeed();
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (events != null)
+            {
+                events.OnIncreaseMoveSpeed -= ModifyMoveSpeed;
+            }
+        }
+
         private void ModifyMoveSpeed(int moveSpeed)
         {
             this.moveSpeed = moveSpeed;

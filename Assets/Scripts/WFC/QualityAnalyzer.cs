@@ -4,7 +4,7 @@ using Debug = UnityEngine.Debug;
 
 namespace WFC
 {
-    /// <summary>Metrics và cleanup sau generation (reachable / empty).</summary>
+    /// <summary>Metrics and cleanup after generation.</summary>
     public class QualityAnalyzer
     {
         public void CalculateQualityMetrics(WFCGrid wfc, ref GenerationStats stats)
@@ -51,7 +51,7 @@ namespace WFC
             int nonEmptyCells = totalCells - emptyCount;
             stats.dungeon_density = totalCells > 0 ? (float)nonEmptyCells / totalCells : 0f;
 
-            stats.connectivity_complete = (stats.mst_edges_success == stats.mst_edges_total);
+            stats.connectivity_complete = stats.mst_edges_success == stats.mst_edges_total;
             stats.generation_success = stats.connectivity_complete
                                        && stats.rooms_placed == stats.rooms_target
                                        && stats.contradictions <= 5;
@@ -77,19 +77,18 @@ namespace WFC
 
                 foreach (Direction dir in System.Enum.GetValues(typeof(Direction)))
                 {
-                    if (current.CollapsedTile.GetConnector(dir) == ConnectorType.Open)
+                    if (current.CollapsedTile.GetConnector(dir) != ConnectorType.Open) continue;
+
+                    Tile neighbor = wfc.GetAdjacentTile(current, dir);
+                    if (neighbor == null) continue;
+
+                    if (!reachable.Contains(neighbor.GridPosition))
                     {
-                        Tile neighbor = wfc.GetAdjacentTile(current, dir);
-                        if (neighbor == null) continue;
+                        reachable.Add(neighbor.GridPosition);
 
-                        if (!reachable.Contains(neighbor.GridPosition))
+                        if (neighbor.IsCollapsed && neighbor.CollapsedTile != null)
                         {
-                            reachable.Add(neighbor.GridPosition);
-
-                            if (neighbor.IsCollapsed && neighbor.CollapsedTile != null)
-                            {
-                                queue.Enqueue(neighbor);
-                            }
+                            queue.Enqueue(neighbor);
                         }
                     }
                 }
@@ -98,15 +97,14 @@ namespace WFC
             return reachable;
         }
 
-        public void CollapseUnreachableCellsToEmpty(
+        public int CollapseUnreachableCellsToEmpty(
             WFCGrid wfc,
             WFCData[] allTiles,
             float cellSize,
             Transform spawnParent,
-            HashSet<Vector2Int> reachableCells,
-            ref int collapsedTiles)
+            HashSet<Vector2Int> reachableCells)
         {
-            if (allTiles == null || allTiles.Length == 0) return;
+            if (allTiles == null || allTiles.Length == 0) return 0;
 
             WFCData emptyTile = null;
             foreach (var tile in allTiles)
@@ -120,8 +118,8 @@ namespace WFC
 
             if (emptyTile == null)
             {
-                Debug.LogWarning("Không tìm thấy tile Empty trong allTiles!");
-                return;
+                Debug.LogWarning("Could not find an Empty tile in allTiles.");
+                return 0;
             }
 
             int collapsedCount = 0;
@@ -135,12 +133,12 @@ namespace WFC
                     tile.IsCollapsed = true;
                     tile.PossibleTiles = new List<WFCData> { emptyTile };
                     tile.SpawnObject(cellSize, spawnParent);
-                    collapsedTiles++;
                     collapsedCount++;
                 }
             }
 
-            Debug.Log($"Đã ép {collapsedCount} ô không thể tiếp cận thành Empty.");
+            Debug.Log($"Collapsed {collapsedCount} unreachable cells to Empty.");
+            return collapsedCount;
         }
     }
 }

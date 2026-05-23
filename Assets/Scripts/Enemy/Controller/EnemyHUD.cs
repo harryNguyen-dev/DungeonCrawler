@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 namespace EnemyController
 {
+    [RequireComponent(typeof(EnemyEvents))]
     public class EnemyHUD : MonoBehaviour
     {
         [SerializeField] private Health health;
@@ -13,33 +14,71 @@ namespace EnemyController
         private float lastShowHUDTime = 0f;
         private float maxTimeShowHUD = 3f;
         private bool isShowHUD = false;
-        private void Start()
+
+        private void Awake()
         {
             instance = GetComponent<EnemyEvents>();
-            instance.OnHealthChange += HandleHealthChange;
         }
+
+        private void OnEnable()
+        {
+            if (instance == null)
+            {
+                instance = GetComponent<EnemyEvents>();
+            }
+
+            if (instance != null)
+            {
+                instance.OnHealthChange += HandleHealthChange;
+            }
+        }
+
+        private void Start()
+        {
+            if (health == null)
+            {
+                health = GetComponent<Health>();
+            }
+
+            if (HUDCanvas != null)
+            {
+                HUDCanvas.SetActive(false);
+            }
+        }
+
         private void Update()
         {
             if(isShowHUD)
             {
                 if(Time.time >= lastShowHUDTime + maxTimeShowHUD)
                 {
-                    HUDCanvas.SetActive(false);
+                    if (HUDCanvas != null)
+                    {
+                        HUDCanvas.SetActive(false);
+                    }
+
                     isShowHUD = false;
                     lastShowHUDTime = 0f;
                 }
             }
         }
+
         private void HandleHealthChange(int health)
         {
+            if (HUDCanvas == null || healthBar == null) return;
+
             HUDCanvas.SetActive(true);
             isShowHUD = true;
             lastShowHUDTime = Time.time;
             healthBar.fillAmount = health / 100f;
         }
+
         private void OnDisable()
         {
-            instance.OnHealthChange -= HandleHealthChange;            
+            if (instance != null)
+            {
+                instance.OnHealthChange -= HandleHealthChange;
+            }
         }
     }
 }

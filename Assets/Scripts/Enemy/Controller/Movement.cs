@@ -1,6 +1,7 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
-using EnemyController;
+using CombatFeel;
+using UnityEngine;
+using UnityEngine.AI;
 
 namespace EnemyController
 {
@@ -13,62 +14,102 @@ namespace EnemyController
         [SerializeField]
         private float moveSpeed = 3.5f;
 
-        private UnityEngine.AI.NavMeshAgent agent;
+        [Header("Knockback Settings")]
+        [SerializeField]
+        private float knockbackForce = 6f;
+
+        [SerializeField]
+        private float knockbackDuration = 0.12f;
+
+        private NavMeshAgent agent;
         private Transform player;
-        private EnemyController.Attack attackComponent;
+        private Attack attackComponent;
+        private Rigidbody rb;
+        private KnockbackAgent knockbackAgent;
+
         private void Start()
         {
-            agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
+            rb = GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            knockbackAgent = new KnockbackAgent(rb, agent, transform);
+
             agent.speed = moveSpeed;
             agent.stoppingDistance = attackRange;
 
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            GameObject playerObj = Global.GlobalEntities.Instance.PlayerInstance;
             if (playerObj != null)
+            {
                 player = playerObj.transform;
-            attackComponent = GetComponent<EnemyController.Attack>();
+            }
+
+            attackComponent = GetComponent<Attack>();
             attackComponent.SetPlayer(player);
             UpdateAIBehaviour().Forget();
         }
+
         public void UpdateAgentSpeed(float speed)
         {
-            agent.speed = speed;
+            if (agent != null)
+            {
+                agent.speed = speed;
+            }
         }
+
         public void ReturnMoveSpeed()
         {
-            agent.speed = moveSpeed;
+            if (agent != null)
+            {
+                agent.speed = moveSpeed;
+            }
         }
+
+        public UniTaskVoid TakeKnockback(Vector3 direction, float force = -1f, float recoveryTime = -1f)
+        {
+            if (knockbackAgent == null)
+            {
+                return default;
+            }
+
+            float appliedForce = force > 0f ? force : knockbackForce;
+            float appliedDuration = recoveryTime > 0f ? recoveryTime : knockbackDuration;
+            knockbackAgent.Play(direction, appliedForce, appliedDuration, player).Forget();
+            return default;
+        }
+
         private async UniTaskVoid UpdateAIBehaviour()
         {
             while (this != null && gameObject != null)
             {
+                if ((knockbackAgent != null && knockbackAgent.IsActive) || agent == null || !agent.enabled)
+                {
+                    await UniTask.Delay(100);
+                    continue;
+                }
+
                 if (player != null)
                 {
                     float distance = Vector3.Distance(transform.position, player.position);
 
                     if (distance <= attackRange)
                     {
-                        // Dừng lại và tấn công
                         agent.isStopped = true;
-                        if (attackComponent != null)
+                        if (attackComponent != null && attackComponent.CanAttack())
                         {
-                            if (attackComponent.CanAttack())
-                            {
-                                attackComponent.PerformAttack(agent).Forget();
-                            }
+                            attackComponent.PerformAttack(agent).Forget();
                         }
                     }
                     else
                     {
-                        // Đuổi theo
                         agent.isStopped = false;
                         agent.SetDestination(player.position);
                     }
                 }
 
-                // Delay nhẹ để tránh tốn tài nguyên (AI không cần check mỗi frame)
                 await UniTask.Delay(100);
             }
         }
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

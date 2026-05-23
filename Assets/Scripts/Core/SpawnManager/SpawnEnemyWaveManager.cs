@@ -14,20 +14,32 @@ namespace Core.SpawnManager
         public int wave = 0;
         public int numberMonsterEachWave = 5;
         public int NumberCurrentLeft = 5;
+
         private void OnEnable()
         {
+            Global.GlobalEvents.OnGameStart += HandleGameStart;
             Global.GlobalEvents.OnEnemyDie += HandleEnemyDie;
         }
+
         private void OnDisable()
         {
+            Global.GlobalEvents.OnGameStart -= HandleGameStart;
             Global.GlobalEvents.OnEnemyDie -= HandleEnemyDie;
         }
-        private void Start()
+
+        private void HandleGameStart()
         {
-            NextWave().Forget();
+            ResetGame();
         }
+
         private void SpawnEnemy()
         {
+            if (enemyPrefabs == null || enemyPrefabs.Count == 0 || spawnPoints == null || spawnPoints.Count == 0)
+            {
+                Debug.LogWarning("[SpawnEnemyWaveManager] Missing enemy prefabs or spawn points.");
+                return;
+            }
+
             int randomIndex = Random.Range(0, enemyPrefabs.Count);
             GameObject enemy = enemyPrefabs[randomIndex];
             Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
@@ -45,7 +57,6 @@ namespace Core.SpawnManager
         {
             for (int i = 0; i < numberMonsterEachWave; i++)
             {
-                UniTask.Delay(500);
                 SpawnEnemy();
             }
             wave++;

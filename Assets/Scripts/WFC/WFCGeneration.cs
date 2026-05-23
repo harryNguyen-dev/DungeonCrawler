@@ -2,12 +2,15 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Core;
 using Debug = UnityEngine.Debug;
 using Global;
+using Unity.Cinemachine;
 namespace WFC
 {
     public class WFCGeneration : MonoBehaviour
     {
+        private readonly int TIME_DELAY_BETWEEN_ITERATIONS = 100; // ms
         [SerializeField] private int gridSize = 30;
 
         [Tooltip("Kích thước thực tế của mỗi ô trong Unity units (VD: 14 nếu prefab là 14x14).")]
@@ -22,6 +25,13 @@ namespace WFC
         [SerializeField] private int roomEdgeMargin = 3;
 
         [SerializeField] private Transform spawnParent;
+
+        [Header("Camera Preview")]
+        [SerializeField] private Transform generationCameraTarget;
+        [SerializeField] private bool followGeneratedTiles = true;
+        [SerializeField] private float generationCameraTargetHeight = 50f;
+        [SerializeField] private float overviewCameraDistance = 50f;
+        [SerializeField] private float overviewCameraVerticalAngle = 50f;
 
         private readonly WFCGrid wfc = new WFCGrid();
         private RoomPlacer roomPlacer;
@@ -100,6 +110,8 @@ namespace WFC
 #endif
         public async UniTask GenerateWithRetry(int maxAttempts = 3)
         {
+            BindCameraToGenerationTarget();
+
             int attempts = 0;
             bool success = false;
 
@@ -122,6 +134,7 @@ namespace WFC
                         // Bạn có thể lưu vị trí này lại hoặc gọi Event truyền vị trí này đi
                         GlobalVariable.PlayerSpawnPosition = worldPosition;
                         startRoomTile.SetStartRoom();
+                        CenterCameraOnStartRoom(startRoomTile);
                     }
                     
                     // Đếm tất cả Room tiles thực tế trên grid (bao gồm cả những phòng được tạo bởi WFC)
@@ -166,6 +179,71 @@ namespace WFC
             }
         }
 
+        private void BindCameraToGenerationTarget()
+        {
+            if (generationCameraTarget == null)
+            {
+                var targetObject = new GameObject("Dungeon Generation Camera Target");
+                generationCameraTarget = targetObject.transform;
+            }
+
+            generationCameraTarget.position = GetGridCenterWorldPosition();
+            if (GlobalEntities.Instance != null)
+            {
+                GlobalEntities.Instance.BindCameraTo(generationCameraTarget);
+            }
+        }
+
+        private Vector3 GetGridCenterWorldPosition()
+        {
+            float center = (gridSize - 1) * cellSize * 0.5f;
+            return new Vector3(center, generationCameraTargetHeight, center);
+        }
+
+        private void CenterCameraOnStartRoom(Tile startRoomTile)
+        {
+            if (startRoomTile == null) return;
+
+            BindCameraToGenerationTarget();
+
+            Vector3 startRoomWorldPosition = new Vector3(
+                startRoomTile.GridPosition.x * cellSize,
+                generationCameraTargetHeight,
+                startRoomTile.GridPosition.y * cellSize);
+
+            generationCameraTarget.position = startRoomWorldPosition;
+
+            if (GlobalEntities.Instance == null || GlobalEntities.Instance.CinemachineCamera == null) return;
+
+            CinemachineCamera cinemachineCamera = GlobalEntities.Instance.CinemachineCamera;
+            CinemachineOrbitalFollow orbital = cinemachineCamera.GetComponent<CinemachineOrbitalFollow>();
+            if (orbital == null) return;
+
+            orbital.Radius = Mathf.Max(overviewCameraDistance, 50f);
+            orbital.VerticalAxis.Range.y = Mathf.Max(orbital.VerticalAxis.Range.y, overviewCameraVerticalAngle);
+            orbital.VerticalAxis.Value = overviewCameraVerticalAngle;
+
+            ThirdCameraController cameraController = cinemachineCamera.GetComponent<ThirdCameraController>();
+            if (cameraController != null)
+            {
+                cameraController.SetZoom(orbital.Radius);
+            }
+        }
+
+        private void MoveGenerationCameraTarget(Tile tile)
+        {
+            if (!followGeneratedTiles || generationCameraTarget == null || tile == null) return;
+            generationCameraTarget.position = new Vector3(
+                tile.GridPosition.x * cellSize,
+                generationCameraTargetHeight,
+                tile.GridPosition.y * cellSize);
+        }
+
+        private bool ShouldDelayAfterPrefabPlacement(Tile tile)
+        {
+            return tile?.CollapsedTile != null && tile.CollapsedTile.tileType != TileType.Empty;
+        }
+
         private void ApplyGenerationRandomSeed()
         {
             if (useFixedSeed)
@@ -179,7 +257,7 @@ namespace WFC
         }
 
         /// <summary>Lấp một vòng ô ngoài cùng bằng gạch Empty (allTiles[0]) và lan truyền ràng buộc vào nội bộ.</summary>
-        private void FillEdgeCellsWithEmpty()
+        private async UniTask FillEdgeCellsWithEmpty()
         {
             if (allTiles == null || allTiles.Length == 0 || allTiles[0] == null)
             {
@@ -204,8 +282,13 @@ namespace WFC
                     t.IsCollapsed = true;
                     t.PossibleTiles = new List<WFCData> { empty };
                     t.SpawnObject(cellSize, spawnParent);
+                    MoveGenerationCameraTarget(t);
                     collapsedTiles++;
                     edgeTiles.Add(t);
+                    if (ShouldDelayAfterPrefabPlacement(t))
+                    {
+                        await UniTask.Delay(TIME_DELAY_BETWEEN_ITERATIONS);
+                    }
                 }
             }
 
@@ -223,7 +306,12 @@ namespace WFC
         private async UniTask OriginalGenerate()
         {
             HashSet<Vector2Int> reachableCells = quality.FindReachableCells(wfc);
-            quality.CollapseUnreachableCellsToEmpty(wfc, allTiles, cellSize, spawnParent, reachableCells, ref collapsedTiles);
+            collapsedTiles += quality.CollapseUnreachableCellsToEmpty(
+                wfc,
+                allTiles,
+                cellSize,
+                spawnParent,
+                reachableCells);
 
             foreach (Tile tile in wfc.Grid)
             {
@@ -246,14 +334,23 @@ namespace WFC
                     nextTile.IsCollapsed = true;
                     nextTile.PossibleTiles = new List<WFCData> { fallback };
                     nextTile.SpawnObject(cellSize, spawnParent);
+                    MoveGenerationCameraTarget(nextTile);
                     wfc.Propagation(nextTile);
+                    if (ShouldDelayAfterPrefabPlacement(nextTile))
+                    {
+                        await UniTask.Delay(TIME_DELAY_BETWEEN_ITERATIONS);
+                    }
                     continue;
                 }
 
                 wfc.CollapseTile(nextTile);
                 nextTile.SpawnObject(cellSize, spawnParent);
+                MoveGenerationCameraTarget(nextTile);
                 wfc.Propagation(nextTile);
-                await UniTask.Delay(10);
+                if (ShouldDelayAfterPrefabPlacement(nextTile))
+                {
+                    await UniTask.Delay(TIME_DELAY_BETWEEN_ITERATIONS);
+                }
             }
         }
 
@@ -268,11 +365,11 @@ namespace WFC
 
             _currentStats.seed = LastGenerationSeed;
 
-            FillEdgeCellsWithEmpty();
+            await FillEdgeCellsWithEmpty();
 
             _stepTimer.Restart();
             var placeOutcome = await roomPlacer.PlaceRoomMustHaveTiles(
-                _rand, roomsToPlace, roomEdgeMargin, cellSize, spawnParent);
+                _rand, roomsToPlace, roomEdgeMargin, cellSize, spawnParent, TIME_DELAY_BETWEEN_ITERATIONS);
             placedRooms = placeOutcome.placedRooms;
             collapsedTiles += placeOutcome.collapsedDelta;
             _stepTimer.Stop();
@@ -281,7 +378,7 @@ namespace WFC
 
             _stepTimer.Restart();
             var (edges, corridorStats) = await corridor.ConnectRoomsByCorridor(
-                placedRooms, _rand, branchingFactor, cellSize, spawnParent, _pathLengths);
+                placedRooms, _rand, branchingFactor, cellSize, spawnParent, _pathLengths, TIME_DELAY_BETWEEN_ITERATIONS);
             MSTEdges = edges;
             _currentStats.mst_edges_total = corridorStats.mst_edges_total;
             _currentStats.extra_edges_total = corridorStats.extra_edges_total;

@@ -57,6 +57,15 @@ namespace Projectile
                 enemiesHit.Add(health);
 
                 var move = other.GetComponent<EnemyController.Movement>();
+                var hitEffect = Global.GlobalEntities.Instance.playerHitEffect;
+
+                Vector3 bulletPos = transform.position;
+                Vector3 exactHitPoint = other.ClosestPoint(bulletPos);
+
+                hitEffect.PlayHitEffect(exactHitPoint, Quaternion.LookRotation(transform.forward));
+
+
+                move?.TakeKnockback(transform.forward);
                 health.TakeDamage(damage);
                 ApplyEffects(health, move);
                 hitCount++;
@@ -93,11 +102,31 @@ namespace Projectile
 
         private async UniTaskVoid FireDamage(int damage, EnemyController.Health health)
         {
-            // 3 seconds
-            for (int i = 0; i < 3; i++)
+            if (health == null) return;
+
+            // Lấy token hủy từ chính con quái
+            var cancellationToken = health.GetCancellationTokenOnDestroy();
+
+            try
             {
-                await UniTask.Delay(1000);
-                health?.TakeDamage(damage);
+                health.gameObject.GetComponent<EnemyController.EnemyEffects>().ShowFireEffect();
+                // Ví dụ vòng lặp đốt sát thương lửa 3 lần, mỗi lần cách nhau 1 giây
+                for (int i = 0; i < 3; i++)
+                {
+                    // Chờ 1 giây, nếu trong 1 giây này quái bị Destroy, UniTask sẽ ném ra ngoại lệ tự hủy và dừng hàm tại đây luôn
+                    await UniTask.Delay(System.TimeSpan.FromSeconds(1f), cancellationToken: cancellationToken);
+
+                    // Kiểm tra an toàn trước khi trừ máu
+                    if (health != null)
+                    {
+                        health.TakeDamage(damage);
+                    }
+                }
+                health.gameObject.GetComponent<EnemyController.EnemyEffects>().HideFireEffect();
+            }
+            catch (System.OperationCanceledException)
+            {
+                Debug.Log("[FireDamage] Tác vụ đốt lửa đã tự động hủy vì quái die trước.");
             }
         }
 

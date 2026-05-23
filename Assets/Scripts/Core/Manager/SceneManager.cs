@@ -4,6 +4,7 @@ namespace Core
     {
         public const string LobbySceneName = "Lobby";
         public const string DungeonSceneName = "BattleScene";
+        public const string TestBattleSceneName = "Test";
 
         public static void LoadScene(string sceneName)
         {
@@ -18,6 +19,11 @@ namespace Core
         public static void LoadDungeon()
         {
             LoadScene(DungeonSceneName);
+        }
+
+        public static void LoadTestBattle()
+        {
+            LoadScene(TestBattleSceneName);
         }
 
         public static void ReloadDungeon()

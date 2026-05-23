@@ -21,7 +21,19 @@ namespace Core
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        public void SetupTestBattleScene()
+        {
+            ResetMatchState();
+            Global.GlobalVariable.CurrentGameMode = Global.GameMode.InMatch;
+            Global.GlobalVariable.PlayerSpawnPosition = Vector3.zero;
 
+            if (Global.GlobalEntities.Instance != null)
+            {
+                Global.GlobalEntities.Instance.SpawnPlayer(true);
+            }
+
+            Global.GlobalEvents.RaiseGameStart();
+        }
         public void SetupBattleScene()
         {
             ResetMatchState();

@@ -16,6 +16,7 @@ namespace Global
         [HideInInspector] public PlayerController.PlayerEffect PlayerEffect;
         [HideInInspector] public PlayerController.Health PlayerHealth;
         [HideInInspector] public PlayerController.PlayerEvents PlayerEvents;
+        [HideInInspector] public CombatFeel.PlayerHitEffect playerHitEffect;
 
         [HideInInspector] public GameObject PlayerInstance;
 
@@ -74,7 +75,7 @@ namespace Global
             PlayerHealth = null;
             PlayerEffect = null;
             PlayerEvents = null;
-
+            playerHitEffect = null;
             if (CinemachineCamera != null)
             {
                 CinemachineCamera.Target.TrackingTarget = null;
@@ -91,7 +92,7 @@ namespace Global
             PlayerHealth = PlayerInstance.GetComponent<PlayerController.Health>();
             PlayerEffect = PlayerInstance.GetComponent<PlayerController.PlayerEffect>();
             PlayerEvents = PlayerInstance.GetComponent<PlayerController.PlayerEvents>();
-
+            playerHitEffect = PlayerInstance.GetComponent<CombatFeel.PlayerHitEffect>();
             SetPlayerAttackEnabled(canAttack);
             BindCameraToPlayer();
 
@@ -111,11 +112,21 @@ namespace Global
             }
         }
 
-        private void BindCameraToPlayer()
+        public void BindCameraToPlayer()
         {
-            CinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
-            if (CinemachineCamera == null || PlayerInstance == null) return;
-            CinemachineCamera.Target.TrackingTarget = PlayerInstance.transform;
+            if (PlayerInstance == null) return;
+            BindCameraTo(PlayerInstance.transform);
+        }
+
+        public void BindCameraTo(Transform target)
+        {
+            if (CinemachineCamera == null)
+            {
+                CinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
+            }
+
+            if (CinemachineCamera == null) return;
+            CinemachineCamera.Target.TrackingTarget = target;
         }
 
         public void RegisterEnemy(GameObject enemy)

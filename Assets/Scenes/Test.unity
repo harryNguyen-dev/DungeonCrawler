@@ -169,7 +169,6 @@ MonoBehaviour:
   PlayerHealth: {fileID: 0}
   PlayerEvents: {fileID: 0}
   PlayerInstance: {fileID: 0}
-  SpawnEnemyManager: {fileID: 478794057}
   CinemachineCamera: {fileID: 2075358756}
   AllCards:
   - {fileID: 11400000, guid: fe4ebec5e02cb2040b896d85b76197b7, type: 2}
@@ -188,6 +187,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30979e99157c4ad43824e1b840cc7bdc, type: 2}
   - {fileID: 11400000, guid: aa36d6fe3395ab94ebf8b00d7d24e00e, type: 2}
   - {fileID: 11400000, guid: fc8e83c04d22d4c49aac974446925de2, type: 2}
+  EnemyPrefabs: []
+  AvailableEnemies: []
 --- !u!1 &93112162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1565,7 +1566,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 364816626}
@@ -2049,6 +2050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1190396927}
   - component: {fileID: 1190396928}
+  - component: {fileID: 1190396929}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2083,6 +2085,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3bd5fe643eee3c4781c5d292e224b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+--- !u!114 &1190396929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1190396926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6451d3ed784e6704f9c8c50278157488, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.SceneLoadNotifier
 --- !u!1 &1218691387
 GameObject:
   m_ObjectHideFlags: 0

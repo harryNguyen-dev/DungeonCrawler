@@ -43,6 +43,10 @@ namespace Core
             {
                 GameManager.Instance.SetupLobbyScene();
             }
+            else if (scene.name == SceneManagerCustom.TestBattleSceneName)
+            {
+                GameManager.Instance.SetupTestBattleScene();
+            }
         }
     }
 }

@@ -23,6 +23,6 @@ MonoBehaviour:
   - EffectType: 0
     Value: 1
   - EffectType: 1
-    Value: 3
-  - EffectType: 5
-    Value: 3
+    Value: 0
+  - EffectType: 2
+    Value: 5

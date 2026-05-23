@@ -52,5 +52,22 @@ namespace Core
             currentZoom = Mathf.Lerp(currentZoom, targetZoom, zoomLerpSpeed * Time.deltaTime);
             orbital.Radius = currentZoom;
         }
+
+        public void SetZoom(float zoom, bool expandLimits = true)
+        {
+            if (expandLimits)
+            {
+                minDistance = Mathf.Min(minDistance, zoom);
+                maxDistance = Mathf.Max(maxDistance, zoom);
+            }
+
+            targetZoom = Mathf.Clamp(zoom, minDistance, maxDistance);
+            currentZoom = targetZoom;
+
+            if (orbital != null)
+            {
+                orbital.Radius = currentZoom;
+            }
+        }
     }
 }
