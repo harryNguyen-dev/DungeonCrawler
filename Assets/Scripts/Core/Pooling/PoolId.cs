@@ -6,10 +6,9 @@ namespace Core
     public enum PoolId
     {
         None = 0,
-        Vfx_Generic = 1,
-        Enemy_Generic = 2,
-        Projectile_Generic = 3,
-        Pickup_Generic = 4,
-        UI_Generic = 5,
+        Obj_EnemyMelle = 1,
+        Obj_Arrow = 2,
+        Obj_HitVFX_1 = 3,
+        Obj_CubeShatter_1 = 4,
     }
 }

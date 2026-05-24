@@ -1,3 +1,4 @@
+using Core;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -76,8 +77,19 @@ namespace PlayerController
             Debug.Log($"[PlayerController] Spawn {numberOfProjectiles} projectiles");
             for (int i = 0; i < numberOfProjectiles; i++)
             {
-                var projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-                var projectileController = projectile.GetComponent<Projectile.ProjectileController>();
+                // var projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+                GameObject projectile = projectilePrefab;
+                PoolId poolId = PoolId.None;
+                if(projectile != null && projectile.TryGetComponent<Core.PooledObject>(out var poolable))
+                {
+                    poolId = poolable.PoolId;
+                }
+                GameObject projectileInstance = null;
+                if(poolId != PoolId.None && ObjectPoolingManager.Instance != null)
+                {
+                    projectileInstance = ObjectPoolingManager.Instance.Get(poolId, firePoint.position, firePoint.rotation);
+                }
+                var projectileController = projectileInstance.GetComponent<Projectile.ProjectileController>();
                 if (projectileController != null)
                 {
                     projectileController.SetDamage(playerStats.GetAttackDamage());

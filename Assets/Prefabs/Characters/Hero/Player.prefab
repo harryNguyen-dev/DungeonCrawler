@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97dc5e2b1a6eaa84598cb3f223f5b6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatFeel.HitEffect
-  hitEffect: {fileID: 4371574358465749826, guid: a4e76a0f922f92041afcc2d890f6a4cc, type: 3}
+  hitEffect: {fileID: 4371574358465749826, guid: 867a1dd8b54bda74a847f8ce05dcea36, type: 3}
 --- !u!1 &5333181541819530023
 GameObject:
   m_ObjectHideFlags: 0

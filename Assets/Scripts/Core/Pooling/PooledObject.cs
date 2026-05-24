@@ -7,7 +7,7 @@ namespace Core
     /// </summary>
     public sealed class PooledObject : MonoBehaviour
     {
-        [HideInInspector]
+        // [HideInInspector]
         [SerializeField] PoolId _poolId;
 
         public PoolId PoolId => _poolId;

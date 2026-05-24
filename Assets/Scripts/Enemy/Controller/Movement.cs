@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using CombatFeel;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,6 +27,8 @@ namespace EnemyController
         private Attack attackComponent;
         private Rigidbody rb;
         private KnockbackAgent knockbackAgent;
+        private CancellationTokenSource updateAICancellation;
+        private bool hasInitialized;
 
         private void Start()
         {
@@ -37,15 +40,44 @@ namespace EnemyController
             agent.speed = moveSpeed;
             agent.stoppingDistance = attackRange;
 
-            GameObject playerObj = Global.GlobalEntities.Instance.PlayerInstance;
+            attackComponent = GetComponent<Attack>();
+            hasInitialized = true;
+            InitializePlayerReference();
+            StartAIBehaviour();
+        }
+
+        private void OnEnable()
+        {
+            if (hasInitialized)
+            {
+                InitializePlayerReference();
+                StartAIBehaviour();
+            }
+        }
+
+        private void OnDisable()
+        {
+            updateAICancellation?.Cancel();
+            updateAICancellation?.Dispose();
+            updateAICancellation = null;
+        }
+
+        private void InitializePlayerReference()
+        {
+            var playerObj = Global.GlobalEntities.Instance?.PlayerInstance;
             if (playerObj != null)
             {
                 player = playerObj.transform;
             }
 
-            attackComponent = GetComponent<Attack>();
-            attackComponent.SetPlayer(player);
-            UpdateAIBehaviour().Forget();
+            attackComponent?.SetPlayer(player);
+        }
+
+        private void StartAIBehaviour()
+        {
+            if (updateAICancellation != null) return;
+            updateAICancellation = new CancellationTokenSource();
+            UpdateAIBehaviour(updateAICancellation.Token).Forget();
         }
 
         public void UpdateAgentSpeed(float speed)
@@ -77,13 +109,13 @@ namespace EnemyController
             return default;
         }
 
-        private async UniTaskVoid UpdateAIBehaviour()
+        private async UniTaskVoid UpdateAIBehaviour(CancellationToken cancellationToken)
         {
-            while (this != null && gameObject != null)
+            while (this != null && gameObject != null && !cancellationToken.IsCancellationRequested)
             {
                 if ((knockbackAgent != null && knockbackAgent.IsActive) || agent == null || !agent.enabled)
                 {
-                    await UniTask.Delay(100);
+                    await UniTask.Delay(100, cancellationToken: cancellationToken);
                     continue;
                 }
 
@@ -106,7 +138,7 @@ namespace EnemyController
                     }
                 }
 
-                await UniTask.Delay(100);
+                await UniTask.Delay(100, cancellationToken: cancellationToken);
             }
         }
 

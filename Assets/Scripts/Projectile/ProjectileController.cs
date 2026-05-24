@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Core;
 
 namespace Projectile
 {
-    public class ProjectileController : MonoBehaviour
+    public class ProjectileController : MonoBehaviour, IPoolable
     {
         private int damage;
         private int pierceCount;
@@ -79,10 +80,24 @@ namespace Projectile
                     else
                     {
                         // Đạn thường HOẶC đạn boomerang đang trên đường bay về mà hết lượt xuyên -> Hủy luôn
-                        Destroy(gameObject);
+                        Core.ObjectPoolingManager.Instance.Return(gameObject);
                     }
                 }
             }
+        }
+
+        public void OnSpawnedFromPool()
+        {
+            hitCount = 0;
+            hasReturned = false;
+            enemiesHit.Clear();
+        }
+
+        public void OnReturnedToPool()
+        {
+            hitCount = 0;
+            hasReturned = false;
+            enemiesHit.Clear();
         }
 
         private void ApplyEffects(EnemyController.Health health, EnemyController.Movement move)
@@ -95,7 +110,7 @@ namespace Projectile
                 } 
                 if(effect.Key == SO.WeaponEffectType.FrozenDuration)
                 {
-                    FrozenDuration(Mathf.RoundToInt(effect.Value), move).Forget();
+                    FrozenDuration(Mathf.RoundToInt(effect.Value), move, health).Forget();
                 }
             }
         }
@@ -104,8 +119,8 @@ namespace Projectile
         {
             if (health == null) return;
 
-            // Lấy token hủy từ chính con quái
-            var cancellationToken = health.GetCancellationTokenOnDestroy();
+            // Lấy token hủy từ chính con quái để hủy DOT khi quái bị trả về pool hoặc die
+            var cancellationToken = health.GetStatusEffectCancellationToken();
 
             try
             {
@@ -113,26 +128,29 @@ namespace Projectile
                 // Ví dụ vòng lặp đốt sát thương lửa 3 lần, mỗi lần cách nhau 1 giây
                 for (int i = 0; i < 3; i++)
                 {
-                    // Chờ 1 giây, nếu trong 1 giây này quái bị Destroy, UniTask sẽ ném ra ngoại lệ tự hủy và dừng hàm tại đây luôn
                     await UniTask.Delay(System.TimeSpan.FromSeconds(1f), cancellationToken: cancellationToken);
 
-                    // Kiểm tra an toàn trước khi trừ máu
-                    if (health != null)
+                    if (health != null && !cancellationToken.IsCancellationRequested)
                     {
                         health.TakeDamage(damage);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
                 health.gameObject.GetComponent<EnemyController.EnemyEffects>().HideFireEffect();
             }
             catch (System.OperationCanceledException)
             {
-                Debug.Log("[FireDamage] Tác vụ đốt lửa đã tự động hủy vì quái die trước.");
+                Debug.Log("[FireDamage] Tác vụ đốt lửa đã tự động hủy vì quái die hoặc bị pool trước.");
             }
         }
 
-        private async UniTaskVoid FrozenDuration(float duration, EnemyController.Movement move)
+        private async UniTaskVoid FrozenDuration(float duration, EnemyController.Movement move, EnemyController.Health health)
         {
             move.UpdateAgentSpeed(0.0f);
+            health.HitFlash.HitFrozen(duration).Forget();
             await UniTask.Delay(TimeSpan.FromSeconds(duration));
             move.ReturnMoveSpeed();
         }

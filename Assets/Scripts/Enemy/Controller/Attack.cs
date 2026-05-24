@@ -1,9 +1,10 @@
 using Cysharp.Threading.Tasks;
+using Core;
 using UnityEngine;
 
 namespace EnemyController
 {
-    public class Attack : MonoBehaviour
+    public class Attack : MonoBehaviour, IPoolable
     {
         [Header("Attack Settings")]
         [SerializeField] private int damage = 30;
@@ -11,6 +12,16 @@ namespace EnemyController
 
         private bool canAttack = true;
         private Transform player;
+
+        public void OnSpawnedFromPool()
+        {
+            canAttack = true;
+        }
+
+        public void OnReturnedToPool()
+        {
+            // No cleanup needed on return.
+        }
 
         public void SetPlayer(Transform p)
         {

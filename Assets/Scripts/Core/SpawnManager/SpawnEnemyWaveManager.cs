@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Core;
 
 namespace Core.SpawnManager
 {
@@ -8,6 +9,7 @@ namespace Core.SpawnManager
     {
         public List<Transform> spawnPoints;
         public List<GameObject> enemyPrefabs;
+        public bool usePooling = true;
 
         public float spawnInterval = 5f;
 
@@ -41,10 +43,27 @@ namespace Core.SpawnManager
             }
 
             int randomIndex = Random.Range(0, enemyPrefabs.Count);
-            GameObject enemy = enemyPrefabs[randomIndex];
+            GameObject enemyPrefab = enemyPrefabs[randomIndex];
             Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
-            GameObject e = Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
-            Global.GlobalEntities.Instance.RegisterEnemy(e);
+
+            PoolId poolId = PoolId.None;
+            if (enemyPrefab != null && enemyPrefab.TryGetComponent<Core.PooledObject>(out var pooledObject))
+            {
+                poolId = pooledObject.PoolId;
+            }
+
+            GameObject enemyInstance = null;
+            if (usePooling && poolId != PoolId.None && ObjectPoolingManager.Instance != null)
+            {
+                enemyInstance = ObjectPoolingManager.Instance.Get(poolId, spawnPoint.position, spawnPoint.rotation);
+            }
+
+            if (enemyInstance == null)
+            {
+                enemyInstance = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+            }
+
+            Global.GlobalEntities.Instance.RegisterEnemy(enemyInstance);
         }
         public void ResetGame()
         {

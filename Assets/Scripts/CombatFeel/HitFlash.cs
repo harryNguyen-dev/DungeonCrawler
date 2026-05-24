@@ -17,6 +17,60 @@ namespace CombatFeel
             this.ownerObject = ownerObject;
             RefreshRenderers();
         }
+        /// <summary>
+        /// Kích hoạt hiệu ứng đóng băng (Đổi sang màu xanh dương đậm trong một khoảng thời gian)
+        /// </summary>
+        public async UniTaskVoid HitFrozen(float duration)
+        {
+            if (renderers.Count == 0 || ownerObject == null) return;
+
+            // Tăng sequenceId để hủy bỏ các hiệu ứng flash/frozen trước đó đang chạy dở
+            int currentSequence = ++sequenceId;
+
+            // Định nghĩa màu xanh dương nhạt
+            Color darkBlue = new Color(0.6f, 0.85f, 1f, 1f); 
+
+            // Bước 1: Đổi toàn bộ sang màu xanh dương đậm
+            for (int r = 0; r < renderers.Count; r++)
+            {
+                if (renderers[r] == null) continue;
+                Material[] mats = renderers[r].materials;
+                for (int m = 0; m < mats.Length; m++)
+                {
+                    if (mats[m].HasProperty("_Color"))
+                    {
+                        mats[m].color = darkBlue;
+                    }
+                }
+            }
+
+            // Bước 2: Chờ hết thời gian bị đóng băng
+            await UniTask.Delay(TimeSpan.FromSeconds(duration), delayTiming: PlayerLoopTiming.Update);
+
+            // Kiểm tra xem quái có chết (bị hủy) hoặc có hiệu ứng khác đè lên không
+            if (ownerObject == null || currentSequence != sequenceId) return;
+
+            // Bước 3: Trả lại màu gốc ban đầu
+            ResetToOriginalColors();
+        }
+        /// <summary>
+        /// Hàm phụ trợ dùng chung để đưa màu sắc của toàn bộ renderers về lại màu gốc ban đầu
+        /// </summary>
+        private void ResetToOriginalColors()
+        {
+            for (int r = 0; r < renderers.Count; r++)
+            {
+                if (renderers[r] == null) continue;
+                Material[] mats = renderers[r].materials;
+                for (int m = 0; m < mats.Length; m++)
+                {
+                    if (mats[m].HasProperty("_Color"))
+                    {
+                        mats[m].color = originalColors[r][m];
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Hàm này giúp quét lại các Renderer. 

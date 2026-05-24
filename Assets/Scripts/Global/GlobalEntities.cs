@@ -146,7 +146,7 @@ namespace Global
             {
                 if (AvailableEnemies[i] != null)
                 {
-                    Destroy(AvailableEnemies[i]);
+                    Core.ObjectPoolingManager.Instance.Return(AvailableEnemies[i]);
                 }
             }
 
@@ -158,7 +158,7 @@ namespace Global
             var projectiles = FindObjectsByType<Projectile.ProjectileController>(FindObjectsSortMode.None);
             foreach (var projectile in projectiles)
             {
-                Destroy(projectile.gameObject);
+                Core.ObjectPoolingManager.Instance.Return(projectile.gameObject);
             }
         }
 

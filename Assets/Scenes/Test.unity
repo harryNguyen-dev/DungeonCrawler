@@ -168,6 +168,7 @@ MonoBehaviour:
   PlayerEffect: {fileID: 0}
   PlayerHealth: {fileID: 0}
   PlayerEvents: {fileID: 0}
+  playerHitEffect: {fileID: 0}
   PlayerInstance: {fileID: 0}
   CinemachineCamera: {fileID: 2075358756}
   AllCards:
@@ -766,6 +767,7 @@ MonoBehaviour:
   - {fileID: 364816626}
   enemyPrefabs:
   - {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+  usePooling: 1
   spawnInterval: 5
   wave: 0
   numberMonsterEachWave: 5
@@ -2482,6 +2484,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334741541}
   m_CullTransparentMesh: 1
+--- !u!1 &1345169539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1345169541}
+  - component: {fileID: 1345169540}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1345169540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345169539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468d57f745aa5c64c824ce2816d50c2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.ObjectPoolingManager
+  _entries:
+  - _id: 3
+    _prefab: {fileID: 4371574358465749826, guid: 867a1dd8b54bda74a847f8ce05dcea36, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 4
+    _prefab: {fileID: 8796382530103501963, guid: 7b032686ddd412e4bb74b727cc2a0fa3, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 1
+    _prefab: {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 2
+    _prefab: {fileID: 705700206895292680, guid: 0edb51427189bab418104a9d314c2c90, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 5
+    _prefab: {fileID: 9076309046526897835, guid: 4acfa1e623e6e1d40821f53e09550f03, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  _poolRoot: {fileID: 1549214991}
+--- !u!4 &1345169541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345169539}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1456954640
 GameObject:
   m_ObjectHideFlags: 0
@@ -2613,7 +2681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1549214991}
   m_Layer: 0
-  m_Name: EnemyPool
+  m_Name: PoolContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2970,3 +3038,4 @@ SceneRoots:
   - {fileID: 751753905}
   - {fileID: 1532256772}
   - {fileID: 1549214991}
+  - {fileID: 1345169541}
