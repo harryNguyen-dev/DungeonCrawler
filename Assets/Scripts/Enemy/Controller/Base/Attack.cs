@@ -30,7 +30,7 @@ namespace EnemyController
 
         public bool CanAttack() => canAttack;
 
-        public async UniTaskVoid PerformAttack(UnityEngine.AI.NavMeshAgent agent)
+        public async UniTask PerformAttack(UnityEngine.AI.NavMeshAgent agent)
         {
             if (!canAttack || player == null) return;
 

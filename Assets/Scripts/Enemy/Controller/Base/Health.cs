@@ -18,6 +18,7 @@ namespace EnemyController
 
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private int currentHealth;
+        [SerializeField] private SO.EnemySO enemyData;
         private bool isDead = false;
         private EnemyEvents events;
         private void Start()
@@ -41,6 +42,7 @@ namespace EnemyController
 
         private void ResetHealth()
         {
+            if (enemyData != null) maxHealth = enemyData.MaxHealth; // Gán từ SO
             currentHealth = maxHealth;
             isDead = false;
             events?.ChangeHealth(currentHealth);

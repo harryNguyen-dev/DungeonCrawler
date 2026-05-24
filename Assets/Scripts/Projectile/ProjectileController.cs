@@ -57,7 +57,7 @@ namespace Projectile
                 
                 enemiesHit.Add(health);
 
-                var move = other.GetComponent<EnemyController.Movement>();
+                var aiController = other.GetComponent<EnemyController.BaseAIController>();
                 var hitEffect = Global.GlobalEntities.Instance.playerHitEffect;
 
                 Vector3 bulletPos = transform.position;
@@ -66,9 +66,12 @@ namespace Projectile
                 hitEffect.PlayHitEffect(exactHitPoint, Quaternion.LookRotation(transform.forward));
 
 
-                move?.TakeKnockback(transform.forward);
+                if (aiController != null)
+                {
+                    aiController.TakeKnockback(transform.position);
+                }
                 health.TakeDamage(damage);
-                ApplyEffects(health, move);
+                ApplyEffects(health, aiController);
                 hitCount++;
                 if (hitCount > pierceCount)
                 {
@@ -100,7 +103,7 @@ namespace Projectile
             enemiesHit.Clear();
         }
 
-        private void ApplyEffects(EnemyController.Health health, EnemyController.Movement move)
+        private void ApplyEffects(EnemyController.Health health, EnemyController.BaseAIController move)
         {
             foreach(var effect in effects)
             {
@@ -147,12 +150,12 @@ namespace Projectile
             }
         }
 
-        private async UniTaskVoid FrozenDuration(float duration, EnemyController.Movement move, EnemyController.Health health)
+        private async UniTaskVoid FrozenDuration(float duration, EnemyController.BaseAIController baseAI, EnemyController.Health health)
         {
-            move.UpdateAgentSpeed(0.0f);
+            baseAI.UpdateAgentSpeed(0.0f);
             health.HitFlash.HitFrozen(duration).Forget();
             await UniTask.Delay(TimeSpan.FromSeconds(duration));
-            move.ReturnMoveSpeed();
+            baseAI.ReturnMoveSpeed();
         }
     }
 }

@@ -141,7 +141,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 17bfad36ddc91bf408640fce24c88f98, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -177,15 +177,15 @@ GameObject:
   - component: {fileID: 3670440329243382119}
   - component: {fileID: 982187767638362198}
   - component: {fileID: 1342928118753438680}
-  - component: {fileID: -6943623815949272812}
   - component: {fileID: -1536886109450528219}
-  - component: {fileID: -6937882651665493850}
   - component: {fileID: -6905839015964978004}
   - component: {fileID: 2574742051925056182}
   - component: {fileID: 8546549627161767335}
   - component: {fileID: -6040291306681819522}
+  - component: {fileID: 973480969975165251}
+  - component: {fileID: 3892239662158479191}
   m_Layer: 6
-  m_Name: EnemyMele
+  m_Name: WolfBlack
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -273,22 +273,7 @@ MonoBehaviour:
   flashDuration: 0.1
   maxHealth: 100
   currentHealth: 0
---- !u!114 &-6943623815949272812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7300521822030121898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed5feddd41f38874e9517ca839bc45a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Movement
-  attackRange: 2
-  moveSpeed: 3.5
-  knockbackForce: 6
-  knockbackDuration: 0.12
+  enemyData: {fileID: 11400000, guid: 6a8a96467c0653444a94cfb7519ce6c1, type: 2}
 --- !u!195 &-1536886109450528219
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -311,20 +296,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 1
---- !u!114 &-6937882651665493850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7300521822030121898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0382c2be12f7cbc439a028fc367532f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Attack
-  damage: 30
-  attackCooldown: 1.5
 --- !u!114 &-6905839015964978004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,7 +336,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyEffects
   fireEffect: {fileID: 2373367799461580602}
-  frozenEffect: {fileID: 0}
 --- !u!114 &-6040291306681819522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,7 +348,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c325d298183101a459fe708d8ef86e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.PooledObject
-  _poolId: 1
+  _poolId: 2
+--- !u!114 &973480969975165251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7300521822030121898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 666987d2e462b9a45ae3f83913fb459b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController.EnemyMeleeAttack
+  enemyData: {fileID: 11400000, guid: 6a8a96467c0653444a94cfb7519ce6c1, type: 2}
+  useAnimationEvents: 0
+--- !u!114 &3892239662158479191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7300521822030121898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ba2ca40449bc544b911446690c9fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController.EnemyMelee
+  enemyData: {fileID: 11400000, guid: 6a8a96467c0653444a94cfb7519ce6c1, type: 2}
 --- !u!1 &8176237655425736132
 GameObject:
   m_ObjectHideFlags: 0

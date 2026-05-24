@@ -89,6 +89,8 @@ namespace PlayerController
                 {
                     projectileInstance = ObjectPoolingManager.Instance.Get(poolId, firePoint.position, firePoint.rotation);
                 }
+                // TODO-check null reference
+                
                 var projectileController = projectileInstance.GetComponent<Projectile.ProjectileController>();
                 if (projectileController != null)
                 {
