@@ -278,8 +278,8 @@ MonoBehaviour:
   PlayerEffect: {fileID: 0}
   PlayerHealth: {fileID: 0}
   PlayerEvents: {fileID: 0}
+  playerHitEffect: {fileID: 0}
   PlayerInstance: {fileID: 0}
-  SpawnEnemyManager: {fileID: 0}
   CinemachineCamera: {fileID: 564973129}
   AllCards:
   - {fileID: 11400000, guid: fe4ebec5e02cb2040b896d85b76197b7, type: 2}
@@ -300,6 +300,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fc8e83c04d22d4c49aac974446925de2, type: 2}
   EnemyPrefabs:
   - {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+  - {fileID: 7300521822030121898, guid: d97a8d1847edbc54cb1fc94afcc4d3d0, type: 3}
+  - {fileID: 7300521822030121898, guid: 3321688a488f8d346803067249606818, type: 3}
+  - {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
+  - {fileID: 7300521822030121898, guid: fd08bae9289e1d74b8c735be9709ba39, type: 3}
   AvailableEnemies: []
 --- !u!4 &538140323
 Transform:
@@ -425,6 +429,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+--- !u!1 &1118382902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1118382903}
+  m_Layer: 0
+  m_Name: ===PoolManager===
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1118382903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118382902}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 681.52484, y: 385.9232, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1281664041
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,6 +644,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6451d3ed784e6704f9c8c50278157488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.SceneLoadNotifier
+--- !u!1 &1562329029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1562329031}
+  - component: {fileID: 1562329030}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1562329030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562329029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468d57f745aa5c64c824ce2816d50c2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.ObjectPoolingManager
+  _entries:
+  - _id: 4
+    _prefab: {fileID: 4371574358465749826, guid: 867a1dd8b54bda74a847f8ce05dcea36, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 5
+    _prefab: {fileID: 8796382530103501963, guid: 7b032686ddd412e4bb74b727cc2a0fa3, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 1
+    _prefab: {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 3
+    _prefab: {fileID: 705700206895292680, guid: 0edb51427189bab418104a9d314c2c90, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 2
+    _prefab: {fileID: 7300521822030121898, guid: d97a8d1847edbc54cb1fc94afcc4d3d0, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 7
+    _prefab: {fileID: 705700206895292680, guid: 79e78d02455e6c84fb43700d9eb6feaa, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 6
+    _prefab: {fileID: 7300521822030121898, guid: 3321688a488f8d346803067249606818, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 8
+    _prefab: {fileID: 7300521822030121898, guid: fd08bae9289e1d74b8c735be9709ba39, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 9
+    _prefab: {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 10
+    _prefab: {fileID: 705700206895292680, guid: 008cedc2d94ceb446bcf69af13cb5eaa, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  _poolRoot: {fileID: 2002553668}
+--- !u!4 &1562329031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562329029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1636674740
 GameObject:
   m_ObjectHideFlags: 0
@@ -823,6 +944,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2002553667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2002553668}
+  m_Layer: 0
+  m_Name: PoolContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2002553668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002553667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 681.52484, y: 385.9232, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2035208970
 GameObject:
   m_ObjectHideFlags: 0
@@ -948,3 +1100,6 @@ SceneRoots:
   - {fileID: 2035208974}
   - {fileID: 246182922}
   - {fileID: 1424862186}
+  - {fileID: 1118382903}
+  - {fileID: 2002553668}
+  - {fileID: 1562329031}
