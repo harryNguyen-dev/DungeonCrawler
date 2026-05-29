@@ -75,7 +75,7 @@ namespace WFC
             InitializeGrid();
             Global.GlobalEvents.OnGameStart += HandleDungeonGenerated;
         }
-        private void OnDestroy() 
+        private void OnDestroy()
         {
             Global.GlobalEvents.OnGameStart -= HandleDungeonGenerated;
         }
@@ -130,19 +130,19 @@ namespace WFC
                         // Tính toán vị trí thực tế trong không gian 3D của Unity để spawn Player hoặc Đánh dấu
                         Vector3 worldPosition = new Vector3(startRoomTile.GridPosition.x * cellSize, 0, startRoomTile.GridPosition.y * cellSize);
                         Debug.Log($"Vị trí World của Start Room: {worldPosition}");
-                        
+
                         // Bạn có thể lưu vị trí này lại hoặc gọi Event truyền vị trí này đi
                         GlobalVariable.PlayerSpawnPosition = worldPosition;
                         startRoomTile.SetStartRoom();
                         CenterCameraOnStartRoom(startRoomTile);
                     }
-                    
+
                     // Đếm tất cả Room tiles thực tế trên grid (bao gồm cả những phòng được tạo bởi WFC)
                     int actualRoomCount = CountAllRoomTiles();
                     Debug.Log("[WFC] Placed rooms (from RoomPlacer): " + placedRooms.Count);
                     Debug.Log("[WFC] Total room count (actual on grid): " + actualRoomCount);
                     GlobalVariable.TotalRoomCount = actualRoomCount - 1; // trừ start room
-                    Debug.Log("[WFC] total room without start room: " + GlobalVariable.TotalRoomCount );
+                    Debug.Log("[WFC] total room without start room: " + GlobalVariable.TotalRoomCount);
                     GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
                     GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
@@ -426,7 +426,7 @@ namespace WFC
                       $"Success={LastStats.generation_success}, " +
                       $"Time={LastStats.ms_total:F1}ms (R:{LastStats.ms_place_rooms:F1} C:{LastStats.ms_connect_corridors:F1} W:{LastStats.ms_wfc_fill:F1})");
         }
-    
+
         /// <summary>
         /// Lọc và lấy ra một ô phòng ngẫu nhiên có thể làm Start Room.
         /// Trả về null nếu không tìm thấy phòng nào thỏa mãn điều kiện.
@@ -461,7 +461,7 @@ namespace WFC
                 // Sử dụng instance _rand đã được khởi tạo theo Seed của bạn để đảm bảo tính deterministic
                 int randomIndex = _rand.Next(0, validStartRooms.Count);
                 Tile startRoom = validStartRooms[randomIndex];
-                
+
                 Debug.Log($"<color=cyan>Đã chọn được Start Room tại vị trí: Grid({startRoom.GridPosition.x}, {startRoom.GridPosition.y})</color>");
                 return startRoom;
             }
@@ -485,6 +485,71 @@ namespace WFC
                 }
             }
             return count;
+        }
+        /// <summary>
+        /// Xóa bỏ dungeon hiện tại, giải phóng bộ nhớ và đưa toàn bộ dữ liệu grid/danh sách về trạng thái trống.
+        /// </summary>
+        public void ResetDungeon()
+        {
+            Debug.Log("[WFCGeneration] Resetting Dungeon...");
+
+            // 1. Xóa toàn bộ GameObjects (Prefabs) đã spawn trên Scene
+            ClearSpawnedTiles();
+
+            // 2. Clear các danh sách lưu trữ dữ liệu tính toán
+            if (placedRooms != null)
+            {
+                placedRooms.Clear();
+            }
+            else
+            {
+                placedRooms = new List<Tile>();
+            }
+
+            if (MSTEdges != null)
+            {
+                MSTEdges.Clear();
+            }
+            else
+            {
+                MSTEdges = new List<(Tile from, Tile to)>();
+            }
+
+            if (_pathLengths != null)
+            {
+                _pathLengths.Clear();
+            }
+
+            // 3. Khởi tạo lại trạng thái ban đầu cho cấu trúc Grid của WFC
+            InitializeGrid();
+
+            // 4. Khôi phục các biến đếm trạng thái toàn cục (Global Variables) nếu cần
+            GlobalVariable.PlayerSpawnPosition = Vector3.zero;
+            GlobalVariable.TotalRoomCount = 0;
+            GlobalVariable.CurrentSeed = 0;
+
+            // 5. Đặt lại các thông số tracking nội bộ
+            collapsedTiles = 0;
+            _currentStats = new GenerationStats();
+            LastStats = new GenerationStats();
+
+            Debug.Log("<color=yellow>[WFCGeneration] Dungeon has been reset successfully!</color>");
+        }
+
+        /// <summary>
+        /// Hàm tiện ích: Tự động Reset dungeon cũ và tiến hành tạo một Dungeon hoàn toàn mới.
+        /// </summary>
+        public async UniTask ResetAndGenerate(int maxAttempts = 5)
+        {
+            ResetDungeon();
+
+            // Nếu không dùng Fixed Seed, ta chủ động đổi seed mới ngay trước khi tạo
+            if (!useFixedSeed)
+            {
+                randomSeed = UnityEngine.Random.Range(0, 1000000);
+            }
+
+            await GenerateWithRetry(maxAttempts);
         }
     }
 }

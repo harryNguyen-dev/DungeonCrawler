@@ -7,10 +7,12 @@ using Global;
 public class MainUI : MonoBehaviour
 {
     [SerializeField] private Button startBtn;
+    [SerializeField] private Button restartBtn;
     [SerializeField] private WFCGeneration _wfcGeneration;
     private void Awake()
     {
         startBtn.onClick.AddListener(OnStartBtnClick);
+        restartBtn.onClick.AddListener(OnResetBtnClick);
     }
 
     private void OnStartBtnClick()
@@ -18,5 +20,9 @@ public class MainUI : MonoBehaviour
         GlobalEvents.RaiseGameStart();
         _wfcGeneration.GenerateWithRetry(5).Forget();
         startBtn.gameObject.SetActive(false);
+    }
+    private void OnResetBtnClick()
+    {
+        _wfcGeneration.ResetAndGenerate().Forget();
     }
 }
