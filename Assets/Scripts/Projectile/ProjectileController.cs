@@ -10,6 +10,8 @@ namespace Projectile
     {
         private int damage;
         private int pierceCount;
+        private float explosiveRadius;
+        private float explosiveSplashMultiplier = 0.6f;
         private int hitCount = 0;
         private bool isBoomerang = false;
         private bool hasReturned = false;
@@ -36,6 +38,8 @@ namespace Projectile
 
             this.effects.TryGetValue(SO.WeaponEffectType.BoomerangMode, out var boomerangMode);
             this.isBoomerang = boomerangMode >= 1;
+
+            this.effects.TryGetValue(SO.WeaponEffectType.ExplosiveRadius, out explosiveRadius);
         }
         public void SetProjectileActive()
         {
@@ -58,12 +62,12 @@ namespace Projectile
                 enemiesHit.Add(health);
 
                 var aiController = other.GetComponent<EnemyController.BaseAIController>();
-                var hitEffect = Global.GlobalEntities.Instance.playerHitEffect;
+                var hitEffect = Global.GlobalEntities.Instance?.playerHitEffect;
 
                 Vector3 bulletPos = transform.position;
                 Vector3 exactHitPoint = other.ClosestPoint(bulletPos);
 
-                hitEffect.PlayHitEffect(exactHitPoint, Quaternion.LookRotation(transform.forward));
+                hitEffect?.PlayHitEffect(exactHitPoint, Quaternion.LookRotation(transform.forward));
 
 
                 if (aiController != null)
@@ -72,20 +76,46 @@ namespace Projectile
                 }
                 health.TakeDamage(damage);
                 ApplyEffects(health, aiController);
+
+                if (explosiveRadius > 0f)
+                {
+                    ApplyExplosiveSplash(exactHitPoint, health);
+                    ObjectPoolingManager.SafeReturn(gameObject);
+                    return;
+                }
+
                 hitCount++;
                 if (hitCount > pierceCount)
                 {
                     if (isBoomerang && !hasReturned)
                     {
-                        // Nếu là đạn boomerang và ĐANG BAY ĐI mà hết lượt xuyên -> Ép quay đầu ngay lập tức
                         projectileMove.StartReturnState();
                     }
                     else
                     {
-                        // Đạn thường HOẶC đạn boomerang đang trên đường bay về mà hết lượt xuyên -> Hủy luôn
-                        Core.ObjectPoolingManager.Instance.Return(gameObject);
+                        ObjectPoolingManager.SafeReturn(gameObject);
                     }
                 }
+            }
+        }
+
+        private void ApplyExplosiveSplash(Vector3 center, EnemyController.Health primaryTarget)
+        {
+            var splashDamage = Mathf.Max(1, Mathf.RoundToInt(damage * explosiveSplashMultiplier));
+            var hits = Physics.OverlapSphere(center, explosiveRadius);
+            foreach (var col in hits)
+            {
+                if (!col.CompareTag("Enemy")) continue;
+
+                var health = col.GetComponent<EnemyController.Health>();
+                if (health == null || health == primaryTarget || enemiesHit.Contains(health)) continue;
+
+                enemiesHit.Add(health);
+                var ai = col.GetComponent<EnemyController.BaseAIController>();
+                if (ai != null)
+                    ai.TakeKnockback(center);
+
+                health.TakeDamage(splashDamage);
             }
         }
 
@@ -152,10 +182,14 @@ namespace Projectile
 
         private async UniTaskVoid FrozenDuration(float duration, EnemyController.BaseAIController baseAI, EnemyController.Health health)
         {
+            if (baseAI == null || health == null) return;
+
             baseAI.UpdateAgentSpeed(0.0f);
             health.HitFlash.HitFrozen(duration).Forget();
             await UniTask.Delay(TimeSpan.FromSeconds(duration));
-            baseAI.ReturnMoveSpeed();
+
+            if (baseAI != null)
+                baseAI.ReturnMoveSpeed();
         }
     }
 }

@@ -11,6 +11,9 @@ namespace EnemyController
     {
         [SerializeField] protected EnemySO enemyData;
 
+        public EnemySO EnemyData => enemyData;
+        public bool IsBossEnemy => enemyData != null && enemyData.isBoss;
+
         protected NavMeshAgent agent;
         protected Transform player;
         protected Rigidbody rb;
@@ -22,6 +25,13 @@ namespace EnemyController
         protected virtual void Awake()
         {
             EnsureComponentsInitialized();
+        }
+
+        protected virtual void Start()
+        {
+            // Instantiate thủ công (RoomController) không qua pool → cần khởi động AI tại đây
+            if (aiCancellation == null)
+                OnSpawnedFromPool();
         }
 
         private void EnsureComponentsInitialized()

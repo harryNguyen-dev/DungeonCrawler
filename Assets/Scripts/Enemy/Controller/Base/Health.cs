@@ -18,19 +18,65 @@ namespace EnemyController
 
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private int currentHealth;
+
+        public int MaxHealth => maxHealth;
+        public int CurrentHealth => currentHealth;
+        public float HealthPercent => maxHealth > 0 ? (float)currentHealth / maxHealth : 0f;
         [SerializeField] private SO.EnemySO enemyData;
+        private bool isBossInstance;
+        private bool bossSetupPending;
+        private float bossHpMultiplier = 3f;
         private bool isDead = false;
         private EnemyEvents events;
+
+        /// <summary>Gán boss cho encounter phòng boss (HP scale khi prefab chưa có isBoss trên SO).</summary>
+        public void ConfigureAsBoss(float hpMultiplier = 3f)
+        {
+            isBossInstance = true;
+            bossHpMultiplier = hpMultiplier;
+            bossSetupPending = true;
+            if (events != null)
+                TryApplyBossSetup();
+        }
+
+        public void ApplyRuntimeHealthScale(float healthMultiplier)
+        {
+            if (healthMultiplier <= 0f || Mathf.Approximately(healthMultiplier, 1f))
+                return;
+
+            maxHealth = Mathf.Max(1, Mathf.RoundToInt(maxHealth * healthMultiplier));
+            currentHealth = maxHealth;
+            events?.ChangeHealth(currentHealth);
+        }
+
         private void Start()
         {
             events = GetComponent<EnemyEvents>();
             hitFlash = new CombatFeel.HitFlash(gameObject);
             ResetStatusEffectCancellation();
             ResetHealth();
+            TryApplyBossSetup();
+        }
+
+        private void TryApplyBossSetup()
+        {
+            if (!bossSetupPending) return;
+            bossSetupPending = false;
+
+            bool dataIsBoss = enemyData != null && enemyData.isBoss;
+            if (!dataIsBoss && bossHpMultiplier > 1f)
+            {
+                int scaled = Mathf.RoundToInt(maxHealth * bossHpMultiplier);
+                maxHealth = scaled;
+                currentHealth = scaled;
+                events?.ChangeHealth(currentHealth);
+            }
         }
 
         public void OnSpawnedFromPool()
         {
+            isBossInstance = false;
+            bossSetupPending = false;
             ResetStatusEffectCancellation();
             ResetHealth();
         }
@@ -92,7 +138,12 @@ namespace EnemyController
             CancelStatusEffects();
 
             Debug.Log("Enemy died!");
-            Global.GlobalEvents.RaiseEnemyDie();
+            var goldDrop = enemyData != null ? enemyData.GoldDrop : 5;
+            Global.GlobalEvents.RaiseEnemyDie(goldDrop);
+            if (isBossInstance || (enemyData != null && enemyData.isBoss))
+            {
+                Global.GlobalEvents.RaiseBossDefeated();
+            }
             Global.GlobalEntities.Instance?.UnregisterEnemy(gameObject);
 
             if (Core.ObjectPoolingManager.Instance != null)

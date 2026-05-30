@@ -1,0 +1,44 @@
+.loading-root {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+}
+
+.loading-title {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgb(120, 220, 255);
+    margin-bottom: 12px;
+    -unity-text-align: middle-center;
+}
+
+.loading-status {
+    font-size: 14px;
+    color: rgb(170, 190, 210);
+    margin-bottom: 20px;
+    -unity-text-align: middle-center;
+}
+
+.loading-bar-track {
+    width: 480px;
+    height: 12px;
+    background-color: rgb(30, 36, 48);
+    border-width: 1px;
+    border-color: rgba(120, 220, 255, 0.35);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.loading-bar-fill {
+    width: 0%;
+    height: 100%;
+    background-color: rgb(72, 196, 255);
+    border-radius: 5px;
+}

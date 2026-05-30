@@ -10,7 +10,10 @@ namespace WFC
 {
     public class WFCGeneration : MonoBehaviour
     {
-        private readonly int TIME_DELAY_BETWEEN_ITERATIONS = 100; // ms
+        [Tooltip("Delay ms giữa các bước spawn (0 = gen nhanh, dùng loading UI che view).")]
+        [SerializeField] private int iterationDelayMs = 0;
+
+        private int IterationDelayMs => iterationDelayMs;
         [SerializeField] private int gridSize = 30;
 
         [Tooltip("Kích thước thực tế của mỗi ô trong Unity units (VD: 14 nếu prefab là 14x14).")]
@@ -110,7 +113,9 @@ namespace WFC
 #endif
         public async UniTask GenerateWithRetry(int maxAttempts = 3)
         {
-            BindCameraToGenerationTarget();
+            GlobalEvents.RaiseDungeonGenerationStarted();
+            GlobalEvents.RaiseDungeonGenerationProgress(0f);
+            SetDungeonVisualsVisible(false);
 
             int attempts = 0;
             bool success = false;
@@ -118,12 +123,17 @@ namespace WFC
             while (attempts < maxAttempts && !success)
             {
                 attempts++;
+                if (attempts > 1)
+                    GlobalEvents.RaiseDungeonGenerationProgress(0.05f);
+
                 await Generate();
 
                 if (LastStats.generation_success && LastStats.connectivity_complete)
                 {
                     success = true;
                     Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
+                    GlobalEvents.RaiseDungeonGenerationProgress(0.98f);
+                    SetDungeonVisualsVisible(true);
                     Tile startRoomTile = GetRandomStartRoom();
                     if (startRoomTile != null)
                     {
@@ -135,6 +145,13 @@ namespace WFC
                         GlobalVariable.PlayerSpawnPosition = worldPosition;
                         startRoomTile.SetStartRoom();
                         CenterCameraOnStartRoom(startRoomTile);
+
+                        Tile bossRoomTile = FindFarthestRoomFromStart(startRoomTile, placedRooms, MSTEdges);
+                        if (bossRoomTile != null)
+                        {
+                            bossRoomTile.SetBossRoom();
+                            Debug.Log($"<color=magenta>Boss Room tại Grid({bossRoomTile.GridPosition.x}, {bossRoomTile.GridPosition.y})</color>");
+                        }
                     }
 
                     // Đếm tất cả Room tiles thực tế trên grid (bao gồm cả những phòng được tạo bởi WFC)
@@ -143,6 +160,7 @@ namespace WFC
                     Debug.Log("[WFC] Total room count (actual on grid): " + actualRoomCount);
                     GlobalVariable.TotalRoomCount = actualRoomCount - 1; // trừ start room
                     Debug.Log("[WFC] total room without start room: " + GlobalVariable.TotalRoomCount);
+                    GlobalEvents.RaiseDungeonGenerationProgress(1f);
                     GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
                     GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
@@ -176,6 +194,16 @@ namespace WFC
             for (int i = spawnParent.childCount - 1; i >= 0; i--)
             {
                 DestroyImmediate(spawnParent.GetChild(i).gameObject);
+            }
+        }
+
+        private void SetDungeonVisualsVisible(bool visible)
+        {
+            if (spawnParent == null) return;
+
+            foreach (var renderer in spawnParent.GetComponentsInChildren<Renderer>(true))
+            {
+                renderer.enabled = visible;
             }
         }
 
@@ -246,7 +274,9 @@ namespace WFC
 
         private void ApplyGenerationRandomSeed()
         {
-            if (useFixedSeed)
+            if (GlobalVariable.CurrentLevel != null)
+                LastGenerationSeed = GlobalVariable.CurrentLevel.wfcSeed;
+            else if (useFixedSeed)
                 LastGenerationSeed = randomSeed;
             else
                 LastGenerationSeed = new System.Random().Next();
@@ -287,7 +317,7 @@ namespace WFC
                     edgeTiles.Add(t);
                     if (ShouldDelayAfterPrefabPlacement(t))
                     {
-                        await UniTask.Delay(TIME_DELAY_BETWEEN_ITERATIONS);
+                        await UniTask.Delay(IterationDelayMs);
                     }
                 }
             }
@@ -338,7 +368,7 @@ namespace WFC
                     wfc.Propagation(nextTile);
                     if (ShouldDelayAfterPrefabPlacement(nextTile))
                     {
-                        await UniTask.Delay(TIME_DELAY_BETWEEN_ITERATIONS);
+                        await UniTask.Delay(IterationDelayMs);
                     }
                     continue;
                 }
@@ -349,7 +379,7 @@ namespace WFC
                 wfc.Propagation(nextTile);
                 if (ShouldDelayAfterPrefabPlacement(nextTile))
                 {
-                    await UniTask.Delay(TIME_DELAY_BETWEEN_ITERATIONS);
+                    await UniTask.Delay(IterationDelayMs);
                 }
             }
         }
@@ -360,26 +390,33 @@ namespace WFC
             var totalTimer = Stopwatch.StartNew();
 
             _currentStats = new GenerationStats();
-            _currentStats.rooms_target = roomsToPlace;
+            var targetRooms = GlobalVariable.CurrentLevel != null && GlobalVariable.CurrentLevel.roomsToPlaceOverride > 0
+                ? GlobalVariable.CurrentLevel.roomsToPlaceOverride
+                : roomsToPlace;
+            _currentStats.rooms_target = targetRooms;
             _pathLengths.Clear();
 
             _currentStats.seed = LastGenerationSeed;
+            GlobalEvents.RaiseDungeonGenerationProgress(0.08f);
 
             await FillEdgeCellsWithEmpty();
+            GlobalEvents.RaiseDungeonGenerationProgress(0.18f);
 
             _stepTimer.Restart();
             var placeOutcome = await roomPlacer.PlaceRoomMustHaveTiles(
-                _rand, roomsToPlace, roomEdgeMargin, cellSize, spawnParent, TIME_DELAY_BETWEEN_ITERATIONS);
+                _rand, targetRooms, roomEdgeMargin, cellSize, spawnParent, IterationDelayMs);
             placedRooms = placeOutcome.placedRooms;
             collapsedTiles += placeOutcome.collapsedDelta;
             _stepTimer.Stop();
             _currentStats.ms_place_rooms = (float)_stepTimer.Elapsed.TotalMilliseconds;
             _currentStats.rooms_placed = placedRooms.Count;
+            GlobalEvents.RaiseDungeonGenerationProgress(0.45f);
 
             _stepTimer.Restart();
             var (edges, corridorStats) = await corridor.ConnectRoomsByCorridor(
-                placedRooms, _rand, branchingFactor, cellSize, spawnParent, _pathLengths, TIME_DELAY_BETWEEN_ITERATIONS);
+                placedRooms, _rand, branchingFactor, cellSize, spawnParent, _pathLengths, IterationDelayMs);
             MSTEdges = edges;
+            GlobalEvents.RaiseDungeonGenerationProgress(0.72f);
             _currentStats.mst_edges_total = corridorStats.mst_edges_total;
             _currentStats.extra_edges_total = corridorStats.extra_edges_total;
             _currentStats.mst_edges_success = corridorStats.mst_edges_success;
@@ -407,6 +444,7 @@ namespace WFC
             await OriginalGenerate();
             _stepTimer.Stop();
             _currentStats.ms_wfc_fill = (float)_stepTimer.Elapsed.TotalMilliseconds;
+            GlobalEvents.RaiseDungeonGenerationProgress(0.9f);
 
             totalTimer.Stop();
             _currentStats.ms_total = (float)totalTimer.Elapsed.TotalMilliseconds;
@@ -425,6 +463,84 @@ namespace WFC
                       $"DeadEnds={LastStats.dead_end_count}, Branches={LastStats.branch_count}, " +
                       $"Success={LastStats.generation_success}, " +
                       $"Time={LastStats.ms_total:F1}ms (R:{LastStats.ms_place_rooms:F1} C:{LastStats.ms_connect_corridors:F1} W:{LastStats.ms_wfc_fill:F1})");
+        }
+
+        /// <summary>
+        /// Chọn phòng xa start nhất trên graph MST/corridor (BFS). Dùng cho boss room MVP.
+        /// </summary>
+        private static Tile FindFarthestRoomFromStart(
+            Tile startRoom,
+            List<Tile> rooms,
+            List<(Tile from, Tile to)> edges)
+        {
+            if (startRoom == null || rooms == null || rooms.Count == 0)
+                return null;
+
+            var adjacency = new Dictionary<Tile, List<Tile>>();
+            foreach (Tile room in rooms)
+                adjacency[room] = new List<Tile>();
+
+            if (edges != null)
+            {
+                foreach (var (from, to) in edges)
+                {
+                    if (from == null || to == null) continue;
+                    if (!adjacency.ContainsKey(from) || !adjacency.ContainsKey(to)) continue;
+                    adjacency[from].Add(to);
+                    adjacency[to].Add(from);
+                }
+            }
+
+            var distance = new Dictionary<Tile, int>();
+            var queue = new Queue<Tile>();
+            distance[startRoom] = 0;
+            queue.Enqueue(startRoom);
+
+            while (queue.Count > 0)
+            {
+                Tile current = queue.Dequeue();
+                if (!adjacency.TryGetValue(current, out List<Tile> neighbors)) continue;
+
+                foreach (Tile neighbor in neighbors)
+                {
+                    if (distance.ContainsKey(neighbor)) continue;
+                    distance[neighbor] = distance[current] + 1;
+                    queue.Enqueue(neighbor);
+                }
+            }
+
+            Tile farthest = null;
+            int maxDistance = -1;
+
+            foreach (Tile room in rooms)
+            {
+                if (room == startRoom) continue;
+                if (!distance.TryGetValue(room, out int d)) continue;
+
+                if (d > maxDistance || (d == maxDistance && IsTieBreakBossRoom(room, farthest)))
+                {
+                    maxDistance = d;
+                    farthest = room;
+                }
+            }
+
+            if (farthest != null) return farthest;
+
+            foreach (Tile room in rooms)
+            {
+                if (room != startRoom)
+                    return room;
+            }
+
+            return null;
+        }
+
+        private static bool IsTieBreakBossRoom(Tile candidate, Tile current)
+        {
+            if (current == null) return true;
+            if (candidate.GridPosition.x != current.GridPosition.x)
+                return candidate.GridPosition.x < current.GridPosition.x;
+            return candidate.GridPosition.y < current.GridPosition.y;
         }
 
         /// <summary>

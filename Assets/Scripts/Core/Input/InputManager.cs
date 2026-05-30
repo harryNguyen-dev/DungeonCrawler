@@ -62,4 +62,9 @@ public class InputManager : MonoBehaviour
     {
         return inputActions != null && inputActions.Player.Attack.WasPressedThisFrame();
     }
+
+    public bool WasPausePressed()
+    {
+        return Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+    }
 }

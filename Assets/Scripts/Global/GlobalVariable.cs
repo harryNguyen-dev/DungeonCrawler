@@ -18,6 +18,18 @@ namespace Global
         public static int TotalRoomCount { get; set; }
         public static GameMode CurrentGameMode { get; set; } = GameMode.Lobby;
 
+        /// <summary>Màn đang chọn từ lobby (null = dùng fallback trên scene).</summary>
+        public static SO.LevelSO CurrentLevel { get; set; }
+
+        /// <summary>Index 0-based trong LevelCatalog của màn hiện tại.</summary>
+        public static int CurrentLevelIndex { get; set; } = -1;
+
+        /// <summary>Sau khi thắng và về Hub, tự mở level select.</summary>
+        public static bool OpenLevelSelectOnLobbyReturn { get; set; }
+
+        /// <summary>Vũ khí đang equip (player-wide).</summary>
+        public static string EquippedWeaponId { get; set; }
+
         // 1. Màu Nền của Thẻ (Dành cho Image Component làm Background - Tông tối để nổi bật chữ)
         public static readonly Dictionary<CardTier, Color> CardBackgroundColor = new Dictionary<CardTier, Color>()
         {

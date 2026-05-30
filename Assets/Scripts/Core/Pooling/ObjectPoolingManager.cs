@@ -94,6 +94,17 @@ namespace Core
                 Instance = null;
         }
 
+        /// <summary>Return to pool when safe; destroy if the manager is already gone (e.g. scene unload).</summary>
+        public static void SafeReturn(GameObject instance)
+        {
+            if (instance == null) return;
+
+            if (Instance != null)
+                Instance.Return(instance);
+            else
+                Destroy(instance);
+        }
+
         /// <summary>Activate an instance from the pool (or create one if allowed).</summary>
         public GameObject Get(PoolId id, Vector3 position, Quaternion rotation, Transform parent = null)
         {
@@ -143,8 +154,15 @@ namespace Core
             Return(instance);
         }
 
+        /// <summary>Gọi sau Instantiate thủ công để kích hoạt IPoolable (AI, Health, Attack...).</summary>
+        public static void NotifySpawnedFromPool(GameObject instance)
+        {
+            NotifySpawned(instance);
+        }
+
         static void NotifySpawned(GameObject instance)
         {
+            if (instance == null) return;
             var poolables = instance.GetComponentsInChildren<IPoolable>(true);
             for (var i = 0; i < poolables.Length; i++)
                 poolables[i].OnSpawnedFromPool();

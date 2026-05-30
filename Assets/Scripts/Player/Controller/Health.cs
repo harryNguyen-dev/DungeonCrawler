@@ -9,14 +9,20 @@ namespace PlayerController
         int currentHealth = 0;
         int maxHealth = 0;
         private PlayerEvents events;
-        private void Start()
+
+        private void Awake()
         {
             events = GetComponent<PlayerEvents>();
             playerStats = GetComponent<PlayerStats>();
             maxHealth = playerStats.GetMaxHealth();
             currentHealth = maxHealth;
+        }
+
+        private void Start()
+        {
             events.OnMaxHealthChanged += SetMaxHealth;
             events.OnHealHealth += SetHealHealth;
+            events.InvokeChangeHealth(currentHealth, maxHealth);
         }
         private void OnDestroy()
         {
@@ -24,8 +30,17 @@ namespace PlayerController
             events.OnMaxHealthChanged -= SetMaxHealth;
             events.OnHealHealth -= SetHealHealth;
         }
-        private void SetMaxHealth(int maxHealth) => currentHealth = maxHealth;
-        private void SetHealHealth(int amount) => currentHealth += amount;
+        private void SetMaxHealth(int newMaxHealth)
+        {
+            maxHealth = newMaxHealth;
+            currentHealth = Mathf.Min(currentHealth, maxHealth);
+            events.InvokeChangeHealth(currentHealth, maxHealth);
+        }
+        private void SetHealHealth(int amount)
+        {
+            currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+            events.InvokeChangeHealth(currentHealth, maxHealth);
+        }
 
         public void TakeDamage(int damage)
         {

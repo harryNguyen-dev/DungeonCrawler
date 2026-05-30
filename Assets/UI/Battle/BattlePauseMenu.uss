@@ -1,0 +1,83 @@
+.pause-root {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.pause-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.pause-content {
+    position: relative;
+    width: 360px;
+    max-width: 90%;
+    padding: 28px 32px 24px;
+    background-color: rgba(10, 16, 32, 0.96);
+    border-width: 1px;
+    border-color: rgba(72, 196, 255, 0.5);
+    border-radius: 12px;
+    align-items: stretch;
+}
+
+.pause-title {
+    font-size: 26px;
+    -unity-font-style: bold;
+    color: rgb(220, 245, 255);
+    margin-bottom: 6px;
+    -unity-text-align: middle-center;
+}
+
+.pause-subtitle {
+    font-size: 14px;
+    color: rgb(170, 190, 210);
+    margin-bottom: 22px;
+    -unity-text-align: middle-center;
+}
+
+.button-row {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.pause-btn {
+    min-width: 120px;
+    height: 40px;
+    margin-left: 8px;
+    margin-right: 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    border-width: 1px;
+}
+
+.primary-btn {
+    background-color: rgba(72, 196, 255, 0.25);
+    border-color: rgba(120, 220, 255, 0.85);
+    color: rgb(220, 245, 255);
+}
+
+.primary-btn:hover {
+    background-color: rgba(72, 196, 255, 0.45);
+}
+
+.secondary-btn {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: rgb(210, 220, 235);
+}
+
+.secondary-btn:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+}

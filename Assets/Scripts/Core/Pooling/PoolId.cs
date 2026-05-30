@@ -14,6 +14,7 @@ namespace Core
         Obj_WolfWhite = 6,
         Obj_WolfWhite_Projectile = 7,
         Obj_Boar = 8,
+        Obj_Boar_Boss = 11,
         Obj_WolfYellow = 9,
         Obj_WolfYellow_Projectile = 10,
     }

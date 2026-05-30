@@ -50,19 +50,13 @@ namespace PlayerController
                     playerStats.AddOneProjectile(Mathf.RoundToInt(cardData.Value));
                     break;
                 case CardEffect.ProjectileFireOnHit:
-                    playerStats.AddProjectileFireOnHit(Mathf.RoundToInt(cardData.Value));
-                    break;
-
                 case CardEffect.ProjectileFrozenOnHit:
-                    playerStats.AddProjectileFrozenOnHit(Mathf.RoundToInt(cardData.Value));
-                    break;
                 case CardEffect.ProjectilePierce:
-                    playerStats.AddProjectilePierce();
+                case CardEffect.ExplosiveImpact:
+                    Debug.LogWarning($"[PlayerEffect] Card {cardData.CardID} is a weapon trait and should not be picked.");
                     break;
                 case CardEffect.ProjectileBoomerang:
                     playerStats.AddProjectileBoomerange();
-                    break;
-                case CardEffect.ExplosiveImpact:
                     break;
 
                 default:

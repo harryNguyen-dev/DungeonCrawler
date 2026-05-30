@@ -1,0 +1,42 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="RunEndGame.uss" />
+    <ui:VisualElement name="run-end-root" class="run-end-root">
+        <ui:VisualElement class="run-end-backdrop" />
+        <ui:VisualElement class="run-end-content">
+            <ui:Label name="result-title" text="VICTORY" class="run-end-title win-title" />
+            <ui:Label name="level-label" text="Chap 1.1" class="run-end-subtitle" />
+
+            <ui:VisualElement class="run-end-section">
+                <ui:Label text="BUILD" class="section-title" />
+                <ui:VisualElement class="stats-grid">
+                    <ui:Label name="stat-level" text="Lv.1" class="stat-item" />
+                    <ui:Label name="stat-hp" text="HP: 0/0" class="stat-item" />
+                    <ui:Label name="stat-atk" text="ATK: 0" class="stat-item" />
+                    <ui:Label name="stat-as" text="AS: 0" class="stat-item" />
+                    <ui:Label name="stat-ms" text="MS: 0" class="stat-item" />
+                    <ui:Label name="stat-armor" text="ARM: 0" class="stat-item" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="run-end-section">
+                <ui:Label text="RUN" class="section-title" />
+                <ui:VisualElement class="stats-grid">
+                    <ui:Label name="stat-kills" text="Kills: 0" class="stat-item" />
+                    <ui:Label name="stat-rooms" text="Rooms: 0/0" class="stat-item" />
+                    <ui:Label name="stat-run-gold" text="Run Gold: 0" class="stat-item highlight" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="run-end-section gold-section">
+                <ui:Label text="META" class="section-title" />
+                <ui:Label name="meta-gain-label" text="+0 meta gold" class="meta-gain-label" />
+                <ui:Label name="meta-total-label" text="Total: 0" class="meta-total-label" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="button-row">
+                <ui:Button name="retry-btn" text="Retry" class="run-end-btn primary-btn" />
+                <ui:Button name="hub-btn" text="Hub" class="run-end-btn secondary-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -61,6 +61,7 @@ namespace Core.SpawnManager
             if (enemyInstance == null)
             {
                 enemyInstance = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+                ObjectPoolingManager.NotifySpawnedFromPool(enemyInstance);
             }
 
             Global.GlobalEntities.Instance.RegisterEnemy(enemyInstance);
@@ -81,7 +82,7 @@ namespace Core.SpawnManager
             wave++;
             return UniTask.CompletedTask;
         }
-        private void HandleEnemyDie()
+        private void HandleEnemyDie(int _)
         {
             NumberCurrentLeft--;
             if (NumberCurrentLeft <= 0)

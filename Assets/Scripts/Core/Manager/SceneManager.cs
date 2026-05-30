@@ -8,6 +8,9 @@ namespace Core
 
         public static void LoadScene(string sceneName)
         {
+            if (Global.GlobalEntities.Instance != null)
+                Global.GlobalEntities.Instance.ClearRuntimeSceneObjects();
+
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
 

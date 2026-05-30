@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="DungeonLoading.uss" />
+    <ui:VisualElement name="loading-root" class="loading-root">
+        <ui:Label text="LOADING" class="loading-title" />
+        <ui:Label name="loading-status" text="Generating dungeon... 0%" class="loading-status" />
+        <ui:VisualElement class="loading-bar-track">
+            <ui:VisualElement name="loading-fill" class="loading-bar-fill" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

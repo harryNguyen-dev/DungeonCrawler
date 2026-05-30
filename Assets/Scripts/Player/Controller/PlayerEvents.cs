@@ -28,6 +28,8 @@ namespace PlayerController
         
         public event Action<int> OnNumberOfProjectileChanged;
         public void InvokeNumberOfProjectileChanged(int amount) => OnNumberOfProjectileChanged?.Invoke(amount);
-        
+
+        public event Action<int, int> OnExpChanged;
+        public void InvokeExpChanged(int current, int required) => OnExpChanged?.Invoke(current, required);
     }
 }

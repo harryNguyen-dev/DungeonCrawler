@@ -6,9 +6,9 @@ namespace Components
     {
         private void OnTriggerEnter(Collider other)
         {
-            if(other.CompareTag("Player"))
+            if (other.CompareTag("Player"))
             {
-                Core.SceneManagerCustom.LoadDungeon();
+                Global.GlobalEvents.RaiseRequestLevelSelectUI();
             }
         }
     }

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8fa56925df29ed45904facb4e9ce305, type: 3}
+  m_Name: Level_Ch1_01
+  m_EditorClassIdentifier: Assembly-CSharp::SO.LevelSO
+  chapter: 1
+  stageIndex: 1
+  levelId: ch1_01
+  wfcSeed: 1107078218
+  roomsToPlaceOverride: 5
+  combatWaves: {fileID: 11400000, guid: f1e2d3c4b5a69788776655443322110, type: 2}
+  boss: {fileID: 11400000, guid: f2e2d3c4b5a69788776655443322110, type: 2}
+  enemyHealthScale: 1
+  enemyDamageScale: 1

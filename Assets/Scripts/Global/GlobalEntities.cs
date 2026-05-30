@@ -26,8 +26,16 @@ namespace Global
         [Header("CardSO")]
         public List<CardSO> AllCards;
 
+        [Header("Levels")]
+        public LevelCatalogSO Chapter1Catalog;
+
+        [Header("Weapons")]
+        public WeaponCatalogSO WeaponCatalog;
+
         [Header("Enemies")]
         public List<GameObject> EnemyPrefabs;
+        [Tooltip("Prefab boss riêng (optional). Nếu null, dùng enemy ngẫu nhiên + HP scale trong boss room.")]
+        public GameObject BossPrefab;
         public List<GameObject> AvailableEnemies = new List<GameObject>();
 
         private void Awake()
@@ -37,6 +45,7 @@ namespace Global
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
                 SceneManager.sceneLoaded += OnSceneLoaded;
+                SceneManager.sceneUnloaded += OnSceneUnloaded;
             }
             else
             {
@@ -44,23 +53,65 @@ namespace Global
             }
         }
 
+        private void Start()
+        {
+            EnsureChapterCatalog();
+            EnsureWeaponCatalog();
+        }
+
         private void OnDestroy()
         {
             if (Instance != this) return;
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
             Instance = null;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             ClearRuntimeSceneObjects();
+            EnsureChapterCatalog();
+            EnsureWeaponCatalog();
         }
+
+        private void OnSceneUnloaded(Scene scene)
+        {
+            ClearRuntimeSceneObjects();
+        }
+
+        private void EnsureChapterCatalog()
+        {
+            if (Chapter1Catalog != null)
+                return;
+
+#if UNITY_EDITOR
+            Chapter1Catalog = UnityEditor.AssetDatabase.LoadAssetAtPath<LevelCatalogSO>(
+                "Assets/SO/Level/LevelCatalog_Chapter1.asset");
+#endif
+            if (Chapter1Catalog == null)
+                Debug.LogWarning("[GlobalEntities] Chapter1Catalog is not assigned.");
+        }
+
+        private void EnsureWeaponCatalog()
+        {
+            if (WeaponCatalog != null)
+                return;
+
+#if UNITY_EDITOR
+            WeaponCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<WeaponCatalogSO>(
+                "Assets/SO/Weapon/WeaponCatalog_Global.asset");
+#endif
+            if (WeaponCatalog == null)
+                Debug.LogWarning("[GlobalEntities] WeaponCatalog is not assigned.");
+        }
+
+        public WeaponSO GetWeapon(string weaponId) => WeaponCatalog?.GetById(weaponId);
 
         public void ClearRuntimeSceneObjects()
         {
-            ClearPlayer();
-            ClearAllEnemies();
             ClearProjectiles();
+            ClearAllEnemies();
+            ClearPlayer();
         }
 
         public void ClearPlayer()
@@ -145,9 +196,7 @@ namespace Global
             for (int i = AvailableEnemies.Count - 1; i >= 0; i--)
             {
                 if (AvailableEnemies[i] != null)
-                {
-                    Core.ObjectPoolingManager.Instance.Return(AvailableEnemies[i]);
-                }
+                    Core.ObjectPoolingManager.SafeReturn(AvailableEnemies[i]);
             }
 
             AvailableEnemies.Clear();
@@ -155,13 +204,20 @@ namespace Global
 
         private void ClearProjectiles()
         {
-            var projectiles = FindObjectsByType<Projectile.ProjectileController>(FindObjectsSortMode.None);
+            ClearActiveProjectiles<Projectile.ProjectileController>();
+            ClearActiveProjectiles<EnemyController.EnemyProjectile>();
+        }
+
+        private static void ClearActiveProjectiles<T>() where T : MonoBehaviour
+        {
+            var projectiles = FindObjectsByType<T>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             foreach (var projectile in projectiles)
             {
-                Core.ObjectPoolingManager.Instance.Return(projectile.gameObject);
+                if (projectile != null)
+                    Core.ObjectPoolingManager.SafeReturn(projectile.gameObject);
             }
         }
 
-        public List<CardSO> GetAllCards() => AllCards;
+        public List<CardSO> GetAllCards() => AllCards ?? new List<CardSO>();
     }
 }

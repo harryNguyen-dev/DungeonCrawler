@@ -65,14 +65,7 @@ namespace EnemyController
         private void ReturnToPool()
         {
             isInitialized = false;
-            if (ObjectPoolingManager.Instance != null)
-            {
-                ObjectPoolingManager.Instance.Return(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            ObjectPoolingManager.SafeReturn(gameObject);
         }
 
         public void OnSpawnedFromPool()

@@ -49,7 +49,16 @@ namespace WFC {
         }
         public void SetStartRoom()
         {
-            SpawnedObject.GetComponentInChildren<RoomController>().SetIsStartRoom(true);
+            var room = SpawnedObject?.GetComponentInChildren<RoomController>();
+            if (room != null)
+                room.SetRoomType(RoomType.Start);
+        }
+
+        public void SetBossRoom()
+        {
+            var room = SpawnedObject?.GetComponentInChildren<RoomController>();
+            if (room != null)
+                room.SetRoomType(RoomType.Boss);
         }
     }
 }

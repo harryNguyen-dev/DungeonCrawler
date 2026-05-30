@@ -29,16 +29,17 @@ namespace Projectile
 
             if (isBoomerang)
             {
-                // Lấy vị trí Player thông qua Local Server GlobalEntities của bạn
-                playerTransform = Global.GlobalEntities.Instance.PlayerStats.transform;
+                var stats = Global.GlobalEntities.Instance?.PlayerStats;
+                playerTransform = stats != null ? stats.transform : null;
 
-                // Thay vì Destroy ngay, sau một nửa thời gian nó sẽ tự kích hoạt chế độ bay về
-                Invoke(nameof(StartReturnState), lifeTime * 0.5f);
+                if (playerTransform != null)
+                    Invoke(nameof(StartReturnState), lifeTime * 0.5f);
             }
             else
             {
-                // Đạn thường thì vẫn hủy sau thời gian lifeTime
-                // Destroy(gameObject, lifeTime);
+                if (disableCTS == null)
+                    disableCTS = new CancellationTokenSource();
+
                 ReturnAfterTime(disableCTS.Token).Forget();
             }
         }
@@ -48,10 +49,8 @@ namespace Projectile
 
             if (isCanceled) return;
 
-            if (gameObject.activeSelf && Core.ObjectPoolingManager.Instance != null)
-            {
-                Core.ObjectPoolingManager.Instance.Return(gameObject);
-            }
+            if (gameObject.activeSelf)
+                ObjectPoolingManager.SafeReturn(gameObject);
         }
 
         public void StartReturnState()
@@ -84,10 +83,7 @@ namespace Projectile
 
                 // Nếu quay về sát Player, tiến hành hủy đạn
                 if (Vector3.Distance(transform.position, playerTransform.position) < 0.5f)
-                {
-                    // Destroy(gameObject);
-                    Core.ObjectPoolingManager.Instance.Return(gameObject);
-                }
+                    ObjectPoolingManager.SafeReturn(gameObject);
             }
             else
             {
@@ -107,8 +103,21 @@ namespace Projectile
             CancelInvoke();
             canMove = false;
             isReturning = false;
+            playerTransform = null;
+            onReturnStart = null;
 
             // Dọn dẹp tiến trình ngầm an toàn
+            if (disableCTS != null)
+            {
+                disableCTS.Cancel();
+                disableCTS.Dispose();
+                disableCTS = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            CancelInvoke();
             if (disableCTS != null)
             {
                 disableCTS.Cancel();

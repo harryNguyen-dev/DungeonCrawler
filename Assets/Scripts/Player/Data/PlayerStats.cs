@@ -21,6 +21,15 @@ namespace PlayerController
         {
             playerHealth = GetComponent<Health>();
             events = GetComponent<PlayerEvents>();
+            ApplyEquippedWeaponConfig();
+        }
+
+        public void ApplyEquippedWeaponConfig()
+        {
+            var built = Core.WeaponLoadoutBuilder.BuildForEquippedWeapon();
+            if (built != null)
+                configData = built;
+
             runtimeStats = Instantiate(configData);
             runtimeStats.InitializeRuntimeDictionary();
         }
@@ -28,10 +37,11 @@ namespace PlayerController
         private void OnEnable() => Global.GlobalEvents.OnEnemyDie += AddExperience;
         private void OnDisable() => Global.GlobalEvents.OnEnemyDie -= AddExperience;
 
-        private void AddExperience()
+        private void AddExperience(int _)
         {
             currentExp += Mathf.RoundToInt(20 * runtimeStats.DefaultExpGainMultiplier); // Mỗi quái cho 20 Exp
             Debug.Log($"Exp: {currentExp}/{expToNextLevel}");
+            events.InvokeExpChanged(currentExp, expToNextLevel);
 
             if (currentExp >= expToNextLevel)
             {
@@ -44,6 +54,7 @@ namespace PlayerController
             currentLevel++;
             currentExp = 0;
             expToNextLevel = Mathf.RoundToInt(expToNextLevel * 1.2f); // Tăng mốc Exp yêu cầu
+            events.InvokeExpChanged(currentExp, expToNextLevel);
 
             Debug.Log($"<color=yellow>LEVEL UP! Current Level: {currentLevel}</color>");
 
@@ -60,7 +71,8 @@ namespace PlayerController
             currentExp = 0;
             expToNextLevel = 100;
             Time.timeScale = 1f;
-            runtimeStats = Instantiate(configData);
+            ApplyEquippedWeaponConfig();
+            events.InvokeExpChanged(currentExp, expToNextLevel);
         }
         // Hàm bổ trợ để các Script khác lấy chỉ số đã được nâng cấp
         public float GetAttackCooldown() => runtimeStats.AttackCooldown;

@@ -19,6 +19,13 @@ namespace SO
         [Header("Knockback Settings")]
         public float KnockbackForce = 6f;
         public float KnockbackDuration = 0.12f;
+
+        [Header("Boss")]
+        [Tooltip("Đánh dấu enemy này là boss (chết → win run).")]
+        public bool isBoss;
+
+        [Header("Rewards")]
+        [Min(0)] public int GoldDrop = 5;
     }
 
 }

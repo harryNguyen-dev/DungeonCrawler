@@ -1,0 +1,236 @@
+.hero-loadout-root {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: column;
+    picking-mode: ignore;
+}
+
+.hero-loadout-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.28);
+    picking-mode: ignore;
+}
+
+.hero-loadout-center {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    picking-mode: ignore;
+}
+
+.hero-loadout-shell {
+    picking-mode: position;
+    width: 820px;
+    height: 380px;
+    max-width: 88%;
+    max-height: 48%;
+    flex-shrink: 0;
+    flex-direction: column;
+    background-color: rgba(8, 14, 28, 0.96);
+    border-width: 1px;
+    border-color: rgba(72, 196, 255, 0.55);
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.hero-loadout-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
+.hero-close-button {
+    width: 32px;
+    height: 26px;
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+.hero-loadout-title {
+    flex-grow: 1;
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: rgb(120, 220, 255);
+}
+
+.hero-meta-gold {
+    font-size: 13px;
+    color: rgb(255, 210, 90);
+    -unity-font-style: bold;
+}
+
+.hero-loadout-body {
+    flex-grow: 1;
+    flex-direction: row;
+    position: relative;
+    min-height: 0;
+}
+
+.hero-left-column {
+    width: 220px;
+    flex-shrink: 0;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.weapon-scroll {
+    flex-grow: 1;
+    min-height: 0;
+    max-height: 300px;
+}
+
+.weapon-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    background-color: rgba(24, 36, 56, 0.95);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+.weapon-row:hover {
+    border-color: rgba(120, 220, 255, 0.6);
+}
+
+.weapon-row--selected {
+    border-color: rgba(255, 180, 60, 0.9);
+    background-color: rgba(40, 52, 72, 0.98);
+}
+
+.weapon-row--locked {
+    opacity: 0.55;
+}
+
+.weapon-row-name {
+    font-size: 12px;
+    color: rgb(230, 235, 245);
+    -unity-font-style: bold;
+}
+
+.weapon-row-status {
+    font-size: 10px;
+    color: rgb(160, 200, 230);
+}
+
+.weapon-detail-overlay {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 220px;
+    padding: 10px;
+    background-color: rgba(10, 18, 32, 0.98);
+    border-width: 1px;
+    border-color: rgba(72, 196, 255, 0.55);
+    border-radius: 8px;
+    flex-direction: column;
+}
+
+.detail-close-button {
+    align-self: flex-end;
+    width: 28px;
+    height: 24px;
+    margin-bottom: 2px;
+    font-size: 11px;
+}
+
+.detail-name {
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: rgb(255, 220, 120);
+    margin-bottom: 4px;
+}
+
+.detail-description {
+    font-size: 11px;
+    color: rgb(180, 195, 210);
+    white-space: normal;
+    margin-bottom: 6px;
+}
+
+.detail-status {
+    font-size: 11px;
+    color: rgb(140, 220, 255);
+    margin-bottom: 8px;
+}
+
+.detail-primary-button {
+    height: 30px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    background-color: rgba(60, 140, 220, 0.9);
+    color: white;
+    -unity-font-style: bold;
+}
+
+.detail-primary-button:disabled {
+    opacity: 0.4;
+}
+
+.detail-equip-button {
+    height: 28px;
+    margin-bottom: 6px;
+    font-size: 11px;
+}
+
+.detail-upgrade-button {
+    height: 26px;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
+.hero-preview-panel {
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+    background-color: rgba(4, 8, 16, 0.9);
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: rgba(72, 196, 255, 0.35);
+    position: relative;
+}
+
+.hero-preview-image {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    picking-mode: ignore;
+}
+
+.hero-preview-drag-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.hero-preview-hint {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    -unity-text-align: middle-center;
+    font-size: 10px;
+    color: rgba(200, 220, 240, 0.55);
+    picking-mode: ignore;
+}

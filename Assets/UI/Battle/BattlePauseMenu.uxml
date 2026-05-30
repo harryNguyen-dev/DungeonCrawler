@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="BattlePauseMenu.uss" />
+    <ui:VisualElement name="pause-root" class="pause-root">
+        <ui:VisualElement class="pause-backdrop" />
+        <ui:VisualElement class="pause-content">
+            <ui:Label text="TẠM DỪNG" class="pause-title" />
+            <ui:Label text="Chọn hành động" class="pause-subtitle" />
+            <ui:VisualElement class="button-row">
+                <ui:Button name="continue-btn" text="Tiếp tục" class="pause-btn primary-btn" />
+                <ui:Button name="exit-btn" text="Thoát" class="pause-btn secondary-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

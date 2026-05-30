@@ -1,0 +1,27 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="BattleHUD.uss" />
+    <ui:VisualElement name="battle-hud-root" class="battle-hud-root">
+        <ui:VisualElement name="player-panel" class="player-panel">
+            <ui:Label name="level-label" text="Lv.1" class="level-label" />
+            <ui:VisualElement class="bar-row">
+                <ui:Label text="HP" class="bar-label" />
+                <ui:VisualElement class="bar-track">
+                    <ui:VisualElement name="hp-fill" class="bar-fill hp-fill" />
+                </ui:VisualElement>
+                <ui:Label name="hp-value" text="0/0" class="bar-value" />
+            </ui:VisualElement>
+            <ui:VisualElement class="bar-row">
+                <ui:Label text="EXP" class="bar-label" />
+                <ui:VisualElement class="bar-track">
+                    <ui:VisualElement name="exp-fill" class="bar-fill exp-fill" />
+                </ui:VisualElement>
+                <ui:Label name="exp-value" text="0/0" class="bar-value" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stats-row">
+                <ui:Label name="atk-label" text="ATK: 0" class="stat-label" />
+                <ui:Label name="as-label" text="AS: 0" class="stat-label" />
+                <ui:Label name="ms-label" text="MS: 0" class="stat-label" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
