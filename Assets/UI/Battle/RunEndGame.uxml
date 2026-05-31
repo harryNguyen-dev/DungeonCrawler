@@ -2,7 +2,7 @@
     <Style src="RunEndGame.uss" />
     <ui:VisualElement name="run-end-root" class="run-end-root">
         <ui:VisualElement class="run-end-backdrop" />
-        <ui:VisualElement class="run-end-content">
+        <ui:VisualElement class="run-end-content scifi-panel">
             <ui:Label name="result-title" text="VICTORY" class="run-end-title win-title" />
             <ui:Label name="level-label" text="Chap 1.1" class="run-end-subtitle" />
 
@@ -34,8 +34,8 @@
             </ui:VisualElement>
 
             <ui:VisualElement class="button-row">
-                <ui:Button name="retry-btn" text="Retry" class="run-end-btn primary-btn" />
-                <ui:Button name="hub-btn" text="Hub" class="run-end-btn secondary-btn" />
+                <ui:Button name="retry-btn" text="Retry" class="run-end-btn primary-btn scifi-button" />
+                <ui:Button name="hub-btn" text="Hub" class="run-end-btn scifi-button" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

@@ -2,7 +2,7 @@
     <Style src="BattleCardPick.uss" />
     <ui:VisualElement name="card-pick-root" class="card-pick-root">
         <ui:VisualElement class="card-pick-backdrop" />
-        <ui:VisualElement class="card-pick-content">
+        <ui:VisualElement class="card-pick-content scifi-panel">
             <ui:Label text="CHOOSE CARD" class="card-pick-title" />
             <ui:Label text="Lv up — pick 1 upgrade" class="card-pick-subtitle" />
             <ui:VisualElement name="card-container" class="card-container" />

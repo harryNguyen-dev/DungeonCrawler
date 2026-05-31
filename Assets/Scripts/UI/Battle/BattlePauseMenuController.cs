@@ -1,4 +1,5 @@
 using Core;
+using CustomUI.SciFi;
 using Global;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -36,6 +37,7 @@ namespace CustomUI.Battle
             GlobalEvents.OnGameOver += HandleGameOver;
 
             CacheElements();
+            SciFiUiHelper.StyleSciFiDocument(uiDocument?.rootVisualElement);
             WireButtons();
             HidePanel();
         }

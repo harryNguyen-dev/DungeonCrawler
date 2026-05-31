@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CustomUI.SciFi;
 using Global;
 using SO;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace CustomUI.Battle
         {
             GlobalEvents.OnRequestBattleCardUI += ShowPanel;
             CacheElements();
+            SciFiUiHelper.StyleSciFiPanels(uiDocument?.rootVisualElement);
             HidePanel();
         }
 

@@ -1,4 +1,5 @@
 using Core;
+using CustomUI.SciFi;
 using Global;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -40,6 +41,7 @@ namespace CustomUI.Battle
             GlobalEvents.OnRequestEndGameUI += ShowSummary;
             GlobalEvents.OnMatchReset += HidePanel;
             CacheElements();
+            SciFiUiHelper.StyleSciFiDocument(uiDocument?.rootVisualElement);
             WireButtons();
             HidePanel();
         }

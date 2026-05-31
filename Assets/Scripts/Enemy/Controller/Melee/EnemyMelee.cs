@@ -44,7 +44,7 @@ namespace EnemyController
         {
             // Nếu đang trong quá trình thực hiện đòn đánh (UniTask của Attack đang chạy), đóng băng AI loop
             if (isAttacking) return;
-
+            
             // Tính khoảng cách đến Player trên không gian 3D
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 

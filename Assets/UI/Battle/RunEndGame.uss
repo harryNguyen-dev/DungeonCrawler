@@ -1,3 +1,5 @@
+@import url("../Shared/SciFiTheme.uss");
+
 .run-end-root {
     display: none;
     position: absolute;
@@ -23,11 +25,6 @@
     position: relative;
     width: 520px;
     max-width: 92%;
-    padding: 28px 32px 24px;
-    background-color: rgba(10, 16, 32, 0.96);
-    border-width: 1px;
-    border-color: rgba(72, 196, 255, 0.5);
-    border-radius: 12px;
     align-items: stretch;
 }
 
@@ -36,6 +33,7 @@
     -unity-font-style: bold;
     margin-bottom: 4px;
     -unity-text-align: middle-center;
+    letter-spacing: 2px;
 }
 
 .win-title {
@@ -48,7 +46,7 @@
 
 .run-end-subtitle {
     font-size: 14px;
-    color: rgb(170, 190, 210);
+    color: rgba(190, 210, 230, 0.9);
     margin-bottom: 18px;
     -unity-text-align: middle-center;
 }
@@ -56,16 +54,18 @@
 .run-end-section {
     margin-bottom: 14px;
     padding: 10px 12px;
-    background-color: rgba(255, 255, 255, 0.04);
-    border-radius: 8px;
+    background-color: rgba(12, 22, 40, 0.65);
+    border-width: 1px;
+    border-color: rgba(45, 110, 165, 0.45);
+    border-radius: 2px;
 }
 
 .section-title {
     font-size: 11px;
     -unity-font-style: bold;
-    color: rgb(120, 220, 255);
+    color: rgb(100, 220, 255);
     margin-bottom: 8px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 .stats-grid {
@@ -99,7 +99,7 @@
 
 .meta-total-label {
     font-size: 13px;
-    color: rgb(170, 190, 210);
+    color: rgba(190, 210, 230, 0.9);
     -unity-text-align: middle-center;
 }
 
@@ -110,32 +110,8 @@
 }
 
 .run-end-btn {
-    min-width: 120px;
-    height: 40px;
+    min-width: 130px;
+    min-height: 48px;
     margin-left: 8px;
     margin-right: 8px;
-    border-radius: 8px;
-    font-size: 14px;
-    -unity-font-style: bold;
-    border-width: 1px;
-}
-
-.primary-btn {
-    background-color: rgba(72, 196, 255, 0.25);
-    border-color: rgba(120, 220, 255, 0.85);
-    color: rgb(220, 245, 255);
-}
-
-.primary-btn:hover {
-    background-color: rgba(72, 196, 255, 0.45);
-}
-
-.secondary-btn {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.25);
-    color: rgb(210, 220, 235);
-}
-
-.secondary-btn:hover {
-    background-color: rgba(255, 255, 255, 0.16);
 }

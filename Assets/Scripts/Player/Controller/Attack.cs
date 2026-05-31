@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace PlayerController
 {
+    [RequireComponent(typeof(Rotate))]
     public class Attack : MonoBehaviour
     {
         [SerializeField] private GameObject projectilePrefab;
@@ -11,6 +12,8 @@ namespace PlayerController
 
         private PlayerStats playerStats;
         private PlayerEvents playerEvents;
+        private PlayerAnimation playerAnimation;
+        private Rotate playerRotate;
         private float attackCooldown;
         private int numberOfProjectiles = 1;
         private float lastAttackTime;
@@ -20,6 +23,8 @@ namespace PlayerController
         {
             playerStats = GetComponent<PlayerStats>();
             playerEvents = GetComponent<PlayerEvents>();
+            playerAnimation = GetComponent<PlayerAnimation>();
+            playerRotate = GetComponent<Rotate>();
             attackCooldown = playerStats.GetAttackCooldown();
             if (playerStats.runtimeStats.TryGetEffect(SO.WeaponEffectType.NumberOfProjectiles, out var value))
             {
@@ -54,6 +59,16 @@ namespace PlayerController
         {
             if (!canAttack) return;
 
+            // Cũ: đánh ngay, model đã xoay theo chuột liên tục (Rotate.LateUpdate)
+            // if (InputManager.Instance.IsAttacking())
+            // {
+            //     if (Time.time >= lastAttackTime + attackCooldown)
+            //     {
+            //         PerformAttack();
+            //         lastAttackTime = Time.time;
+            //     }
+            // }
+
             if (InputManager.Instance.IsAttacking())
             {
                 if (Time.time >= lastAttackTime + attackCooldown)
@@ -66,8 +81,11 @@ namespace PlayerController
 
         private void PerformAttack()
         {
+            // Xoay mặt về hướng chuột (định hướng) rồi mới đánh
+            playerRotate?.SnapFaceAimDirection();
+
             Debug.Log("[PlayerController] Perform Attack");
-            SpawnProjectile().Forget();
+            playerAnimation.SetAttack();
         }
 
         public async UniTask SpawnProjectile()

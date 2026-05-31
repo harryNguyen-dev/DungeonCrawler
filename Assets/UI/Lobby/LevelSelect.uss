@@ -1,3 +1,5 @@
+@import url("../Shared/SciFiTheme.uss");
+
 .level-select-root {
     display: none;
     position: absolute;
@@ -21,26 +23,22 @@
 
 .level-select-panel {
     position: relative;
-    width: 420px;
-    max-height: 80%;
-    padding: 24px;
-    background-color: rgba(10, 16, 32, 0.96);
-    border-width: 1px;
-    border-color: rgba(72, 196, 255, 0.55);
-    border-radius: 12px;
+    width: 480px;
+    max-height: 82%;
 }
 
 .level-select-title {
     font-size: 22px;
     -unity-font-style: bold;
-    color: rgb(120, 220, 255);
+    color: rgb(100, 220, 255);
     -unity-text-align: middle-center;
     margin-bottom: 4px;
+    letter-spacing: 2px;
 }
 
 .level-select-subtitle {
     font-size: 13px;
-    color: rgb(170, 190, 210);
+    color: rgba(190, 210, 230, 0.9);
     -unity-text-align: middle-center;
     margin-bottom: 6px;
 }
@@ -48,6 +46,7 @@
 .level-select-progress {
     font-size: 12px;
     color: rgb(255, 210, 90);
+    -unity-font-style: bold;
     -unity-text-align: middle-center;
     margin-bottom: 14px;
 }
@@ -65,43 +64,52 @@
     align-items: center;
     padding: 12px 14px;
     margin-bottom: 8px;
-    background-color: rgba(24, 36, 56, 0.95);
-    border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
+    background-color: rgba(12, 22, 40, 0.88);
+    border-width: 2px;
+    border-color: rgba(45, 110, 165, 0.55);
+    border-radius: 2px;
     cursor: link;
 }
 
 .level-row:hover {
-    border-color: rgba(120, 220, 255, 0.75);
+    border-color: rgba(0, 210, 255, 0.75);
+    background-color: rgba(16, 32, 56, 0.92);
 }
 
 .level-row--locked {
-    opacity: 0.45;
     cursor: arrow;
+    background-color: rgba(12, 22, 40, 0.55);
+    border-color: rgba(45, 110, 165, 0.28);
+}
+
+.level-row--locked .level-label {
+    color: rgb(175, 188, 205);
+}
+
+.level-row--locked .level-status {
+    color: rgb(150, 168, 190);
 }
 
 .level-row--next {
-    border-color: rgba(255, 210, 90, 0.85);
-    background-color: rgba(48, 40, 16, 0.55);
+    border-color: rgba(255, 190, 70, 0.85);
+    background-color: rgba(36, 28, 12, 0.55);
 }
 
 .level-label {
     font-size: 16px;
     color: rgb(230, 240, 255);
+    -unity-font-style: bold;
+    letter-spacing: 1px;
 }
 
 .level-status {
     font-size: 12px;
-    color: rgb(120, 220, 255);
+    color: rgb(100, 220, 255);
     -unity-font-style: bold;
 }
 
 .level-close-button {
     align-self: center;
-    min-width: 120px;
-    padding: 8px 16px;
-    background-color: rgba(40, 60, 90, 0.95);
-    border-color: rgba(120, 220, 255, 0.45);
-    color: rgb(220, 235, 255);
+    min-width: 140px;
+    min-height: 48px;
 }

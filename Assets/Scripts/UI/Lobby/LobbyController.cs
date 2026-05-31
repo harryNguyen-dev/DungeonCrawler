@@ -1,6 +1,7 @@
 using System.Globalization;
 using Core;
 using Core.Save;
+using CustomUI.SciFi;
 using Global;
 using SO;
 using UnityEngine;
@@ -11,31 +12,27 @@ using UnityEditor;
 
 namespace CustomUI.Lobby
 {
-    /// <summary>Màn hình Lobby chính (UI Toolkit) — thay tương tác Portal/Cube.</summary>
+    /// <summary>Main lobby screen (UI Toolkit).</summary>
     [RequireComponent(typeof(UIDocument))]
     public class LobbyController : MonoBehaviour
     {
-        [SerializeField] private string playerDisplayName = "PILOT";
-
         private UIDocument uiDocument;
 
-        private Button quickAccessButton;
+        private Button continueButton;
         private Button levelsButton;
         private Button heroButton;
         private Button creditButton;
+        private Button settingsButton;
         private Button exitButton;
 
-        private Label quickAccessTitleLabel;
-        private Label quickAccessSubtitleLabel;
-        private Label playerNameLabel;
+        private Label continueLabel;
         private Label metaGoldValueLabel;
-        private Label playerAchievementLabel;
 
-        // Giữ reference callback để hủy đăng ký trong OnDisable (tránh leak)
-        private EventCallback<ClickEvent> onQuickAccessClick;
+        private EventCallback<ClickEvent> onContinueClick;
         private EventCallback<ClickEvent> onLevelsClick;
         private EventCallback<ClickEvent> onExitClick;
         private EventCallback<ClickEvent> onHeroClick;
+        private EventCallback<ClickEvent> onSettingsClick;
 
         private void Awake()
         {
@@ -50,6 +47,7 @@ namespace CustomUI.Lobby
                 uiDocument = GetComponent<UIDocument>();
 
             CacheElements();
+            SciFiUiHelper.StyleLobbyUi(uiDocument?.rootVisualElement);
             BindCallbacks();
             RefreshLobbyDisplay();
 
@@ -64,46 +62,45 @@ namespace CustomUI.Lobby
             GlobalEvents.OnMetaGoldChanged -= HandleLobbyReady;
         }
 
-        /// <summary>Query các phần tử UI theo name đã đặt trong LobbyUI.uxml.</summary>
         private void CacheElements()
         {
             var root = uiDocument?.rootVisualElement;
             if (root == null)
                 return;
 
-            quickAccessButton = root.Q<Button>("quick-access-button");
+            continueButton = root.Q<Button>("continue-button");
             levelsButton = root.Q<Button>("levels-button");
             heroButton = root.Q<Button>("hero-button");
             creditButton = root.Q<Button>("credit-button");
+            settingsButton = root.Q<Button>("settings-button");
             exitButton = root.Q<Button>("exit-button");
 
-            quickAccessTitleLabel = root.Q<Label>("quick-access-title");
-            quickAccessSubtitleLabel = root.Q<Label>("quick-access-subtitle");
-            playerNameLabel = root.Q<Label>("player-name-label");
+            continueLabel = root.Q<Label>("continue-label");
             metaGoldValueLabel = root.Q<Label>("meta-gold-value-label");
-            playerAchievementLabel = root.Q<Label>("player-achievement-label");
         }
 
         private void BindCallbacks()
         {
-            onQuickAccessClick = _ => OnQuickAccessClicked();
-            onLevelsClick = _ => OpenLevelSelectPanel();
+            onContinueClick = _ => OnContinueClicked();
+            onLevelsClick = _ => GlobalEvents.RaiseRequestLevelSelectUI();
             onExitClick = _ => ExitGame();
+            onHeroClick = _ => GlobalEvents.RaiseRequestHeroLoadoutUI();
+            onSettingsClick = _ => Debug.Log("[Lobby] Settings — coming soon.");
 
-            quickAccessButton?.RegisterCallback(onQuickAccessClick);
+            continueButton?.RegisterCallback(onContinueClick);
             levelsButton?.RegisterCallback(onLevelsClick);
             exitButton?.RegisterCallback(onExitClick);
-
-            onHeroClick = _ => GlobalEvents.RaiseRequestHeroLoadoutUI();
             heroButton?.RegisterCallback(onHeroClick);
+            settingsButton?.RegisterCallback(onSettingsClick);
         }
 
         private void UnbindCallbacks()
         {
-            quickAccessButton?.UnregisterCallback(onQuickAccessClick);
+            continueButton?.UnregisterCallback(onContinueClick);
             levelsButton?.UnregisterCallback(onLevelsClick);
             exitButton?.UnregisterCallback(onExitClick);
             heroButton?.UnregisterCallback(onHeroClick);
+            settingsButton?.UnregisterCallback(onSettingsClick);
         }
 
         private void HandleLobbyReady()
@@ -111,38 +108,34 @@ namespace CustomUI.Lobby
             RefreshLobbyDisplay();
         }
 
-        /// <summary>Cập nhật tên người chơi, tài nguyên meta, tiến độ màn và nhãn Quick Access.</summary>
         private void RefreshLobbyDisplay()
         {
-            if (playerNameLabel != null)
-                playerNameLabel.text = playerDisplayName;
-
             if (metaGoldValueLabel != null)
                 metaGoldValueLabel.text = FormatResourceAmount(LevelProgressService.GetMetaGold());
 
             var catalog = GlobalEntities.Instance?.Chapter1Catalog;
             if (catalog == null || catalog.LevelCount == 0)
             {
-                if (playerAchievementLabel != null)
-                    playerAchievementLabel.text = "—";
-                if (quickAccessSubtitleLabel != null)
-                    quickAccessSubtitleLabel.text = "Chưa có dữ liệu màn";
+                if (continueLabel != null)
+                    continueLabel.text = "CONTINUE (LEVEL —)";
+                continueButton?.SetEnabled(false);
                 return;
             }
 
+            continueButton?.SetEnabled(true);
+
             var unlockedIndex = LevelProgressService.GetHighestUnlockedIndex(catalog.LevelCount);
-            var unlockedCount = unlockedIndex + 1;
-
-            if (playerAchievementLabel != null)
-                playerAchievementLabel.text = $"{unlockedCount}/{catalog.LevelCount}";
-
             var level = catalog.GetLevel(unlockedIndex);
-            if (quickAccessSubtitleLabel != null)
-                quickAccessSubtitleLabel.text = level != null ? level.DisplayLabel : $"Màn {unlockedIndex + 1}";
+            if (continueLabel != null)
+            {
+                var levelName = level != null ? level.DisplayLabel : $"Level {unlockedIndex + 1}";
+                continueLabel.text = $"CONTINUE ({levelName.ToUpperInvariant()})";
+            }
 
-            // Placeholder: giữ nút sẵn sàng cho panel tương lai
             heroButton?.SetEnabled(true);
+            levelsButton?.SetEnabled(true);
             creditButton?.SetEnabled(true);
+            settingsButton?.SetEnabled(true);
         }
 
         private static string FormatResourceAmount(int amount)
@@ -150,13 +143,12 @@ namespace CustomUI.Lobby
             return amount.ToString("N0", CultureInfo.InvariantCulture);
         }
 
-        /// <summary>Vào màn tiến độ hiện tại (màn mở khóa cao nhất).</summary>
-        private void OnQuickAccessClicked()
+        private void OnContinueClicked()
         {
             var catalog = GlobalEntities.Instance?.Chapter1Catalog;
             if (catalog == null || catalog.LevelCount == 0)
             {
-                Debug.LogWarning("[Lobby] Chapter1Catalog chưa gán trên GlobalEntities.");
+                Debug.LogWarning("[Lobby] Chapter1Catalog is not assigned on GlobalEntities.");
                 return;
             }
 
@@ -164,27 +156,20 @@ namespace CustomUI.Lobby
             var level = catalog.GetLevel(index);
             if (level == null)
             {
-                Debug.LogWarning("[Lobby] Không tìm thấy LevelSO cho màn quick access.");
+                Debug.LogWarning("[Lobby] LevelSO not found for continue action.");
                 return;
             }
 
             StartLevel(level, index);
         }
 
-        /// <summary>Mở panel chọn màn (LevelSelectController lắng nghe event).</summary>
-        private void OpenLevelSelectPanel()
-        {
-            GlobalEvents.RaiseRequestLevelSelectUI();
-        }
-
-        private void StartLevel(LevelSO level, int index)
+        private static void StartLevel(LevelSO level, int index)
         {
             GlobalVariable.CurrentLevel = level;
             GlobalVariable.CurrentLevelIndex = index;
             SceneManagerCustom.LoadDungeon();
         }
 
-        /// <summary>Thoát game — Editor dừng Play Mode, bản build gọi Application.Quit().</summary>
         private static void ExitGame()
         {
 #if UNITY_EDITOR

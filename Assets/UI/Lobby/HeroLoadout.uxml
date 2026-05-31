@@ -3,30 +3,36 @@
     <ui:VisualElement name="hero-loadout-root" class="hero-loadout-root">
         <ui:VisualElement name="hero-loadout-backdrop" class="hero-loadout-backdrop" />
         <ui:VisualElement class="hero-loadout-center">
-            <ui:VisualElement class="hero-loadout-shell">
+            <ui:VisualElement class="hero-loadout-shell scifi-panel">
                 <ui:VisualElement class="hero-loadout-header">
-                    <ui:Button name="close-button" text="X" class="hero-close-button" />
+                    <ui:Button name="close-button" text="X" class="hero-close-button scifi-button-compact" />
                     <ui:Label text="HERO" class="hero-loadout-title" />
                     <ui:Label name="meta-gold-label" text="0" class="hero-meta-gold" />
                 </ui:VisualElement>
                 <ui:VisualElement class="hero-loadout-body">
                     <ui:VisualElement class="hero-left-column">
                         <ui:ScrollView name="weapon-scroll" class="weapon-scroll" />
+                        <ui:VisualElement name="detail-panel" class="weapon-detail-overlay">
+                            <ui:VisualElement class="detail-header-row">
+                                <ui:Label name="detail-name" text="—" class="detail-name" />
+                                <ui:Button name="detail-close-button" text="X" class="detail-close-button scifi-button-compact" />
+                            </ui:VisualElement>
+                            <ui:ScrollView name="detail-scroll" class="detail-scroll">
+                                <ui:Label name="detail-description" text="" class="detail-description" />
+                                <ui:Label name="detail-status" text="" class="detail-status" />
+                            </ui:ScrollView>
+                            <ui:VisualElement class="detail-actions">
+                                <ui:Button name="primary-action-button" text="—" class="detail-primary-button primary-btn scifi-button" />
+                                <ui:Button name="equip-button" text="EQUIP" class="detail-equip-button scifi-button" />
+                                <ui:Button name="upgrade-damage-button" text="+ DMG" class="detail-upgrade-button scifi-button" />
+                                <ui:Button name="upgrade-fire-rate-button" text="+ ROF" class="detail-upgrade-button scifi-button" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="preview-panel" class="hero-preview-panel">
                         <ui:Image name="preview-image" class="hero-preview-image" picking-mode="Ignore" />
                         <ui:VisualElement name="preview-drag-layer" class="hero-preview-drag-layer" />
                         <ui:Label text="Drag to rotate" class="hero-preview-hint" picking-mode="Ignore" />
-                    </ui:VisualElement>
-                    <ui:VisualElement name="detail-panel" class="weapon-detail-overlay">
-                        <ui:Button name="detail-close-button" text="X" class="detail-close-button" />
-                        <ui:Label name="detail-name" text="—" class="detail-name" />
-                        <ui:Label name="detail-description" text="" class="detail-description" />
-                        <ui:Label name="detail-status" text="" class="detail-status" />
-                        <ui:Button name="primary-action-button" text="—" class="detail-primary-button" />
-                        <ui:Button name="equip-button" text="EQUIP" class="detail-equip-button" />
-                        <ui:Button name="upgrade-damage-button" text="+ DMG" class="detail-upgrade-button" />
-                        <ui:Button name="upgrade-fire-rate-button" text="+ ROF" class="detail-upgrade-button" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

@@ -19,6 +19,8 @@ namespace EnemyController
         protected Rigidbody rb;
         protected CombatFeel.KnockbackAgent knockbackAgent;
         private CancellationTokenSource aiCancellation;
+        protected BaseEnemyAnimation baseEnemyAnimation;
+        private Health health;
         private bool hasInitialized;
         private bool hasInitializedComponents = false;
 
@@ -40,7 +42,8 @@ namespace EnemyController
 
             agent = GetComponent<NavMeshAgent>();
             rb = GetComponent<Rigidbody>();
-            
+            baseEnemyAnimation = GetComponent<BaseEnemyAnimation>();
+            health = GetComponent<Health>();
             // Khởi tạo knockbackAgent 1 lần duy nhất
             if (rb != null && agent != null)
             {
@@ -83,11 +86,17 @@ namespace EnemyController
                 aiCancellation = null;
             }
         }
+        protected bool IsDead()
+        {
+            return health != null && health.CurrentHealth <= 0 && health.IsDead;
+        }
 
         private async UniTaskVoid AILoop(CancellationToken token)
         {
             while (this != null && gameObject != null && !token.IsCancellationRequested)
             {
+                UpdateLocomotionAnimation();
+
                 if ((knockbackAgent != null && knockbackAgent.IsActive) || agent == null || !agent.enabled)
                 {
                     await UniTask.Delay(100, cancellationToken: token);
@@ -96,6 +105,11 @@ namespace EnemyController
 
                 if (player != null)
                 {
+                    if(IsDead()) {
+                        await UniTask.Delay(100, cancellationToken: token);
+                        continue;
+                    }
+    
                     ExecuteBehaviour();
                 }
 
@@ -103,22 +117,25 @@ namespace EnemyController
             }
         }
 
+        protected void UpdateLocomotionAnimation()
+        {
+            if (agent == null || !agent.enabled)
+            {
+                baseEnemyAnimation?.SetSpeed(0f);
+                return;
+            }
+            if(!IsDead()) {
+                baseEnemyAnimation?.SetSpeed(agent.velocity.magnitude);
+            }
+        }
+
         // Các lớp con (Melee, Ranged, Boss) sẽ tự override hàm này để viết code AI riêng
-        protected abstract void ExecuteBehaviour();
+        protected virtual void ExecuteBehaviour() { }
 
         public virtual void OnSpawnedFromPool()
         {
-            // Đảm bảo components đã được cache (phòng trường hợp OnSpawned gọi trước cả Awake/Start tùy ObjectPoolingManager)
-            EnsureComponentsInitialized(); 
-
-            // Cập nhật lại chỉ số mới từ ScriptableObject phòng khi bạn đổi chỉ số lúc chạy game
-            ApplyData();
-
-            // Tìm lại Player mới nhất (Tránh việc Player cũ bị hủy hoặc đổi màn chơi)
-            InitializePlayer();
-
-            // Chạy lại vòng lặp AI cho vòng đời mới này
-            StartAILoop();
+            baseEnemyAnimation?.ResetAttackCombo();
+            baseEnemyAnimation?.SetSpawnTrigger();
         }
 
         public virtual void OnReturnedToPool()
@@ -149,6 +166,21 @@ namespace EnemyController
         {
             if (agent == null || enemyData == null) return;
             agent.speed = enemyData.MoveSpeed;
+        }
+        public virtual void SpawnFinish()
+        {
+            // StartAILoop();
+            // Đảm bảo components đã được cache (phòng trường hợp OnSpawned gọi trước cả Awake/Start tùy ObjectPoolingManager)
+            EnsureComponentsInitialized(); 
+
+            // Cập nhật lại chỉ số mới từ ScriptableObject phòng khi bạn đổi chỉ số lúc chạy game
+            ApplyData();
+
+            // Tìm lại Player mới nhất (Tránh việc Player cũ bị hủy hoặc đổi màn chơi)
+            InitializePlayer();
+
+            // Chạy lại vòng lặp AI cho vòng đời mới này
+            StartAILoop();
         }
     }
 

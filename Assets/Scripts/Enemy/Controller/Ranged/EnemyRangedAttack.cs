@@ -18,9 +18,9 @@ namespace EnemyController
 
             try
             {
-                if (useAnimationEvents && animator != null)
+                if (useAnimationEvents && baseEnemyAnimation != null)
                 {
-                    animator.SetTrigger("Attack"); // Tên trigger tùy thuộc vào Animator của bạn
+                    baseEnemyAnimation.SetAttackTrigger(); 
 
                     // Chờ theo thời gian hồi chiêu cấu hình trong ScriptableObject
                     await UniTask.Delay(System.TimeSpan.FromSeconds(enemyData.AttackCooldown));
@@ -45,7 +45,10 @@ namespace EnemyController
                 if (this != null) canAttack = true;
             }
         }
-
+        public override void OnAnimationAttackEvent()
+        {
+            SpawnProjectile();
+        }
         public void SpawnProjectile()
         {
             if (projectilePrefab == null)

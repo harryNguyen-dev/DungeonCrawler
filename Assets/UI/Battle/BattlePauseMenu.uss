@@ -1,3 +1,5 @@
+@import url("../Shared/SciFiTheme.uss");
+
 .pause-root {
     display: none;
     position: absolute;
@@ -21,27 +23,22 @@
 
 .pause-content {
     position: relative;
-    width: 360px;
+    width: 380px;
     max-width: 90%;
-    padding: 28px 32px 24px;
-    background-color: rgba(10, 16, 32, 0.96);
-    border-width: 1px;
-    border-color: rgba(72, 196, 255, 0.5);
-    border-radius: 12px;
-    align-items: stretch;
 }
 
 .pause-title {
     font-size: 26px;
     -unity-font-style: bold;
-    color: rgb(220, 245, 255);
+    color: rgb(100, 220, 255);
     margin-bottom: 6px;
     -unity-text-align: middle-center;
+    letter-spacing: 2px;
 }
 
 .pause-subtitle {
     font-size: 14px;
-    color: rgb(170, 190, 210);
+    color: rgba(190, 210, 230, 0.9);
     margin-bottom: 22px;
     -unity-text-align: middle-center;
 }
@@ -52,32 +49,8 @@
 }
 
 .pause-btn {
-    min-width: 120px;
-    height: 40px;
+    min-width: 130px;
+    min-height: 48px;
     margin-left: 8px;
     margin-right: 8px;
-    border-radius: 8px;
-    font-size: 14px;
-    -unity-font-style: bold;
-    border-width: 1px;
-}
-
-.primary-btn {
-    background-color: rgba(72, 196, 255, 0.25);
-    border-color: rgba(120, 220, 255, 0.85);
-    color: rgb(220, 245, 255);
-}
-
-.primary-btn:hover {
-    background-color: rgba(72, 196, 255, 0.45);
-}
-
-.secondary-btn {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.25);
-    color: rgb(210, 220, 235);
-}
-
-.secondary-btn:hover {
-    background-color: rgba(255, 255, 255, 0.16);
 }

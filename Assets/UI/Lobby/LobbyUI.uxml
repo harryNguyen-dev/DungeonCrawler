@@ -1,41 +1,62 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+
     <Style src="project://database/Assets/UI/Lobby/LobbyUI.uss?fileID=7433441132597879392&amp;guid=a1b2c3d4e5f6478091a2b3c4d5e6f702&amp;type=3#LobbyUI"/>
+
     <ui:VisualElement name="lobby-root" class="lobby-root">
-        <ui:VisualElement class="lobby-overlay"/>
-        <ui:VisualElement class="lobby-top-bar">
-            <ui:VisualElement name="top-left-container" class="top-left-container">
-                <ui:Button name="quick-access-button" class="quick-access-button">
-                    <ui:Label name="quick-access-title" text="TIẾP TỤC" class="quick-access-title"/>
-                    <ui:Label name="quick-access-subtitle" text="Màn —" class="quick-access-subtitle"/>
-                </ui:Button>
-            </ui:VisualElement>
-            <ui:VisualElement name="top-right-container" class="top-right-container">
-                <ui:Label name="player-name-label" text="PILOT" class="player-name-label"/>
-                <ui:VisualElement name="player-resources-row" class="player-resources-row">
+
+        <ui:VisualElement name="lobby-background-slot" class="lobby-background"/>
+
+        <ui:VisualElement class="lobby-ui-layer">
+
+            <ui:VisualElement class="lobby-top-bar">
+
+                <ui:VisualElement name="top-right-container" class="top-right-container">
+
                     <ui:VisualElement name="meta-gold-chip" class="resource-chip resource-chip--gold">
-                        <ui:Label text="◆" class="resource-icon resource-icon--gold"/>
-                        <ui:VisualElement class="resource-text-group">
-                            <ui:Label text="VÀNG META" class="resource-label"/>
+
+                        <ui:Label text="GOLD" class="resource-label"/>
+
+                        <ui:VisualElement class="resource-value-row">
+
+                            <ui:Label text="◆" class="resource-icon resource-icon--gold"/>
+
                             <ui:Label name="meta-gold-value-label" text="0" class="resource-value resource-value--gold"/>
+
                         </ui:VisualElement>
+
                     </ui:VisualElement>
-                    <ui:VisualElement name="progress-chip" class="resource-chip resource-chip--progress">
-                        <ui:Label text="◈" class="resource-icon resource-icon--progress"/>
-                        <ui:VisualElement class="resource-text-group">
-                            <ui:Label text="MẢNH ĐỊA ĐỒ" class="resource-label"/>
-                            <ui:Label name="player-achievement-label" text="0/0" class="resource-value resource-value--progress"/>
-                        </ui:VisualElement>
-                    </ui:VisualElement>
+
                 </ui:VisualElement>
+
             </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement class="lobby-main">
-            <ui:VisualElement name="left-menu-bar" class="left-menu-bar">
-                <ui:Button name="levels-button" text="LEVELS" class="menu-button menu-button--levels"/>
-                <ui:Button name="hero-button" text="HERO" class="menu-button menu-button--upgrade"/>
-                <ui:Button name="credit-button" text="CREDIT" class="menu-button menu-button--credit"/>
-                <ui:Button name="exit-button" text="EXIT" class="menu-button menu-button--exit"/>
+
+            <ui:VisualElement class="lobby-main">
+
+                <ui:VisualElement name="left-menu-bar" class="left-menu-bar">
+
+                    <ui:Button name="continue-button" class="menu-button menu-button--continue">
+
+                        <ui:Label name="continue-label" text="CONTINUE (LEVEL —)" class="menu-button-label"/>
+
+                    </ui:Button>
+
+                    <ui:Button name="levels-button" text="LEVELS" class="menu-button menu-button--default"/>
+
+                    <ui:Button name="hero-button" text="HERO" class="menu-button menu-button--default"/>
+
+                    <ui:Button name="credit-button" text="CREDIT" class="menu-button menu-button--default"/>
+
+                    <ui:Button name="settings-button" text="SETTINGS" class="menu-button menu-button--default"/>
+
+                    <ui:Button name="exit-button" text="EXIT" class="menu-button menu-button--exit"/>
+
+                </ui:VisualElement>
+
             </ui:VisualElement>
+
         </ui:VisualElement>
+
     </ui:VisualElement>
-</ui:UXML>
+
+</ui:UXML> 
+

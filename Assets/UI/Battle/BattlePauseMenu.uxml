@@ -2,12 +2,12 @@
     <Style src="BattlePauseMenu.uss" />
     <ui:VisualElement name="pause-root" class="pause-root">
         <ui:VisualElement class="pause-backdrop" />
-        <ui:VisualElement class="pause-content">
+        <ui:VisualElement class="pause-content scifi-panel">
             <ui:Label text="TẠM DỪNG" class="pause-title" />
             <ui:Label text="Chọn hành động" class="pause-subtitle" />
             <ui:VisualElement class="button-row">
-                <ui:Button name="continue-btn" text="Tiếp tục" class="pause-btn primary-btn" />
-                <ui:Button name="exit-btn" text="Thoát" class="pause-btn secondary-btn" />
+                <ui:Button name="continue-btn" text="Tiếp tục" class="pause-btn primary-btn scifi-button" />
+                <ui:Button name="exit-btn" text="Thoát" class="pause-btn secondary-btn scifi-button" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

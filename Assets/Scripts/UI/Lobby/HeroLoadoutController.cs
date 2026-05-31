@@ -1,5 +1,6 @@
 using System.Globalization;
 using Core.Save;
+using CustomUI.SciFi;
 using Global;
 using SO;
 using UnityEngine;
@@ -42,6 +43,7 @@ namespace CustomUI.Lobby
             GlobalEvents.OnRequestHeroLoadoutUI += ShowPanel;
             GlobalEvents.OnMetaGoldChanged += RefreshMetaGold;
             CacheElements();
+            SciFiUiHelper.StyleSciFiDocument(uiDocument?.rootVisualElement);
             HidePanel();
         }
 
@@ -240,23 +242,23 @@ namespace CustomUI.Lobby
 
             if (dmgTier >= selectedWeapon.maxDamageTier)
             {
-                upgradeDamageButton.text = $"DAMAGE MAX ({dmgTier}/{selectedWeapon.maxDamageTier})";
+                upgradeDamageButton.text = $"DMG MAX ({dmgTier}/{selectedWeapon.maxDamageTier})";
                 upgradeDamageButton.SetEnabled(false);
             }
             else
             {
-                upgradeDamageButton.text = $"+ DAMAGE ({dmgTier}/{selectedWeapon.maxDamageTier}) — {dmgCost:N0}g";
+                upgradeDamageButton.text = $"DMG {dmgTier}/{selectedWeapon.maxDamageTier} · {dmgCost:N0}g";
                 upgradeDamageButton.SetEnabled(gold >= dmgCost);
             }
 
             if (rofTier >= selectedWeapon.maxFireRateTier)
             {
-                upgradeFireRateButton.text = $"FIRE RATE MAX ({rofTier}/{selectedWeapon.maxFireRateTier})";
+                upgradeFireRateButton.text = $"ROF MAX ({rofTier}/{selectedWeapon.maxFireRateTier})";
                 upgradeFireRateButton.SetEnabled(false);
             }
             else
             {
-                upgradeFireRateButton.text = $"+ FIRE RATE ({rofTier}/{selectedWeapon.maxFireRateTier}) — {rofCost:N0}g";
+                upgradeFireRateButton.text = $"ROF {rofTier}/{selectedWeapon.maxFireRateTier} · {rofCost:N0}g";
                 upgradeFireRateButton.SetEnabled(gold >= rofCost);
             }
         }

@@ -1,5 +1,6 @@
 using Core;
 using Core.Save;
+using CustomUI.SciFi;
 using Global;
 using SO;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace CustomUI.Lobby
             GlobalEvents.OnRequestLevelSelectUI += ShowPanel;
             GlobalEvents.OnLobbyReady += HandleLobbyReady;
             CacheElements();
+            SciFiUiHelper.StyleSciFiDocument(uiDocument?.rootVisualElement);
             HidePanel();
         }
 

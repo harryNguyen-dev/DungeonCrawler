@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Core;
 using Cysharp.Threading.Tasks;
@@ -6,26 +7,37 @@ using UnityEngine;
 
 namespace Projectile
 {
-
     public class ProjectileMove : MonoBehaviour, IPoolable
     {
         [SerializeField] private float speed = 15f;
         [SerializeField] private float lifeTime = 2f;
-        private bool canMove = false;
 
-        // --- Biến bổ sung cho Boomerang ---
+        [Header("VFX")]
+        [SerializeField] private GameObject muzzlePrefab;
+        [SerializeField] private bool rotate;
+        [SerializeField] private float rotateAmount = 45f;
+        [SerializeField] private List<GameObject> trails = new();
+
+        private bool canMove = false;
         private bool isBoomerang = false;
         private bool isReturning = false;
         private Transform playerTransform;
-        private System.Action onReturnStart; // Callback báo cho Controller biết đạn đang quay về
+        private Action onReturnStart;
+        private Action onDespawnRequested;
         private CancellationTokenSource disableCTS;
-        public void ActiveSelf(bool isBoomerang, System.Action onReturnStart)
+
+        public void SetDespawnCallback(Action callback) => onDespawnRequested = callback;
+
+        public void ActiveSelf(bool isBoomerang, Action onReturnStart)
         {
-            CancelInvoke(); // Xóa sạch các lệnh Invoke cũ nếu có
+            CancelInvoke();
             this.isBoomerang = isBoomerang;
             this.onReturnStart = onReturnStart;
             this.isReturning = false;
             this.canMove = true;
+
+            PlayMuzzleVfx();
+            PlayTrailVfx();
 
             if (isBoomerang)
             {
@@ -43,6 +55,7 @@ namespace Projectile
                 ReturnAfterTime(disableCTS.Token).Forget();
             }
         }
+
         private async UniTask ReturnAfterTime(CancellationToken cancellationToken)
         {
             bool isCanceled = await UniTask.Delay(TimeSpan.FromSeconds(lifeTime), cancellationToken: cancellationToken).SuppressCancellationThrow();
@@ -50,17 +63,15 @@ namespace Projectile
             if (isCanceled) return;
 
             if (gameObject.activeSelf)
-                ObjectPoolingManager.SafeReturn(gameObject);
+                RequestDespawn();
         }
 
         public void StartReturnState()
         {
             if (isReturning || !isBoomerang) return;
 
-            CancelInvoke(nameof(StartReturnState)); // Hủy lệnh invoke nếu được gọi ép buộc từ bên ngoài
+            CancelInvoke(nameof(StartReturnState));
             isReturning = true;
-
-            // Kích hoạt callback để xóa list đã trúng độc bên Controller
             onReturnStart?.Invoke();
         }
 
@@ -68,33 +79,44 @@ namespace Projectile
         {
             if (!canMove) return;
 
+            if (rotate)
+                transform.Rotate(0f, 0f, rotateAmount, Space.Self);
+
             if (isReturning && playerTransform != null)
             {
-                // GIAI ĐOẠN 2: Hướng về phía Player như nam châm
                 Vector3 direction = (playerTransform.position - transform.position).normalized;
 
-                // Quay đầu viên đạn về phía Player nhìn cho đẹp mắt
                 if (direction != Vector3.zero)
-                {
                     transform.forward = direction;
-                }
 
                 transform.Translate(Vector3.forward * speed * 1.5f * Time.deltaTime);
 
-                // Nếu quay về sát Player, tiến hành hủy đạn
                 if (Vector3.Distance(transform.position, playerTransform.position) < 0.5f)
-                    ObjectPoolingManager.SafeReturn(gameObject);
+                    RequestDespawn();
             }
             else
             {
-                // GIAI ĐOẠN 1: Di chuyển về phía trước theo hướng mặc định
                 transform.Translate(Vector3.forward * speed * Time.deltaTime);
             }
         }
 
+        private void PlayMuzzleVfx() =>
+            ProjectileVfxHelper.PlayMuzzle(muzzlePrefab, transform.position, transform.forward);
+
+        private void PlayTrailVfx() => ProjectileVfxHelper.PlayTrails(trails);
+
+        private void StopTrailVfx() => ProjectileVfxHelper.ResetTrails(trails);
+
+        private void RequestDespawn()
+        {
+            if (onDespawnRequested != null)
+                onDespawnRequested.Invoke();
+            else
+                ObjectPoolingManager.SafeReturn(gameObject);
+        }
+
         public void OnSpawnedFromPool()
         {
-            // Đảm bảo CTS luôn luôn được tạo TRƯỚC khi bất kỳ logic nào khác chạy
             disableCTS = new CancellationTokenSource();
         }
 
@@ -105,8 +127,8 @@ namespace Projectile
             isReturning = false;
             playerTransform = null;
             onReturnStart = null;
+            StopTrailVfx();
 
-            // Dọn dẹp tiến trình ngầm an toàn
             if (disableCTS != null)
             {
                 disableCTS.Cancel();
@@ -126,5 +148,4 @@ namespace Projectile
             }
         }
     }
-
 }

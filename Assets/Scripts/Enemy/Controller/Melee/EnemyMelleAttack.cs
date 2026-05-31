@@ -15,9 +15,9 @@ namespace EnemyController
 
             try
             {
-                if (useAnimationEvents && animator != null)
+                if (useAnimationEvents && baseEnemyAnimation != null)
                 {
-                    animator.SetTrigger("Attack");
+                    baseEnemyAnimation.SetAttackTrigger();
                     // Chờ theo thời gian hồi gốc của cấu hình SO
                     await UniTask.Delay(System.TimeSpan.FromSeconds(enemyData.AttackCooldown));
                 }
@@ -38,9 +38,13 @@ namespace EnemyController
                 if (this != null) canAttack = true;
             }
         }
-
+        public override void OnAnimationAttackEvent()
+        {
+            ApplyMeleeDamage();
+        }
         private void ApplyMeleeDamage()
         {
+            Debug.Log("[EnemyMeleeAttack] Apply Melee Damage");
             float distance = Vector3.Distance(transform.position, player.position);
             // Check xem player có lướt ra ngoài tầm đánh (AttackRange trong SO) chưa
             if (distance <= enemyData.AttackRange + 0.5f) 

@@ -1,6 +1,8 @@
 using System.Threading;
 using UnityEngine;
 using Core;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace EnemyController
 {
@@ -27,7 +29,9 @@ namespace EnemyController
         private bool bossSetupPending;
         private float bossHpMultiplier = 3f;
         private bool isDead = false;
+        public bool IsDead => isDead;
         private EnemyEvents events;
+        private BaseEnemyAnimation baseEnemyAnimation;
 
         /// <summary>Gán boss cho encounter phòng boss (HP scale khi prefab chưa có isBoss trên SO).</summary>
         public void ConfigureAsBoss(float hpMultiplier = 3f)
@@ -53,6 +57,7 @@ namespace EnemyController
         {
             events = GetComponent<EnemyEvents>();
             hitFlash = new CombatFeel.HitFlash(gameObject);
+            baseEnemyAnimation = GetComponent<BaseEnemyAnimation>();
             ResetStatusEffectCancellation();
             ResetHealth();
             TryApplyBossSetup();
@@ -119,7 +124,7 @@ namespace EnemyController
         public void TakeDamage(int damage)
         {
             if (this == null || gameObject == null || isDead) return;
-
+            baseEnemyAnimation?.SetHitTrigger();
             currentHealth -= damage;
             events.ChangeHealth((int)currentHealth);
             Color colorToFlash = customFlashColor ?? defaultFlashColor;
@@ -134,12 +139,17 @@ namespace EnemyController
         {
             if (isDead) return;
             isDead = true;
-
+            var goldDrop = enemyData != null ? enemyData.GoldDrop : 5;
+            baseEnemyAnimation?.SetDieTrigger();
             CancelStatusEffects();
 
             Debug.Log("Enemy died!");
-            var goldDrop = enemyData != null ? enemyData.GoldDrop : 5;
             Global.GlobalEvents.RaiseEnemyDie(goldDrop);
+            ReturnToPoolAsync().Forget();
+        }
+        private async UniTaskVoid ReturnToPoolAsync()
+        {
+            await UniTask.Delay(1300);
             if (isBossInstance || (enemyData != null && enemyData.isBoss))
             {
                 Global.GlobalEvents.RaiseBossDefeated();

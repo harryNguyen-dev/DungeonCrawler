@@ -12,6 +12,7 @@ namespace EnemyController
         [Header("Projectile")]
         [SerializeField] private GameObject projectilePrefab;
         [SerializeField] private Transform firePoint;
+        [SerializeField] private bool useAnimationEvents = true;
 
         [Header("Pattern 1 — 3 tia góc")]
         [SerializeField] private float spreadHalfAngle = 22.5f;
@@ -28,24 +29,41 @@ namespace EnemyController
         [SerializeField] private int circleWaveDelayMs = 450;
         [SerializeField] private int windUpMsCircle = 400;
 
+        private StampedeBossAttackPattern pendingPattern;
+        private bool awaitingAnimationHit;
+
         public async UniTask PerformPattern(StampedeBossAttackPattern pattern)
         {
             if (!canAttack || enemyData == null) return;
             canAttack = false;
+            pendingPattern = pattern;
+            IsAttackInProgress = true;
 
             try
             {
-                switch (pattern)
+                if (useAnimationEvents && baseEnemyAnimation != null)
                 {
-                    case StampedeBossAttackPattern.TripleSpread:
-                        await PerformTripleSpread();
-                        break;
-                    case StampedeBossAttackPattern.RapidFive:
-                        await PerformRapidFive();
-                        break;
-                    case StampedeBossAttackPattern.CircleDoubleWave:
-                        await PerformCircleDoubleWave();
-                        break;
+                    awaitingAnimationHit = true;
+                    baseEnemyAnimation.PlayProjectileAttack();
+
+                    float waited = 0f;
+                    const float maxWait = 2.5f;
+                    while (awaitingAnimationHit && waited < maxWait)
+                    {
+                        if (this == null) return;
+                        waited += Time.deltaTime;
+                        await UniTask.Yield();
+                    }
+
+                    if (awaitingAnimationHit)
+                    {
+                        awaitingAnimationHit = false;
+                        FirePendingPattern();
+                    }
+                }
+                else
+                {
+                    await PerformPatternTimed(pattern);
                 }
 
                 if (enemyData != null)
@@ -53,6 +71,7 @@ namespace EnemyController
             }
             finally
             {
+                IsAttackInProgress = false;
                 if (this != null) canAttack = true;
             }
         }
@@ -62,22 +81,61 @@ namespace EnemyController
             return PerformPattern(StampedeBossAttackPattern.TripleSpread);
         }
 
-        private async UniTask PerformTripleSpread()
+        public override void OnAnimationAttackEvent()
         {
-            await UniTask.Delay(windUpMsSpread);
-            if (this == null) return;
+            if (!awaitingAnimationHit) return;
+            awaitingAnimationHit = false;
+            FirePendingPattern();
+        }
 
+        private void FirePendingPattern()
+        {
+            switch (pendingPattern)
+            {
+                case StampedeBossAttackPattern.TripleSpread:
+                    FireTripleSpread();
+                    break;
+                case StampedeBossAttackPattern.RapidFive:
+                    FireRapidFive().Forget();
+                    break;
+                case StampedeBossAttackPattern.CircleDoubleWave:
+                    FireCircleDoubleWave().Forget();
+                    break;
+            }
+        }
+
+        private async UniTask PerformPatternTimed(StampedeBossAttackPattern pattern)
+        {
+            switch (pattern)
+            {
+                case StampedeBossAttackPattern.TripleSpread:
+                    await UniTask.Delay(windUpMsSpread);
+                    if (this == null) return;
+                    FireTripleSpread();
+                    break;
+                case StampedeBossAttackPattern.RapidFive:
+                    await UniTask.Delay(windUpMsRapid);
+                    if (this == null) return;
+                    await FireRapidFive();
+                    break;
+                case StampedeBossAttackPattern.CircleDoubleWave:
+                    await UniTask.Delay(windUpMsCircle);
+                    if (this == null) return;
+                    await FireCircleDoubleWave();
+                    break;
+            }
+        }
+
+        private void FireTripleSpread()
+        {
             Vector3 baseDir = GetAimDirection();
             SpawnProjectile(baseDir);
             SpawnProjectile(Quaternion.Euler(0f, -spreadHalfAngle, 0f) * baseDir);
             SpawnProjectile(Quaternion.Euler(0f, spreadHalfAngle, 0f) * baseDir);
         }
 
-        private async UniTask PerformRapidFive()
+        private async UniTask FireRapidFive()
         {
-            await UniTask.Delay(windUpMsRapid);
-            if (this == null) return;
-
             for (int i = 0; i < rapidShotCount; i++)
             {
                 if (this == null || player == null) return;
@@ -87,11 +145,8 @@ namespace EnemyController
             }
         }
 
-        private async UniTask PerformCircleDoubleWave()
+        private async UniTask FireCircleDoubleWave()
         {
-            await UniTask.Delay(windUpMsCircle);
-            if (this == null) return;
-
             SpawnCircleWave(0f);
             await UniTask.Delay(circleWaveDelayMs);
             if (this == null) return;

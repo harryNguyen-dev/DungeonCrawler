@@ -83,7 +83,6 @@ namespace EnemyController
 
             // Xoay mặt nhìn thẳng vào Player để chốt hướng húc cố định
             LookAtPlayer();
-
             // Kích hoạt đòn lao húc từ Attack Component
             await attackComponent.PerformAttack(agent);
 

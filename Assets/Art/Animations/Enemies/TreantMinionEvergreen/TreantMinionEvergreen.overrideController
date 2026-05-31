@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TreantMinionEvergreen
+  m_Controller: {fileID: 9100000, guid: 5a68e68c2d9ee534eaed894852230a41, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: b83a3eef81ebb3d49957c6db8246c6bc, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: 46c18290dae64da4eb83df45b1f00d4a, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: 8401525b31f09924988c7f67298a820b, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: 9e5e01a138dff414bb5e81eb29beacd0, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: 4e839b848fae4b640a67f74ce4192a6e, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: 1383a9606fd1ee64ab03a18709551551, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: b6fd3951f0980d2479f27c4225427741, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: 89d82b91aa996184db59c5720e7a9190, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: fda285752cbfbdb4db22474f2495175a, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: abb87584988b77a4bb9418e740ed6ee7, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: 970f088a40d247541b4814197ee91cb7, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: cbccc9241a33b6d4089c5bf2ad44aaaf, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: 658145380ffd7404aa0e42d85217e57b, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: 4ae84ec3dce9557439e2071be6ce2891, type: 3}
+  - m_OriginalClip: {fileID: 1827226128182048838, guid: a3a7a9a754d3aea4784cb4fa3dac15f8, type: 3}
+    m_OverrideClip: {fileID: 1827226128182048838, guid: 707b0d85f7a38654db92fac37e418480, type: 3}

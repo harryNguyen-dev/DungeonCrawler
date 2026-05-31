@@ -16,7 +16,6 @@ namespace Global
         [HideInInspector] public PlayerController.PlayerEffect PlayerEffect;
         [HideInInspector] public PlayerController.Health PlayerHealth;
         [HideInInspector] public PlayerController.PlayerEvents PlayerEvents;
-        [HideInInspector] public CombatFeel.PlayerHitEffect playerHitEffect;
 
         [HideInInspector] public GameObject PlayerInstance;
 
@@ -126,7 +125,6 @@ namespace Global
             PlayerHealth = null;
             PlayerEffect = null;
             PlayerEvents = null;
-            playerHitEffect = null;
             if (CinemachineCamera != null)
             {
                 CinemachineCamera.Target.TrackingTarget = null;
@@ -143,7 +141,6 @@ namespace Global
             PlayerHealth = PlayerInstance.GetComponent<PlayerController.Health>();
             PlayerEffect = PlayerInstance.GetComponent<PlayerController.PlayerEffect>();
             PlayerEvents = PlayerInstance.GetComponent<PlayerController.PlayerEvents>();
-            playerHitEffect = PlayerInstance.GetComponent<CombatFeel.PlayerHitEffect>();
             SetPlayerAttackEnabled(canAttack);
             BindCameraToPlayer();
 

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Core;
+using Projectile;
 using UnityEngine;
 
 namespace EnemyController
@@ -9,62 +11,60 @@ namespace EnemyController
         [SerializeField] private float speed = 10f;
         [SerializeField] private float maxLifetime = 5f;
 
+        [Header("VFX")]
+        [SerializeField] private GameObject muzzlePrefab;
+        [SerializeField] private GameObject hitPrefab;
+        [SerializeField] private bool rotate;
+        [SerializeField] private float rotateAmount = 45f;
+        [SerializeField] private List<GameObject> trails = new();
+
         private int damage;
         private float currentLifetime;
-        private bool isInitialized = false;
+        private bool isInitialized;
 
-        // Hàm thiết lập chỉ số viên đạn được gọi từ EnemyRangedAttack khi bắn
         public void Setup(int damageValue)
         {
             damage = damageValue;
             currentLifetime = 0f;
             isInitialized = true;
+
+            ProjectileVfxHelper.PlayMuzzle(muzzlePrefab, transform.position, transform.forward);
+            ProjectileVfxHelper.PlayTrails(trails);
         }
 
         private void Update()
         {
             if (!isInitialized) return;
 
-            // Di chuyển viên đạn tịnh tiến về phía trước theo trục Z của chính nó
+            if (rotate)
+                transform.Rotate(0f, 0f, rotateAmount, Space.Self);
+
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
-            // Cơ chế tự hủy theo thời gian nếu bay lạc không trúng mục tiêu (Tránh lọt bộ nhớ)
             currentLifetime += Time.deltaTime;
             if (currentLifetime >= maxLifetime)
-            {
                 ReturnToPool();
-            }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            // Kiểm tra va chạm với Player
-            if (other.CompareTag("Player"))
-            {
-                // Tìm component quản lý máu của Player từ kiến trúc toàn cục Global
-                var playerHealth = Global.GlobalEntities.Instance?.PlayerHealth;
-                if (playerHealth != null)
-                {
-                    playerHealth.TakeDamage(damage);
-                }
+            if (!other.CompareTag("Player")) return;
 
-                // Có thể sinh thêm VFX nổ trúng Player tại đây:
-                // var hitEffect = Global.GlobalEntities.Instance.playerHitEffect;
-                // if (hitEffect != null) hitEffect.PlayHitEffect(transform.position, Quaternion.identity);
+            var playerHealth = Global.GlobalEntities.Instance?.PlayerHealth;
+            if (playerHealth != null)
+                playerHealth.TakeDamage(damage);
 
-                // Biến mất ngay lập tức sau khi chạm mục tiêu
-                ReturnToPool();
-            }
-            // // Tùy chọn: Hủy đạn nếu đập vào tường/vật cản môi trường
-            // else if (other.CompareTag("Wall") || other.CompareTag("Obstacle"))
-            // {
-            //     ReturnToPool();
-            // }
+            var hitPoint = other.ClosestPoint(transform.position);
+            ReturnToPool(hitPoint, -transform.forward);
         }
 
-        private void ReturnToPool()
+        private void ReturnToPool(Vector3? hitPoint = null, Vector3? hitNormal = null)
         {
+            if (hitPoint.HasValue)
+                ProjectileVfxHelper.SpawnHit(hitPrefab, hitPoint.Value, hitNormal ?? -transform.forward);
+
             isInitialized = false;
+            ProjectileVfxHelper.ResetTrails(trails);
             ObjectPoolingManager.SafeReturn(gameObject);
         }
 
@@ -77,6 +77,7 @@ namespace EnemyController
         public void OnReturnedToPool()
         {
             isInitialized = false;
+            ProjectileVfxHelper.ResetTrails(trails);
         }
     }
 }

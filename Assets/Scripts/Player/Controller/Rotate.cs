@@ -2,11 +2,10 @@ using UnityEngine;
 
 namespace PlayerController
 {
-
-    using UnityEngine;
-
     public class Rotate : MonoBehaviour
     {
+        [SerializeField] private float moveRotateSpeed = 15f;
+
         private Camera mainCamera;
 
         private void Start()
@@ -14,42 +13,76 @@ namespace PlayerController
             mainCamera = Camera.main;
         }
 
-        private void LateUpdate()
-        {
-            RotatePlayerToMouse();
-        }
+        // --- Cơ chế cũ: xoay model theo chuột mỗi frame (đã tắt) ---
+        // private void LateUpdate()
+        // {
+        //     RotatePlayerToMouse();
+        // }
+        //
+        // private void RotatePlayerToMouse()
+        // {
+        //     Vector2 mousePos = InputManager.Instance.GetMousePosition();
+        //     Ray ray = mainCamera.ScreenPointToRay(mousePos);
+        //     Plane groundPlane = new Plane(Vector3.up, transform.position);
+        //     if (groundPlane.Raycast(ray, out float distance))
+        //     {
+        //         Vector3 mouseWorldPosition = ray.GetPoint(distance);
+        //         Vector3 lookDir = mouseWorldPosition - transform.position;
+        //         lookDir.y = 0;
+        //         if (lookDir != Vector3.zero)
+        //         {
+        //             Quaternion targetRotation = Quaternion.LookRotation(lookDir);
+        //             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
+        //         }
+        //     }
+        // }
 
-        private void RotatePlayerToMouse()
+        /// <summary>Hướng ngắm từ chuột trên mặt phẳng ngang (không xoay model).</summary>
+        public bool TryGetAimDirection(out Vector3 aimDirection)
         {
-            // 1. Lấy vị trí chuột từ New Input System thông qua InputManager
+            aimDirection = Vector3.zero;
+            if (mainCamera == null || InputManager.Instance == null)
+                return false;
+
             Vector2 mousePos = InputManager.Instance.GetMousePosition();
-
-            // 2. Tạo một tia (Ray) từ Camera
             Ray ray = mainCamera.ScreenPointToRay(mousePos);
-
-            // 3. Tạo một mặt phẳng ảo nằm ngang (Vector3.up là pháp tuyến)
-            // Mặt phẳng này đi qua vị trí hiện tại của Player
             Plane groundPlane = new Plane(Vector3.up, transform.position);
 
-            // 4. Tìm giao điểm giữa Tia và Mặt phẳng
-            // Biến 'distance' sẽ lưu khoảng cách từ Camera đến điểm giao
-            if (groundPlane.Raycast(ray, out float distance))
-            {
-                // Lấy tọa độ 3D tại khoảng cách đó
-                Vector3 mouseWorldPosition = ray.GetPoint(distance);
+            if (!groundPlane.Raycast(ray, out float distance))
+                return false;
 
-                // 5. Tính toán hướng xoay
-                Vector3 lookDir = mouseWorldPosition - transform.position;
+            Vector3 mouseWorldPosition = ray.GetPoint(distance);
+            aimDirection = mouseWorldPosition - transform.position;
+            aimDirection.y = 0f;
 
-                // Đảm bảo không xoay theo trục đứng
-                lookDir.y = 0;
+            return aimDirection.sqrMagnitude > 0.0001f;
+        }
 
-                if (lookDir != Vector3.zero)
-                {
-                    Quaternion targetRotation = Quaternion.LookRotation(lookDir);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
-                }
-            }
+        public void FaceTowards(Vector3 worldDirection, float rotateSpeed)
+        {
+            worldDirection.y = 0f;
+            if (worldDirection.sqrMagnitude < 0.0001f)
+                return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(worldDirection.normalized);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                Time.deltaTime * rotateSpeed);
+        }
+
+        public void FaceMovementDirection(Vector3 moveDirection)
+        {
+            FaceTowards(moveDirection, moveRotateSpeed);
+        }
+
+        /// <summary>Xoay tức thì về hướng chuột trước khi đánh.</summary>
+        public void SnapFaceAimDirection()
+        {
+            if (!TryGetAimDirection(out Vector3 aimDirection))
+                return;
+
+            transform.rotation = Quaternion.LookRotation(aimDirection.normalized);
         }
     }
 }

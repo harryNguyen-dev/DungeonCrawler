@@ -1,3 +1,5 @@
+@import url("../Shared/SciFiTheme.uss");
+
 .hero-loadout-root {
     display: none;
     position: absolute;
@@ -31,23 +33,18 @@
 
 .hero-loadout-shell {
     picking-mode: position;
-    width: 820px;
-    height: 380px;
-    max-width: 88%;
-    max-height: 48%;
+    width: 960px;
+    height: 500px;
+    max-width: 92%;
+    max-height: 72%;
     flex-shrink: 0;
     flex-direction: column;
-    background-color: rgba(8, 14, 28, 0.96);
-    border-width: 1px;
-    border-color: rgba(72, 196, 255, 0.55);
-    border-radius: 10px;
-    padding: 12px 14px;
 }
 
 .hero-loadout-header {
     flex-direction: row;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     flex-shrink: 0;
 }
 
@@ -62,11 +59,12 @@
     flex-grow: 1;
     font-size: 16px;
     -unity-font-style: bold;
-    color: rgb(120, 220, 255);
+    color: rgb(100, 220, 255);
+    letter-spacing: 2px;
 }
 
 .hero-meta-gold {
-    font-size: 13px;
+    font-size: 14px;
     color: rgb(255, 210, 90);
     -unity-font-style: bold;
 }
@@ -74,124 +72,152 @@
 .hero-loadout-body {
     flex-grow: 1;
     flex-direction: row;
-    position: relative;
     min-height: 0;
 }
 
 .hero-left-column {
-    width: 220px;
+    width: 300px;
     flex-shrink: 0;
     flex-direction: column;
-    margin-right: 10px;
+    margin-right: 12px;
+    min-height: 0;
+    position: relative;
 }
 
 .weapon-scroll {
     flex-grow: 1;
     min-height: 0;
-    max-height: 300px;
 }
 
 .weapon-row {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 10px;
-    margin-bottom: 5px;
-    background-color: rgba(24, 36, 56, 0.95);
-    border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background-color: rgba(12, 22, 40, 0.88);
+    border-width: 2px;
+    border-color: rgba(45, 110, 165, 0.45);
+    border-radius: 2px;
 }
 
 .weapon-row:hover {
-    border-color: rgba(120, 220, 255, 0.6);
+    border-color: rgba(0, 210, 255, 0.6);
 }
 
 .weapon-row--selected {
-    border-color: rgba(255, 180, 60, 0.9);
-    background-color: rgba(40, 52, 72, 0.98);
+    border-color: rgba(255, 190, 70, 0.9);
+    background-color: rgba(36, 28, 12, 0.55);
 }
 
 .weapon-row--locked {
-    opacity: 0.55;
+    background-color: rgba(12, 22, 40, 0.55);
+    border-color: rgba(45, 110, 165, 0.28);
+}
+
+.weapon-row--locked .weapon-row-name {
+    color: rgb(175, 188, 205);
+}
+
+.weapon-row--locked .weapon-row-status {
+    color: rgb(150, 168, 190);
 }
 
 .weapon-row-name {
-    font-size: 12px;
-    color: rgb(230, 235, 245);
+    font-size: 13px;
+    color: rgb(235, 242, 255);
     -unity-font-style: bold;
+    flex-shrink: 1;
+    margin-right: 8px;
 }
 
 .weapon-row-status {
     font-size: 10px;
-    color: rgb(160, 200, 230);
+    color: rgb(100, 220, 255);
+    -unity-font-style: bold;
+    flex-shrink: 0;
 }
 
 .weapon-detail-overlay {
     display: none;
     position: absolute;
     left: 0;
+    right: 0;
     top: 0;
     bottom: 0;
-    width: 220px;
-    padding: 10px;
-    background-color: rgba(10, 18, 32, 0.98);
-    border-width: 1px;
-    border-color: rgba(72, 196, 255, 0.55);
-    border-radius: 8px;
+    padding: 12px;
+    background-color: rgb(10, 18, 32);
+    border-width: 2px;
+    border-color: rgba(45, 120, 175, 0.65);
+    border-radius: 2px;
     flex-direction: column;
 }
 
+.detail-header-row {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+
 .detail-close-button {
-    align-self: flex-end;
     width: 28px;
     height: 24px;
-    margin-bottom: 2px;
+    margin-left: 8px;
+    flex-shrink: 0;
     font-size: 11px;
 }
 
 .detail-name {
-    font-size: 15px;
+    flex-grow: 1;
+    font-size: 16px;
     -unity-font-style: bold;
-    color: rgb(255, 220, 120);
-    margin-bottom: 4px;
+    color: rgb(255, 210, 90);
+    white-space: normal;
+}
+
+.detail-scroll {
+    flex-grow: 1;
+    min-height: 0;
+    margin-bottom: 10px;
 }
 
 .detail-description {
-    font-size: 11px;
-    color: rgb(180, 195, 210);
+    font-size: 12px;
+    color: rgb(200, 215, 235);
     white-space: normal;
-    margin-bottom: 6px;
-}
-
-.detail-status {
-    font-size: 11px;
-    color: rgb(140, 220, 255);
     margin-bottom: 8px;
 }
 
-.detail-primary-button {
-    height: 30px;
-    margin-bottom: 6px;
-    font-size: 11px;
-    background-color: rgba(60, 140, 220, 0.9);
-    color: white;
+.detail-status {
+    font-size: 12px;
+    color: rgb(100, 220, 255);
     -unity-font-style: bold;
+    white-space: normal;
+    margin-bottom: 4px;
 }
 
-.detail-primary-button:disabled {
-    opacity: 0.4;
+.detail-actions {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.detail-primary-button {
+    min-height: 44px;
+    margin-bottom: 8px;
+    font-size: 13px;
 }
 
 .detail-equip-button {
-    height: 28px;
-    margin-bottom: 6px;
-    font-size: 11px;
+    min-height: 44px;
+    margin-bottom: 8px;
+    font-size: 13px;
 }
 
 .detail-upgrade-button {
-    height: 26px;
-    margin-bottom: 4px;
+    min-height: 42px;
+    margin-bottom: 6px;
     font-size: 11px;
 }
 
@@ -199,10 +225,10 @@
     flex-grow: 1;
     min-width: 0;
     min-height: 0;
-    background-color: rgba(4, 8, 16, 0.9);
-    border-radius: 6px;
-    border-width: 1px;
-    border-color: rgba(72, 196, 255, 0.35);
+    background-color: rgba(8, 14, 28, 0.9);
+    border-radius: 2px;
+    border-width: 2px;
+    border-color: rgba(45, 110, 165, 0.45);
     position: relative;
 }
 
@@ -231,6 +257,6 @@
     right: 0;
     -unity-text-align: middle-center;
     font-size: 10px;
-    color: rgba(200, 220, 240, 0.55);
+    color: rgba(200, 220, 240, 0.65);
     picking-mode: ignore;
 }
