@@ -63,14 +63,19 @@ namespace EnemyController
             }
         }
 
-        private void HandleHealthChange(int health)
+        private void HandleHealthChange(int current)
         {
             if (HUDCanvas == null || healthBar == null) return;
 
             HUDCanvas.SetActive(true);
             isShowHUD = true;
             lastShowHUDTime = Time.time;
-            healthBar.fillAmount = health / 100f;
+
+            if (health == null)
+                health = GetComponent<Health>();
+
+            var max = health != null && health.MaxHealth > 0 ? health.MaxHealth : 100;
+            healthBar.fillAmount = (float)current / max;
         }
 
         private void OnDisable()

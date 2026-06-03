@@ -20,6 +20,8 @@ namespace EnemyController
 
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private int currentHealth;
+        private int baseMaxHealth;
+        private int poolLifeId;
 
         public int MaxHealth => maxHealth;
         public int CurrentHealth => currentHealth;
@@ -48,16 +50,20 @@ namespace EnemyController
             if (healthMultiplier <= 0f || Mathf.Approximately(healthMultiplier, 1f))
                 return;
 
-            maxHealth = Mathf.Max(1, Mathf.RoundToInt(maxHealth * healthMultiplier));
+            CacheBaseMaxHealth();
+            maxHealth = Mathf.Max(1, Mathf.RoundToInt(baseMaxHealth * healthMultiplier));
             currentHealth = maxHealth;
             events?.ChangeHealth(currentHealth);
         }
 
+        private void Awake()
+        {
+            CacheBaseMaxHealth();
+        }
+
         private void Start()
         {
-            events = GetComponent<EnemyEvents>();
-            hitFlash = new CombatFeel.HitFlash(gameObject);
-            baseEnemyAnimation = GetComponent<BaseEnemyAnimation>();
+            EnsureInitialized();
             ResetStatusEffectCancellation();
             ResetHealth();
             TryApplyBossSetup();
@@ -80,8 +86,11 @@ namespace EnemyController
 
         public void OnSpawnedFromPool()
         {
+            poolLifeId++;
+            EnsureInitialized();
             isBossInstance = false;
             bossSetupPending = false;
+            isDead = false;
             ResetStatusEffectCancellation();
             ResetHealth();
         }
@@ -89,11 +98,32 @@ namespace EnemyController
         public void OnReturnedToPool()
         {
             CancelStatusEffects();
+            isDead = false;
+            ResetHealth();
+        }
+
+        private void EnsureInitialized()
+        {
+            if (events == null)
+                events = GetComponent<EnemyEvents>();
+            if (baseEnemyAnimation == null)
+                baseEnemyAnimation = GetComponent<BaseEnemyAnimation>();
+            if (hitFlash == null)
+                hitFlash = new CombatFeel.HitFlash(gameObject);
+        }
+
+        private void CacheBaseMaxHealth()
+        {
+            if (enemyData != null)
+                baseMaxHealth = enemyData.MaxHealth;
+            else if (baseMaxHealth <= 0)
+                baseMaxHealth = maxHealth;
         }
 
         private void ResetHealth()
         {
-            if (enemyData != null) maxHealth = enemyData.MaxHealth; // Gán từ SO
+            CacheBaseMaxHealth();
+            maxHealth = baseMaxHealth;
             currentHealth = maxHealth;
             isDead = false;
             events?.ChangeHealth(currentHealth);
@@ -149,7 +179,15 @@ namespace EnemyController
         }
         private async UniTaskVoid ReturnToPoolAsync()
         {
+            int returnLifeId = poolLifeId;
             await UniTask.Delay(1300);
+
+            if (this == null || gameObject == null || poolLifeId != returnLifeId)
+                return;
+
+            if (!gameObject.activeInHierarchy)
+                return;
+
             if (isBossInstance || (enemyData != null && enemyData.isBoss))
             {
                 Global.GlobalEvents.RaiseBossDefeated();

@@ -127,6 +127,9 @@ namespace Core
         {
             if (instance == null) return;
 
+            if (!instance.activeSelf)
+                return;
+
             if (!instance.TryGetComponent<PooledObject>(out var tag) || tag.PoolId == PoolId.None)
             {
                 Debug.LogWarning("ObjectPoolingManager.Return: object has no PooledObject / PoolId — destroying.");
