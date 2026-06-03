@@ -20,7 +20,7 @@ namespace EnemyController
         protected CombatFeel.KnockbackAgent knockbackAgent;
         private CancellationTokenSource aiCancellation;
         protected BaseEnemyAnimation baseEnemyAnimation;
-        private Health health;
+        protected Health health;
         private bool hasInitialized;
         private bool hasInitializedComponents = false;
 

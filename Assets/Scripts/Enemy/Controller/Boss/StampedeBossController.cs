@@ -18,7 +18,6 @@ namespace EnemyController
 
         private EnemyChargeAttack chargeAttack;
         private StampedeBossProjectileAttack projectileAttack;
-        private Health health;
         private EnemyEvents enemyEvents;
 
         private bool isPhase2;
@@ -32,7 +31,6 @@ namespace EnemyController
             base.Awake();
             chargeAttack = GetComponent<EnemyChargeAttack>();
             projectileAttack = GetComponent<StampedeBossProjectileAttack>();
-            health = GetComponent<Health>();
             enemyEvents = GetComponent<EnemyEvents>();
         }
 

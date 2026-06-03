@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fe3ff6bc4babd042bfc313acde85cd8, type: 3}
-  m_Name: BossConfig_Ch1_StampedeBoar
+  m_Name: Boss_Ch1_01
   m_EditorClassIdentifier: Assembly-CSharp::SO.BossConfigSO
-  bossPrefab: {fileID: 100100000, guid: d33c3a63b764ff04797a827d01fa4d0c, type: 3}
-  healthMultiplier: 1
+  bossPrefab: {fileID: 7300521822030121898, guid: d33c3a63b764ff04797a827d01fa4d0c, type: 3}
+  healthMultiplier: 4
   spawnDelayMs: 500

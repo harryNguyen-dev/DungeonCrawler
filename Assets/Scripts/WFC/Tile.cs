@@ -34,6 +34,29 @@ namespace WFC {
 
             Vector3 position = new Vector3(GridPosition.x * cellSize, 0, GridPosition.y * cellSize);
             SpawnedObject = Object.Instantiate(CollapsedTile.prefab, position, Quaternion.identity, parent);
+            ApplyEncounterRoleFromTileType();
+        }
+
+        private void ApplyEncounterRoleFromTileType()
+        {
+            if (CollapsedTile == null || SpawnedObject == null)
+                return;
+
+            if (CollapsedTile.tileType == TileType.Corridor)
+            {
+                ConfigureAsHallwayRoom();
+                return;
+            }
+
+            if (CollapsedTile.tileType != TileType.Room)
+                return;
+
+            var room = SpawnedObject.GetComponentInChildren<RoomController>();
+            if (room == null)
+                return;
+
+            room.SetSeedSalt(SeedSaltFromGrid());
+            room.SetRoomType(RoomType.Combat);
         }
 
         public void DespawnObject()
@@ -50,15 +73,29 @@ namespace WFC {
         public void SetStartRoom()
         {
             var room = SpawnedObject?.GetComponentInChildren<RoomController>();
-            if (room != null)
-                room.SetRoomType(RoomType.Start);
+            if (room == null) return;
+            room.SetSeedSalt(SeedSaltFromGrid());
+            room.SetRoomType(RoomType.Start);
         }
 
-        public void SetBossRoom()
+        public void SetCombatRoom()
         {
             var room = SpawnedObject?.GetComponentInChildren<RoomController>();
-            if (room != null)
-                room.SetRoomType(RoomType.Boss);
+            if (room == null) return;
+            room.SetSeedSalt(SeedSaltFromGrid());
+            room.SetRoomType(RoomType.Combat);
         }
+
+        public void ConfigureAsHallwayRoom()
+        {
+            if (SpawnedObject == null) return;
+
+            var room = HallwayEncounterBootstrap.EnsureEncounterZone(SpawnedObject);
+            if (room == null) return;
+            room.SetSeedSalt(SeedSaltFromGrid());
+            room.SetRoomType(RoomType.Hallway);
+        }
+
+        private int SeedSaltFromGrid() => GridPosition.x * 73856093 ^ GridPosition.y;
     }
 }

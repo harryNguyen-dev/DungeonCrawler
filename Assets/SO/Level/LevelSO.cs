@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SO
@@ -17,7 +18,9 @@ namespace SO
         [Min(0)] public int roomsToPlaceOverride;
 
         [Header("Encounters")]
-        public WaveConfigSO combatWaves;
+        public List<WaveConfigSO> combatWavePool = new();
+        public List<WaveConfigSO> hallwayWavePool = new();
+        [Range(0f, 1f)] public float hallwaySpawnChance = 0.4f;
         public BossConfigSO boss;
 
         [Header("Difficulty Scale")]
@@ -28,6 +31,30 @@ namespace SO
         [Min(0.1f)] public float enemyDamageScale = 1f;
 
         public string DisplayLabel => $"Chap {chapter}.{stageIndex}";
+
+        public WaveConfigSO PickCombatWave(int seedSalt) => PickFromPool(combatWavePool, seedSalt);
+
+        public WaveConfigSO PickHallwayWave(int seedSalt) => PickFromPool(hallwayWavePool, seedSalt);
+
+        private static WaveConfigSO PickFromPool(List<WaveConfigSO> pool, int seedSalt)
+        {
+            if (pool == null || pool.Count == 0)
+                return null;
+
+            var valid = new List<WaveConfigSO>();
+            foreach (var w in pool)
+            {
+                if (w != null)
+                    valid.Add(w);
+            }
+
+            if (valid.Count == 0)
+                return null;
+
+            var seed = Global.GlobalVariable.CurrentSeed ^ seedSalt;
+            var index = new System.Random(seed).Next(0, valid.Count);
+            return valid[index];
+        }
 
         private void OnValidate()
         {

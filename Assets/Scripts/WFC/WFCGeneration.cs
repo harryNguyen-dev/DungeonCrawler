@@ -145,21 +145,15 @@ namespace WFC
                         GlobalVariable.PlayerSpawnPosition = worldPosition;
                         startRoomTile.SetStartRoom();
                         CenterCameraOnStartRoom(startRoomTile);
-
-                        Tile bossRoomTile = FindFarthestRoomFromStart(startRoomTile, placedRooms, MSTEdges);
-                        if (bossRoomTile != null)
-                        {
-                            bossRoomTile.SetBossRoom();
-                            Debug.Log($"<color=magenta>Boss Room tại Grid({bossRoomTile.GridPosition.x}, {bossRoomTile.GridPosition.y})</color>");
-                        }
                     }
 
-                    // Đếm tất cả Room tiles thực tế trên grid (bao gồm cả những phòng được tạo bởi WFC)
                     int actualRoomCount = CountAllRoomTiles();
+                    int totalCombatRooms = Mathf.Max(0, actualRoomCount - 1);
+                    DungeonEncounterTracker.Reset(totalCombatRooms);
                     Debug.Log("[WFC] Placed rooms (from RoomPlacer): " + placedRooms.Count);
                     Debug.Log("[WFC] Total room count (actual on grid): " + actualRoomCount);
-                    GlobalVariable.TotalRoomCount = actualRoomCount - 1; // trừ start room
-                    Debug.Log("[WFC] total room without start room: " + GlobalVariable.TotalRoomCount);
+                    GlobalVariable.TotalRoomCount = totalCombatRooms;
+                    Debug.Log("[WFC] combat rooms (boss on last entered): " + totalCombatRooms);
                     GlobalEvents.RaiseDungeonGenerationProgress(1f);
                     GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
                     GlobalVariable.CurrentSeed = LastStats.seed;
@@ -643,6 +637,7 @@ namespace WFC
             GlobalVariable.PlayerSpawnPosition = Vector3.zero;
             GlobalVariable.TotalRoomCount = 0;
             GlobalVariable.CurrentSeed = 0;
+            DungeonEncounterTracker.Reset(0);
 
             // 5. Đặt lại các thông số tracking nội bộ
             collapsedTiles = 0;

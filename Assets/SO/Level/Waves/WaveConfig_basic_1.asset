@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5c826209f6d6274e98faebb4d7a71c9, type: 3}
+  m_Name: WaveConfig_basic_1
+  m_EditorClassIdentifier: Assembly-CSharp::SO.WaveConfigSO
+  waveCount: 2
+  enemiesPerWave: 7
+  spawnDelayMs: 500
+  delayBetweenWavesMs: 500
+  roomEnterDelayMs: 500
+  enemyPool:
+  - prefab: {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+    weight: 50
+    healthMultiplier: 1
+    damageMultiplier: 1
+  - prefab: {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
+    weight: 50
+    healthMultiplier: 1.2
+    damageMultiplier: 0.9

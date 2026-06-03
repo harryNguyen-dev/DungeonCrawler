@@ -17,7 +17,12 @@ MonoBehaviour:
   levelId: ch1_09
   wfcSeed: 207308
   roomsToPlaceOverride: 7
-  combatWaves: {fileID: 11400000, guid: f1e2d3c4b5a69788776655443322110, type: 2}
-  boss: {fileID: 11400000, guid: f2e2d3c4b5a69788776655443322110, type: 2}
+  combatWavePool:
+  - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
+  - {fileID: 11400000, guid: b8bce39ed3a3f4840a27673ddaf2ec82, type: 2}
+  hallwayWavePool:
+  - {fileID: 11400000, guid: a9b8c7d6e5f432109876543210fedcba, type: 2}
+  hallwaySpawnChance: 0.4
+  boss: {fileID: 11400000, guid: f2e2d3c4b5a697887766554433221100, type: 2}
   enemyHealthScale: 1.64
   enemyDamageScale: 1
