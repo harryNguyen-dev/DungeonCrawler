@@ -1,3 +1,4 @@
+using Core;
 using Global;
 using PlayerController;
 using TMPro;
@@ -12,7 +13,6 @@ namespace CustomUI
         [Header("Hero Info")]
         [SerializeField] private Image hpBarFill;
         [SerializeField] private Image expBarFill;
-        [SerializeField] private TMP_Text levelText;
         [SerializeField] private TMP_Text hpText;
         [SerializeField] private TMP_Text expText;
 
@@ -20,6 +20,10 @@ namespace CustomUI
         [SerializeField] private TMP_Text goldText;
         [SerializeField] private TMP_Text monsterKilledText;
 
+        [Header("Stars")]
+        [SerializeField] private Image star1;
+        [SerializeField] private Image star2;
+        [SerializeField] private Image star3;
 
         [Header("Skill buttons")]
         [SerializeField] private Button normalAttackButton;
@@ -40,7 +44,8 @@ namespace CustomUI
         {
             GlobalEvents.OnPlayerJoin += BindPlayer;
             GlobalEvents.OnMatchReset += HandleMatchReset;
-            GlobalEvents.OnLevelUp += HandleLevelUp;
+            GlobalEvents.OnDungeonGenerated += HandleDungeonGenerated;
+            GlobalEvents.OnRunStarsChanged += HandleRunStarsChanged;
             GlobalEvents.OnEnemyDie += HandleEnemyKilled;
 
             if (GlobalEntities.Instance?.PlayerEvents != null)
@@ -49,6 +54,7 @@ namespace CustomUI
             }
 
             RefreshCurrency();
+            StarDisplayHelper.Apply(star1, star2, star3, 0);
             WireAttackButton();
         }
 
@@ -56,7 +62,8 @@ namespace CustomUI
         {
             GlobalEvents.OnPlayerJoin -= BindPlayer;
             GlobalEvents.OnMatchReset -= HandleMatchReset;
-            GlobalEvents.OnLevelUp -= HandleLevelUp;
+            GlobalEvents.OnDungeonGenerated -= HandleDungeonGenerated;
+            GlobalEvents.OnRunStarsChanged -= HandleRunStarsChanged;
             GlobalEvents.OnEnemyDie -= HandleEnemyKilled;
             UnbindPlayerEvents();
             UnwireAttackButton();
@@ -99,12 +106,17 @@ namespace CustomUI
             runGold = 0;
             enemiesKilled = 0;
             RefreshCurrency();
+            StarDisplayHelper.Apply(star1, star2, star3, 0);
         }
 
-        private void HandleLevelUp(int level)
+        private void HandleDungeonGenerated(int _)
         {
-            SetLevel(level);
-            RefreshExp();
+            StarDisplayHelper.Apply(star1, star2, star3, 0);
+        }
+
+        private void HandleRunStarsChanged(int stars)
+        {
+            StarDisplayHelper.Apply(star1, star2, star3, stars);
         }
 
         private void HandleHealthChanged(int current, int max)
@@ -138,8 +150,6 @@ namespace CustomUI
         {
             if (playerStats == null) return;
 
-            SetLevel(playerStats.currentLevel);
-
             if (playerHealth != null)
             {
                 HandleHealthChanged(playerHealth.GetCurrentHealth(), playerStats.GetMaxHealth());
@@ -165,12 +175,6 @@ namespace CustomUI
 
             if (monsterKilledText != null)
                 monsterKilledText.text = enemiesKilled.ToString();
-        }
-
-        private void SetLevel(int level)
-        {
-            if (levelText != null)
-                levelText.text = $"{level}";
         }
 
         private static void SetBar(Image fill, TMP_Text valueLabel, int current, int max)

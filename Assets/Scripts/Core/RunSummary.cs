@@ -21,6 +21,10 @@ namespace Core
         public int RunGold;
         public int MetaGoldGained;
         public int TotalMetaGold;
+
+        public int StarsEarned;
+        public int BestStars;
+        public bool UnlockedNewLevel;
     }
 
     public static class RunEconomy

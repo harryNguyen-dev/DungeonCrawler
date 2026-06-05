@@ -1,4 +1,5 @@
 using Core;
+using Core.Save;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -98,4 +99,17 @@ public class InputManager : MonoBehaviour
     {
         return Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (!Debug.isDebugBuild)
+            return;
+
+        if (Keyboard.current == null || !Keyboard.current.pKey.wasPressedThisFrame)
+            return;
+
+        LevelProgressService.ResetSave();
+    }
+#endif
 }

@@ -7,6 +7,7 @@ namespace Core
         public static GameManager Instance;
 
         private bool isGameOver;
+        private bool bossKilled;
         private int totalRooms;
         private int clearedRooms;
         private int runGold;
@@ -65,6 +66,7 @@ namespace Core
         {
             Time.timeScale = 1f;
             isGameOver = false;
+            bossKilled = false;
             totalRooms = 0;
             clearedRooms = 0;
             runGold = 0;
@@ -80,6 +82,7 @@ namespace Core
             }
 
             Global.GlobalEvents.RaiseMatchReset();
+            Global.GlobalEvents.RaiseRunStarsChanged(0);
         }
 
         private void OnEnable()
@@ -111,6 +114,8 @@ namespace Core
 
         private void HandleBossDefeated()
         {
+            bossKilled = true;
+            RefreshRunStars();
             HandleWin();
         }
 
@@ -120,21 +125,6 @@ namespace Core
             isGameOver = true;
             Time.timeScale = 0f;
             Debug.Log("BOSS DEFEATED — RUN WON!");
-
-            var catalog = Global.GlobalEntities.Instance?.Chapter1Catalog;
-            var clearedIndex = ResolveClearedLevelIndex(catalog);
-            if (catalog != null && clearedIndex >= 0)
-            {
-                var previousUnlocked = Save.LevelProgressService.GetHighestUnlockedIndex(catalog.LevelCount);
-                Save.LevelProgressService.UnlockNextAfter(clearedIndex, catalog.LevelCount);
-                var newUnlocked = Save.LevelProgressService.GetHighestUnlockedIndex(catalog.LevelCount);
-                Debug.Log($"[GameManager] Cleared stage index {clearedIndex}. Unlocked {previousUnlocked} -> {newUnlocked}.");
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] Win but level progress not saved (missing catalog or level index).");
-            }
-
             ShowEndScreen(true);
         }
 
@@ -162,6 +152,18 @@ namespace Core
             var stats = entities?.PlayerStats;
             var health = entities?.PlayerHealth;
             var level = Global.GlobalVariable.CurrentLevel;
+            var catalog = entities?.GetChapter1Catalog();
+            var clearedIndex = ResolveClearedLevelIndex(catalog, level);
+
+            var starsEarned = LevelStarCalculator.Calculate(clearedRooms, totalRooms, bossKilled, level);
+            var bestStars = 0;
+            var unlockedNewLevel = false;
+
+            if (level != null)
+            {
+                Save.LevelProgressService.TryUpdateBestStars(level.levelId, starsEarned, out bestStars);
+                TryUnlockNextMap(level, catalog, clearedIndex, starsEarned, out unlockedNewLevel);
+            }
 
             var metaGain = RunEconomy.CalculateMetaGoldGain(runGold, isWin);
             var totalMeta = Save.LevelProgressService.AddMetaGold(metaGain);
@@ -182,7 +184,10 @@ namespace Core
                 TotalRooms = totalRooms,
                 RunGold = runGold,
                 MetaGoldGained = metaGain,
-                TotalMetaGold = totalMeta
+                TotalMetaGold = totalMeta,
+                StarsEarned = starsEarned,
+                BestStars = bestStars,
+                UnlockedNewLevel = unlockedNewLevel
             };
         }
 
@@ -190,30 +195,93 @@ namespace Core
         {
             totalRooms = Global.GlobalVariable.TotalRoomCount;
             clearedRooms = 0;
+            bossKilled = false;
             isGameOver = false;
 
             if (Global.GlobalEntities.Instance != null)
             {
                 Global.GlobalEntities.Instance.SpawnPlayer(true);
             }
+
+            RefreshRunStars();
         }
 
         private void HandleRoomCleared()
         {
             clearedRooms++;
-            Debug.Log($"Room {clearedRooms} cleared (stats only; win requires boss). Total tracked: {totalRooms}");
+            Debug.Log($"Room {clearedRooms} cleared. Stars tracked against total: {totalRooms}");
+            RefreshRunStars();
         }
 
-        private static int ResolveClearedLevelIndex(SO.LevelCatalogSO catalog)
+        private void RefreshRunStars()
+        {
+            var level = Global.GlobalVariable.CurrentLevel;
+            var stars = LevelStarCalculator.Calculate(clearedRooms, totalRooms, bossKilled, level);
+            Global.GlobalEvents.RaiseRunStarsChanged(stars);
+        }
+
+        private static void TryUnlockNextMap(
+            SO.LevelSO level,
+            SO.LevelCatalogSO catalog,
+            int clearedIndex,
+            int starsEarned,
+            out bool unlockedNewLevel)
+        {
+            unlockedNewLevel = false;
+            var threshold = Save.LevelProgressService.GetUnlockThreshold(level);
+
+            if (catalog == null)
+            {
+                Debug.LogWarning(
+                    $"[GameManager] Chapter1Catalog missing — saved {starsEarned} stars for '{level.levelId}' but map unlock skipped.");
+                return;
+            }
+
+            if (clearedIndex < 0)
+            {
+                Debug.LogWarning(
+                    $"[GameManager] Could not resolve index for '{level.levelId}' — saved {starsEarned} stars but map unlock skipped.");
+                return;
+            }
+
+            unlockedNewLevel = Save.LevelProgressService.TryUnlockFromStars(
+                clearedIndex, starsEarned, level, catalog.LevelCount);
+
+            if (unlockedNewLevel)
+            {
+                Debug.Log($"[GameManager] Stars {starsEarned} unlocked next stage after index {clearedIndex}.");
+                return;
+            }
+
+            if (starsEarned >= threshold)
+            {
+                Debug.Log(
+                    $"[GameManager] Stars {starsEarned} met threshold ({threshold}) for index {clearedIndex}; next map was already unlocked.");
+            }
+            else
+            {
+                Debug.Log(
+                    $"[GameManager] Stars {starsEarned}/{threshold} on index {clearedIndex} — next map not unlocked yet.");
+            }
+        }
+
+        private static int ResolveClearedLevelIndex(SO.LevelCatalogSO catalog, SO.LevelSO level)
         {
             var index = Global.GlobalVariable.CurrentLevelIndex;
             if (index >= 0)
                 return index;
 
-            if (catalog == null || Global.GlobalVariable.CurrentLevel == null)
-                return -1;
+            if (catalog != null && level != null)
+            {
+                var catalogIndex = catalog.IndexOf(level);
+                if (catalogIndex >= 0)
+                    return catalogIndex;
+            }
 
-            return catalog.IndexOf(Global.GlobalVariable.CurrentLevel);
+            if (level != null && level.stageIndex >= 1)
+                return level.stageIndex - 1;
+
+            return -1;
         }
     }
 }

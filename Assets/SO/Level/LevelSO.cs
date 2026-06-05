@@ -23,6 +23,13 @@ namespace SO
         [Range(0f, 1f)] public float hallwaySpawnChance = 0.4f;
         public BossConfigSO boss;
 
+        [Header("Star Goals")]
+        [Min(1)] public int oneStarMinRooms = 1;
+
+        [Range(0.05f, 1f)] public float twoStarRoomRatio = 0.5f;
+
+        [Min(2)] public int unlockNextAtStars = 2;
+
         [Header("Difficulty Scale")]
         [Tooltip("Nhân thêm lên HP toàn màn (sau spawn entry multiplier).")]
         [Min(0.1f)] public float enemyHealthScale = 1f;
@@ -60,6 +67,15 @@ namespace SO
         {
             if (string.IsNullOrWhiteSpace(levelId))
                 levelId = $"ch{chapter}_{stageIndex:D2}";
+
+            if (oneStarMinRooms < 1)
+                oneStarMinRooms = 1;
+
+            if (twoStarRoomRatio < 0.05f)
+                twoStarRoomRatio = 0.5f;
+
+            if (unlockNextAtStars < 2)
+                unlockNextAtStars = 2;
         }
     }
 }

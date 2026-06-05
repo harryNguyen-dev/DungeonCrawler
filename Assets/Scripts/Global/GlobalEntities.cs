@@ -78,6 +78,12 @@ namespace Global
             ClearRuntimeSceneObjects();
         }
 
+        public LevelCatalogSO GetChapter1Catalog()
+        {
+            EnsureChapterCatalog();
+            return Chapter1Catalog;
+        }
+
         private void EnsureChapterCatalog()
         {
             if (Chapter1Catalog != null)
