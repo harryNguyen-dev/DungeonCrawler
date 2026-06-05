@@ -81,7 +81,7 @@ namespace PlayerController
 
         private void PerformAttack()
         {
-            // Xoay mặt về hướng chuột (định hướng) rồi mới đánh
+            // Xoay mặt về enemy gần nhất rồi mới đánh
             playerRotate?.SnapFaceAimDirection();
 
             Debug.Log("[PlayerController] Perform Attack");

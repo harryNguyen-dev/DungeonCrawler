@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: dacf9fb8cdb9a4a62a74b629d84cabd3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/Runtime/Internal/Utilities/MinMax01.cs
+  uploadId: 816960

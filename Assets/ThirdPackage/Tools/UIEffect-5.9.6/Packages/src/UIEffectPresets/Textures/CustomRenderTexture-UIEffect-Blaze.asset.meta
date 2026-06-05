@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 229852646954b4e569b280216b3d9f2e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8600000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Textures/CustomRenderTexture-UIEffect-Blaze.asset
+  uploadId: 816960

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c6f31259f929a47bf9cbd8f1b921327e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/Runtime/Utilities/GraphicProxy.cs
+  uploadId: 816960

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e5b632cdcfc38478ebc1424ae9371f99
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: v5.9.0
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/Samples~/ShaderGraph
+    Support (Unity 6 BuiltIn)~/UISample (UIEffect).shadergraph
+  uploadId: 816960

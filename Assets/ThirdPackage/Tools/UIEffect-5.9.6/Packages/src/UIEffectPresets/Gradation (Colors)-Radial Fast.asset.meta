@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 29882cb8e43ba4b72b1b63476f8f2052
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 607
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Gradation
+    (Colors)-Radial Fast.asset
+  uploadId: 816960

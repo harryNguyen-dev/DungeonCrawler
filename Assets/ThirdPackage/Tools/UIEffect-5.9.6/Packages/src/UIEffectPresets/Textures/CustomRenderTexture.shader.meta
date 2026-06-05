@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: dfaeac7731fb141568e45d384ea8121b
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Textures/CustomRenderTexture.shader
+  uploadId: 816960

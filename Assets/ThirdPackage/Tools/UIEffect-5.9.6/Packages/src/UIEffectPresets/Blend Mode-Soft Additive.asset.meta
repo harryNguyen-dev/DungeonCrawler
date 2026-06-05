@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 586319e0b43864656b60842d6b9df0f7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 404
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Blend
+    Mode-Soft Additive.asset
+  uploadId: 816960

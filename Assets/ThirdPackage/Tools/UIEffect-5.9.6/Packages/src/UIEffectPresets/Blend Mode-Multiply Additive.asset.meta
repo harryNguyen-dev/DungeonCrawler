@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: fb8a67aa275814813810b8c67ba5d577
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 405
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Blend
+    Mode-Multiply Additive.asset
+  uploadId: 816960

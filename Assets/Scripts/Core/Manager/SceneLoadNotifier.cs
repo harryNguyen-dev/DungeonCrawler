@@ -29,6 +29,9 @@ namespace Core
             Debug.Log($"Scene loaded: {scene.name}");
             Debug.Log($"Load mode: {mode}");
 
+            if (scene.name == SceneManagerCustom.BoostSceneName)
+                return;
+
             if (GameManager.Instance == null)
             {
                 Debug.LogWarning("[SceneLoadNotifier] GameManager is missing.");

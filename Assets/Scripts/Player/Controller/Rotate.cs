@@ -1,3 +1,5 @@
+using EnemyController;
+using Global;
 using UnityEngine;
 
 namespace PlayerController
@@ -6,55 +8,40 @@ namespace PlayerController
     {
         [SerializeField] private float moveRotateSpeed = 15f;
 
-        private Camera mainCamera;
-
-        private void Start()
-        {
-            mainCamera = Camera.main;
-        }
-
-        // --- Cơ chế cũ: xoay model theo chuột mỗi frame (đã tắt) ---
-        // private void LateUpdate()
-        // {
-        //     RotatePlayerToMouse();
-        // }
-        //
-        // private void RotatePlayerToMouse()
-        // {
-        //     Vector2 mousePos = InputManager.Instance.GetMousePosition();
-        //     Ray ray = mainCamera.ScreenPointToRay(mousePos);
-        //     Plane groundPlane = new Plane(Vector3.up, transform.position);
-        //     if (groundPlane.Raycast(ray, out float distance))
-        //     {
-        //         Vector3 mouseWorldPosition = ray.GetPoint(distance);
-        //         Vector3 lookDir = mouseWorldPosition - transform.position;
-        //         lookDir.y = 0;
-        //         if (lookDir != Vector3.zero)
-        //         {
-        //             Quaternion targetRotation = Quaternion.LookRotation(lookDir);
-        //             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
-        //         }
-        //     }
-        // }
-
-        /// <summary>Hướng ngắm từ chuột trên mặt phẳng ngang (không xoay model).</summary>
+        /// <summary>Hướng ngắm tới enemy sống gần nhất trên mặt phẳng ngang.</summary>
         public bool TryGetAimDirection(out Vector3 aimDirection)
         {
             aimDirection = Vector3.zero;
-            if (mainCamera == null || InputManager.Instance == null)
+
+            var entities = GlobalEntities.Instance;
+            if (entities == null || entities.AvailableEnemies.Count == 0)
                 return false;
 
-            Vector2 mousePos = InputManager.Instance.GetMousePosition();
-            Ray ray = mainCamera.ScreenPointToRay(mousePos);
-            Plane groundPlane = new Plane(Vector3.up, transform.position);
+            Transform nearest = null;
+            float nearestSqrDist = float.MaxValue;
+            Vector3 origin = transform.position;
 
-            if (!groundPlane.Raycast(ray, out float distance))
+            foreach (var enemy in entities.AvailableEnemies)
+            {
+                if (enemy == null) continue;
+
+                var health = enemy.GetComponent<Health>();
+                if (health != null && health.IsDead) continue;
+
+                Vector3 offset = enemy.transform.position - origin;
+                offset.y = 0f;
+                float sqrDist = offset.sqrMagnitude;
+                if (sqrDist >= nearestSqrDist) continue;
+
+                nearestSqrDist = sqrDist;
+                nearest = enemy.transform;
+            }
+
+            if (nearest == null)
                 return false;
 
-            Vector3 mouseWorldPosition = ray.GetPoint(distance);
-            aimDirection = mouseWorldPosition - transform.position;
+            aimDirection = nearest.position - origin;
             aimDirection.y = 0f;
-
             return aimDirection.sqrMagnitude > 0.0001f;
         }
 
@@ -76,7 +63,7 @@ namespace PlayerController
             FaceTowards(moveDirection, moveRotateSpeed);
         }
 
-        /// <summary>Xoay tức thì về hướng chuột trước khi đánh.</summary>
+        /// <summary>Xoay tức thì về enemy gần nhất trước khi đánh.</summary>
         public void SnapFaceAimDirection()
         {
             if (!TryGetAimDirection(out Vector3 aimDirection))

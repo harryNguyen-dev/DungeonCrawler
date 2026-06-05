@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2b7a7eb5bb5ed49dcaf7965481fa019d
+AssemblyDefinitionReferenceImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/Samples~/ShaderGraph
+    Support (Unity 6 URP)~/Unity.RenderPipelines.Universal.Editor.asmref
+  uploadId: 816960

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d9f8e387c42cf4a6785eb5cf2a94beae
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Assets/ProjectSettings/UIEffectProjectSettings.asset
+  uploadId: 816960

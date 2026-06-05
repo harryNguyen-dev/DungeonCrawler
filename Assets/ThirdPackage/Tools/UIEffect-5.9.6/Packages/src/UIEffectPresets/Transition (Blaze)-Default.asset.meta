@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 5d7a1009d2770479eb10a0ff0fecec8b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 361
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Transition
+    (Blaze)-Default.asset
+  uploadId: 816960

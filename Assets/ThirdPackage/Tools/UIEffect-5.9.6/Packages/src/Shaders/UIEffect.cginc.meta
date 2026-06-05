@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2dd0ed35b98b345218d9aa8ac5a3ad6b
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/Shaders/UIEffect.cginc
+  uploadId: 816960
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

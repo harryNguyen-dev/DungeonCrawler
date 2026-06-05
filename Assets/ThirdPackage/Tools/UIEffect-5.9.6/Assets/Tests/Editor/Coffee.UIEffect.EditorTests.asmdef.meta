@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 182e53eada385475e905b8ca6d82d6ad
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Assets/Tests/Editor/Coffee.UIEffect.EditorTests.asmdef
+  uploadId: 816960

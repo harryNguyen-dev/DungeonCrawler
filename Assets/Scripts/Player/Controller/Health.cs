@@ -9,7 +9,7 @@ namespace PlayerController
         int currentHealth = 0;
         int maxHealth = 0;
         private PlayerEvents events;
-
+        public bool IsDead => currentHealth <= 0;
         private void Awake()
         {
             events = GetComponent<PlayerEvents>();

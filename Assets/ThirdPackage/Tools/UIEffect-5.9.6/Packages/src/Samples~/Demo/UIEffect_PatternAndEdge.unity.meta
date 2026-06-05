@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 263e512bc0ad44038af0c3a4e37b6b33
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/Samples~/Demo/UIEffect_PatternAndEdge.unity
+  uploadId: 816960

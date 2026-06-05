@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6bb1906ff0c464ee1a06a46b9dd7dc5f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 105
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/Tools/UIEffect-5.9.6/Packages/src/UIEffectPresets/Color-Multiply
+    Luminance.asset
+  uploadId: 816960
