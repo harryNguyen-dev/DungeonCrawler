@@ -55,8 +55,18 @@ namespace PlayerController
             this.moveSpeed = moveSpeed;
         }
 
+        private bool movementEnabled = true;
+
+        public void SetMovementEnabled(bool enabled)
+        {
+            movementEnabled = enabled;
+            if (!movementEnabled)
+                playerAnimation?.SetSpeed(0f);
+        }
+
         private void Update()
         {
+            if (!movementEnabled) return;
             Move();
         }
 

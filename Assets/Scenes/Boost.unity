@@ -803,6 +803,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aa36d6fe3395ab94ebf8b00d7d24e00e, type: 2}
   Chapter1Catalog: {fileID: 11400000, guid: 4d5e6f708192a3b4c5d6e7f8091a2b3c, type: 2}
   WeaponCatalog: {fileID: 0}
+  HeroCatalog: {fileID: 11400000, guid: 4cdb897d233fb8b4f872763260f7c2f9, type: 2}
+  DefaultDashConfig: {fileID: 11400000, guid: 4490137a6f625f741a9a875938bf0997, type: 2}
   EnemyPrefabs:
   - {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
   - {fileID: 7300521822030121898, guid: d97a8d1847edbc54cb1fc94afcc4d3d0, type: 3}

@@ -10,7 +10,7 @@ namespace Core
         public static void LoadPersistentData()
         {
             LevelProgressService.GetSaveData();
-            WeaponProgressService.SyncEquippedWeaponCache();
+            HeroProgressService.SyncEquippedHeroCache();
         }
     }
 }

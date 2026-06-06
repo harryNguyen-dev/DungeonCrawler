@@ -27,10 +27,10 @@ namespace Global
         /// <summary>Sau khi thắng và về Hub, tự mở level select.</summary>
         public static bool OpenLevelSelectOnLobbyReturn { get; set; }
 
-        /// <summary>Vũ khí đang equip (player-wide).</summary>
-        public static string EquippedWeaponId { get; set; }
+        /// <summary>Hero đang equip (player-wide).</summary>
+        public static string EquippedHeroId { get; set; }
 
-        // 1. Màu Nền của Thẻ (Dành cho Image Component làm Background - Tông tối để nổi bật chữ)
+        // 1. Màu Nền của Thẻ
         public static readonly Dictionary<CardTier, Color> CardBackgroundColor = new Dictionary<CardTier, Color>()
         {
             // Xám đen rất nhẹ cho Common

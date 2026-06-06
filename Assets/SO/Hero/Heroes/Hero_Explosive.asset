@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7ee4f0f58ce226469fd8e748429bec6, type: 3}
+  m_Name: Hero_Explosive
+  m_EditorClassIdentifier: Assembly-CSharp::SO.HeroSO
+  heroId: hero_explosive
+  displayName: Demolitionist
+  description: Demolitionist
+  icon: {fileID: 0}
+  sortOrder: 2
+  maxHealth: 140
+  moveSpeed: 9
+  attackDamage: 32
+  attackCooldown: 0.55
+  critChance: 0.08
+  boundWeapon: {fileID: 11400000, guid: 55b1628fc3a0433cacc225c94e111a51, type: 2}
+  skill: {fileID: 11400000, guid: 71133be7f985f284c9cdc0eeb3633f3a, type: 2}
+  visualPrefab: {fileID: 2729737082750660509, guid: 994e61fb5c0d0eb4a8617b43290cf647, type: 3}
+  visualLocalPosition: {x: 0, y: 0, z: 0}
+  visualLocalEulerAngles: {x: 0, y: 0, z: 0}
+  visualLocalScale: {x: 1, y: 1, z: 1}
+  unlockedByDefault: 0
+  unlockCost: 250
+  damagePerTier: 5
+  maxDamageTier: 3
+  damageUpgradeCosts: 64000000a0000000dc000000
+  cooldownReductionPerTier: 0.05
+  maxFireRateTier: 2
+  fireRateUpgradeCosts: 64000000a0000000

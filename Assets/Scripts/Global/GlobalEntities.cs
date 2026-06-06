@@ -28,8 +28,9 @@ namespace Global
         [Header("Levels")]
         public LevelCatalogSO Chapter1Catalog;
 
-        [Header("Weapons")]
-        public WeaponCatalogSO WeaponCatalog;
+        [Header("Heroes")]
+        public HeroCatalogSO HeroCatalog;
+        public DashConfigSO DefaultDashConfig;
 
         [Header("Enemies")]
         public List<GameObject> EnemyPrefabs;
@@ -55,7 +56,7 @@ namespace Global
         private void Start()
         {
             EnsureChapterCatalog();
-            EnsureWeaponCatalog();
+            EnsureHeroCatalog();
         }
 
         private void OnDestroy()
@@ -70,7 +71,7 @@ namespace Global
         {
             ClearRuntimeSceneObjects();
             EnsureChapterCatalog();
-            EnsureWeaponCatalog();
+            EnsureHeroCatalog();
         }
 
         private void OnSceneUnloaded(Scene scene)
@@ -97,20 +98,23 @@ namespace Global
                 Debug.LogWarning("[GlobalEntities] Chapter1Catalog is not assigned.");
         }
 
-        private void EnsureWeaponCatalog()
+        private void EnsureHeroCatalog()
         {
-            if (WeaponCatalog != null)
+            if (HeroCatalog != null)
                 return;
 
 #if UNITY_EDITOR
-            WeaponCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<WeaponCatalogSO>(
-                "Assets/SO/Weapon/WeaponCatalog_Global.asset");
+            HeroCatalog = UnityEditor.AssetDatabase.LoadAssetAtPath<HeroCatalogSO>(
+                "Assets/SO/Hero/HeroCatalog_Global.asset");
+            if (DefaultDashConfig == null)
+                DefaultDashConfig = UnityEditor.AssetDatabase.LoadAssetAtPath<DashConfigSO>(
+                    "Assets/SO/Hero/DashConfig_Default.asset");
 #endif
-            if (WeaponCatalog == null)
-                Debug.LogWarning("[GlobalEntities] WeaponCatalog is not assigned.");
+            if (HeroCatalog == null)
+                Debug.LogWarning("[GlobalEntities] HeroCatalog is not assigned.");
         }
 
-        public WeaponSO GetWeapon(string weaponId) => WeaponCatalog?.GetById(weaponId);
+        public HeroSO GetHero(string heroId) => HeroCatalog?.GetById(heroId);
 
         public void ClearRuntimeSceneObjects()
         {
@@ -147,7 +151,7 @@ namespace Global
             PlayerHealth = PlayerInstance.GetComponent<PlayerController.Health>();
             PlayerEffect = PlayerInstance.GetComponent<PlayerController.PlayerEffect>();
             PlayerEvents = PlayerInstance.GetComponent<PlayerController.PlayerEvents>();
-            SetPlayerAttackEnabled(canAttack);
+            SetPlayerCombatEnabled(canAttack);
             BindCameraToPlayer();
 
             Vector3 offset = Vector3.up * 2.5f;
@@ -156,14 +160,23 @@ namespace Global
             GlobalEvents.RaisePlayerJoin();
         }
 
-        public void SetPlayerAttackEnabled(bool enabled)
+        public void SetPlayerAttackEnabled(bool enabled) => SetPlayerCombatEnabled(enabled);
+
+        public void SetPlayerCombatEnabled(bool enabled)
         {
             if (PlayerInstance == null) return;
+
             var attack = PlayerInstance.GetComponent<PlayerController.Attack>();
             if (attack != null)
-            {
                 attack.SetAttackEnabled(enabled);
-            }
+
+            var skill = PlayerInstance.GetComponent<PlayerController.PlayerSkill>();
+            if (skill != null)
+                skill.SetSkillEnabled(enabled);
+
+            var dash = PlayerInstance.GetComponent<PlayerController.PlayerDash>();
+            if (dash != null)
+                dash.SetDashEnabled(enabled);
         }
 
         public void BindCameraToPlayer()

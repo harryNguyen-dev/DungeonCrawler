@@ -1,4 +1,5 @@
 using Global;
+using SO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +9,8 @@ namespace CustomUI.Lobby
     /// <summary>3D hero preview for loadout panel — RenderTexture + drag yaw.</summary>
     public class HeroPreviewController : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
+        public const string PreviewLayerName = "HeroPreview";
+
         public static HeroPreviewController Instance { get; private set; }
 
         [SerializeField] private Camera previewCamera;
@@ -15,10 +18,13 @@ namespace CustomUI.Lobby
         [SerializeField] private RenderTexture renderTexture;
         [SerializeField] private float dragDegreesPerPixel = 0.4f;
         [SerializeField] private Vector3 modelLocalPosition = new(0f, 0f, 0f);
+        [SerializeField] private Vector3 isolatedWorldPosition = new(1000f, 1000f, 1000f);
+        [SerializeField] private Color backgroundColor = new(0.05f, 0.08f, 0.14f, 1f);
 
         private GameObject previewModel;
         private RawImage boundPreviewImage;
         private bool isDragging;
+        private int previewLayer = -1;
 
         private void Awake()
         {
@@ -29,15 +35,64 @@ namespace CustomUI.Lobby
             }
 
             Instance = this;
+            previewLayer = LayerMask.NameToLayer(PreviewLayerName);
 
             if (renderTexture == null)
                 renderTexture = new RenderTexture(512, 512, 16);
+
+            ConfigurePreviewRig();
 
             if (previewCamera != null)
             {
                 previewCamera.targetTexture = renderTexture;
                 previewCamera.enabled = false;
             }
+        }
+
+        private void ConfigurePreviewRig()
+        {
+            transform.position = isolatedWorldPosition;
+
+            if (previewLayer < 0)
+            {
+                Debug.LogWarning($"[HeroPreviewController] Layer '{PreviewLayerName}' is missing. Preview may show lobby geometry.");
+                return;
+            }
+
+            SetLayerRecursively(gameObject, previewLayer);
+
+            if (previewCamera != null)
+            {
+                previewCamera.clearFlags = CameraClearFlags.SolidColor;
+                previewCamera.backgroundColor = backgroundColor;
+                previewCamera.cullingMask = 1 << previewLayer;
+                previewCamera.useOcclusionCulling = false;
+            }
+
+            EnsurePreviewLight();
+        }
+
+        private void EnsurePreviewLight()
+        {
+            if (previewLayer < 0)
+                return;
+
+            var existing = GetComponentInChildren<Light>(true);
+            if (existing != null)
+            {
+                existing.cullingMask = 1 << previewLayer;
+                return;
+            }
+
+            var lightGo = new GameObject("PreviewLight");
+            lightGo.transform.SetParent(transform, false);
+            lightGo.transform.localRotation = Quaternion.Euler(35f, -30f, 0f);
+
+            var light = lightGo.AddComponent<Light>();
+            light.type = LightType.Directional;
+            light.intensity = 1.1f;
+            light.cullingMask = 1 << previewLayer;
+            SetLayerRecursively(lightGo, previewLayer);
         }
 
         private void OnDestroy()
@@ -56,7 +111,16 @@ namespace CustomUI.Lobby
             if (previewCamera != null)
                 previewCamera.enabled = true;
 
-            EnsureModel();
+            var hero = GlobalEntities.Instance?.GetHero(Core.Save.HeroProgressService.GetEquippedHeroId());
+            ShowHero(hero);
+        }
+
+        public void ShowHero(HeroSO hero)
+        {
+            if (previewCamera != null)
+                previewCamera.enabled = true;
+
+            EnsureModel(hero);
             ResetModelRotation();
         }
 
@@ -116,18 +180,39 @@ namespace CustomUI.Lobby
                 previewModel.transform.localRotation = Quaternion.identity;
         }
 
-        private void EnsureModel()
+        private void EnsureModel(HeroSO hero)
         {
-            if (previewModel != null || modelPivot == null) return;
+            ClearModel();
 
-            var prefab = GlobalEntities.Instance?.PlayerPrefab;
-            if (prefab == null) return;
+            if (modelPivot == null)
+                return;
+
+            GameObject prefab = hero?.visualPrefab;
+            if (prefab == null)
+                prefab = GlobalEntities.Instance?.PlayerPrefab;
+
+            if (prefab == null)
+                return;
 
             previewModel = Instantiate(prefab, modelPivot);
-            previewModel.transform.localPosition = modelLocalPosition;
+            previewModel.transform.localPosition = hero != null ? hero.visualLocalPosition : modelLocalPosition;
             previewModel.transform.localRotation = Quaternion.identity;
+            previewModel.transform.localScale = hero != null ? hero.visualLocalScale : Vector3.one;
+
+            if (previewLayer >= 0)
+                SetLayerRecursively(previewModel, previewLayer);
 
             DisableGameplayComponents(previewModel);
+        }
+
+        private static void SetLayerRecursively(GameObject root, int layer)
+        {
+            if (root == null)
+                return;
+
+            root.layer = layer;
+            foreach (Transform child in root.transform)
+                SetLayerRecursively(child.gameObject, layer);
         }
 
         private static void DisableGameplayComponents(GameObject model)

@@ -42,8 +42,15 @@ namespace PlayerController
             events.InvokeChangeHealth(currentHealth, maxHealth);
         }
 
+        private bool invulnerable;
+
+        public void SetInvulnerable(bool value) => invulnerable = value;
+
         public void TakeDamage(int damage)
         {
+            if (invulnerable)
+                return;
+
             currentHealth -= damage;
             Debug.Log("[PlayerController Health] Health: " + currentHealth);
             events.InvokeChangeHealth(currentHealth, maxHealth);

@@ -26,6 +26,11 @@ namespace Projectile
         private Action onDespawnRequested;
         private CancellationTokenSource disableCTS;
 
+        public void SetSpeed(float speed)
+        {
+            this.speed = speed;
+        }
+
         public void SetDespawnCallback(Action callback) => onDespawnRequested = callback;
 
         public void ActiveSelf(bool isBoomerang, Action onReturnStart)

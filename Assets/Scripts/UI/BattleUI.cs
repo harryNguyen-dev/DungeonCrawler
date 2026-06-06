@@ -25,8 +25,9 @@ namespace CustomUI
         [SerializeField] private Image star2;
         [SerializeField] private Image star3;
 
-        [Header("Skill buttons")]
+        [Header("Combat buttons")]
         [SerializeField] private Button normalAttackButton;
+        [SerializeField] private Button dashButton;
 
         private EventTrigger attackButtonTrigger;
         private EventTrigger.Entry attackPointerDownEntry;
@@ -57,6 +58,7 @@ namespace CustomUI
             RefreshCurrency();
             StarDisplayHelper.Apply(star1, star2, star3, 0);
             WireAttackButton();
+            WireDashButton();
         }
 
         private void OnDisable()
@@ -69,6 +71,7 @@ namespace CustomUI
             GlobalEvents.OnEnemyDie -= HandleEnemyKilled;
             UnbindPlayerEvents();
             UnwireAttackButton();
+            UnwireDashButton();
         }
 
         private void BindPlayer()
@@ -248,6 +251,26 @@ namespace CustomUI
         private static void OnAttackButtonReleased(BaseEventData _)
         {
             InputManager.Instance?.SetUiAttackHeld(false);
+        }
+
+        private void WireDashButton()
+        {
+            if (dashButton == null)
+                return;
+
+            dashButton.onClick.RemoveAllListeners();
+            dashButton.onClick.AddListener(OnDashButtonClicked);
+        }
+
+        private void UnwireDashButton()
+        {
+            if (dashButton != null)
+                dashButton.onClick.RemoveAllListeners();
+        }
+
+        private static void OnDashButtonClicked()
+        {
+            InputManager.Instance?.SetUiDashPressed();
         }
     }
 }

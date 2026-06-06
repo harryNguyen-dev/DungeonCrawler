@@ -19,9 +19,10 @@ namespace Core.Save
         public int highestUnlockedIndex;
         public int metaGold;
 
-        public List<string> unlockedWeaponIds;
-        public string equippedWeaponId;
-        public List<WeaponUpgradeEntry> weaponUpgrades;
+        public List<string> unlockedHeroIds;
+        public string equippedHeroId;
+        public List<HeroUpgradeEntry> heroUpgrades;
+
         public List<LevelStarEntry> levelStars;
     }
 
@@ -198,7 +199,8 @@ namespace Core.Save
             }
 
             cachedData = CreateFreshSaveData();
-            WeaponProgressService.SyncEquippedWeaponCache();
+            HeroProgressService.EnsureHeroDefaults(cachedData);
+            HeroProgressService.SyncEquippedHeroCache();
             Save(cachedData);
             Global.GlobalEvents.RaiseMetaGoldChanged();
             Global.GlobalEvents.RaiseLobbyReady();
@@ -230,6 +232,7 @@ namespace Core.Save
 
             EnsureStarterMapUnlocked(cachedData);
             EnsureLevelStarsList(cachedData);
+            HeroProgressService.EnsureHeroDefaults(cachedData);
             return cachedData;
         }
 
@@ -237,6 +240,7 @@ namespace Core.Save
         {
             var data = new LevelProgressData { highestUnlockedIndex = 0 };
             EnsureLevelStarsList(data);
+            HeroProgressService.EnsureHeroDefaults(data);
             return data;
         }
 

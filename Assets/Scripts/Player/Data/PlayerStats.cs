@@ -1,37 +1,53 @@
-using System;
-using System.Linq;
-using UnityEditor.PackageManager;
+using Core;
+using Global;
+using SO;
 using UnityEngine;
 
 namespace PlayerController
 {
     public class PlayerStats : MonoBehaviour
     {
-
-        public SO.PlayerSO configData;
-        public SO.PlayerSO runtimeStats; // Bản sao để chạy runtime
+        public PlayerSO configData;
+        public PlayerSO runtimeStats;
 
         public int currentLevel = 1;
         public int currentExp = 0;
         public int expToNextLevel = 100;
 
+        public HeroSO EquippedHero { get; private set; }
+        public WeaponSO EquippedWeapon { get; private set; }
+        public HeroSkillSO ActiveSkill { get; private set; }
+
         private PlayerEvents events;
-        private PlayerController.Health playerHealth;
+        private HeroVisualController heroVisual;
+        private PlayerSkill playerSkill;
+        private Attack attack;
+
         private void Awake()
         {
-            playerHealth = GetComponent<Health>();
             events = GetComponent<PlayerEvents>();
-            ApplyEquippedWeaponConfig();
+            heroVisual = GetComponent<HeroVisualController>();
+            playerSkill = GetComponent<PlayerSkill>();
+            attack = GetComponent<Attack>();
+            ApplyEquippedHeroConfig();
         }
 
-        public void ApplyEquippedWeaponConfig()
+        public void ApplyEquippedHeroConfig()
         {
-            var built = Core.WeaponLoadoutBuilder.BuildForEquippedWeapon();
-            if (built != null)
-                configData = built;
+            var loadout = HeroLoadoutBuilder.BuildForEquippedHero();
+            if (loadout.Stats != null)
+                configData = loadout.Stats;
+
+            EquippedHero = loadout.Hero;
+            EquippedWeapon = loadout.Weapon;
+            ActiveSkill = loadout.Skill;
 
             runtimeStats = Instantiate(configData);
             runtimeStats.InitializeRuntimeDictionary();
+
+            heroVisual?.ApplyHeroVisual(EquippedHero);
+            playerSkill?.SetActiveSkill(ActiveSkill);
+            attack?.ApplyWeapon(EquippedWeapon);
         }
 
         public void CollectExp(int baseAmount)
@@ -49,39 +65,47 @@ namespace PlayerController
         {
             currentLevel++;
             currentExp = 0;
-            expToNextLevel = Mathf.RoundToInt(expToNextLevel * 1.2f); // Tăng mốc Exp yêu cầu
+            expToNextLevel = Mathf.RoundToInt(expToNextLevel * 1.2f);
             events.InvokeExpChanged(currentExp, expToNextLevel);
 
             Debug.Log($"<color=yellow>LEVEL UP! Current Level: {currentLevel}</color>");
 
-            // Bắn event để UI lắng nghe và hiện bảng chọn Card
-            Global.GlobalEvents.RaiseLevelUp(currentLevel);
-            Global.GlobalEvents.RaiseRequestBattleCard();
-
-            // Dừng thời gian để người chơi chọn thẻ
+            GlobalEvents.RaiseLevelUp(currentLevel);
+            GlobalEvents.RaiseRequestBattleCard();
             Time.timeScale = 0f;
         }
+
         public void RestartGame()
         {
             currentLevel = 1;
             currentExp = 0;
             expToNextLevel = 100;
             Time.timeScale = 1f;
-            ApplyEquippedWeaponConfig();
+            ApplyEquippedHeroConfig();
             events.InvokeExpChanged(currentExp, expToNextLevel);
         }
-        // Hàm bổ trợ để các Script khác lấy chỉ số đã được nâng cấp
+
         public float GetAttackCooldown() => runtimeStats.AttackCooldown;
         public int GetAttackDamage() => runtimeStats.AttackDamage;
+        public float GetCritChance() => runtimeStats.CritChance;
         public int GetMoveSpeed() => runtimeStats.MoveSpeed;
         public int GetMaxHealth() => runtimeStats.MaxHealth;
+
+        public int RollAttackDamage()
+        {
+            var baseDamage = GetAttackDamage();
+            if (Random.value < GetCritChance())
+                return Mathf.RoundToInt(baseDamage * HeroSO.CritDamageMultiplier);
+
+            return baseDamage;
+        }
 
         public void UpgradeAttackSpeed(float amount)
         {
             runtimeStats.AttackCooldown -= amount;
             events.InvokeAttackSpeedChanged(runtimeStats.AttackCooldown);
         }
-        
+
         public void UpgradeAttackDamage(int amount)
         {
             runtimeStats.AttackDamage += amount;
@@ -104,65 +128,68 @@ namespace PlayerController
             runtimeStats.Amor += amount;
             events.InvokeIncreaseAmor(runtimeStats.Amor);
         }
+
         public void UpgradeIncreaseRunSpeed(float amount)
         {
             runtimeStats.MoveSpeed += Mathf.RoundToInt(amount);
             events.InvokeIncreaseMoveSpeed(runtimeStats.MoveSpeed);
         }
+
         public void UpgradeIncreaseExpGain(float amount)
         {
             runtimeStats.DefaultExpGainMultiplier += amount;
         }
+
         public void UpgradeIncreaseGoldGain(float amount)
         {
             runtimeStats.DefaultGoldGainMultiplier += amount;
         }
+
         public void AddOneProjectile(int amount)
         {
-            Debug.Log($"[PlayerStats] Add {amount} projectiles");
-            var weaponModify = new SO.WeaponEffectModifier()
+            var weaponModify = new WeaponEffectModifier
             {
-                EffectType = SO.WeaponEffectType.NumberOfProjectiles,
+                EffectType = WeaponEffectType.NumberOfProjectiles,
                 Value = amount
             };
             runtimeStats.AddpendWeaponModifier(weaponModify);
-            events.InvokeNumberOfProjectileChanged(Mathf.RoundToInt(runtimeStats.RuntimeEffects[SO.WeaponEffectType.NumberOfProjectiles]));
+            events.InvokeNumberOfProjectileChanged(Mathf.RoundToInt(runtimeStats.RuntimeEffects[WeaponEffectType.NumberOfProjectiles]));
         }
+
         public void AddProjectileFireOnHit(int amount)
         {
-            var weaponModify = new SO.WeaponEffectModifier()
+            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
             {
-                EffectType = SO.WeaponEffectType.FireDamage,
+                EffectType = WeaponEffectType.FireDamage,
                 Value = amount
-            };
-            runtimeStats.AddpendWeaponModifier(weaponModify);
+            });
         }
+
         public void AddProjectileFrozenOnHit(int amount)
         {
-            var weaponModify = new SO.WeaponEffectModifier()
+            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
             {
-                EffectType = SO.WeaponEffectType.FrozenDuration,
+                EffectType = WeaponEffectType.FrozenDuration,
                 Value = amount
-            };
-            runtimeStats.AddpendWeaponModifier(weaponModify);
+            });
         }
+
         public void AddProjectilePierce()
         {
-            var weaponModify = new SO.WeaponEffectModifier()
+            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
             {
-                EffectType = SO.WeaponEffectType.PierceCount,
+                EffectType = WeaponEffectType.PierceCount,
                 Value = 1
-            };
-            runtimeStats.AddpendWeaponModifier(weaponModify);
+            });
         }
+
         public void AddProjectileBoomerange()
         {
-            var weaponModify = new SO.WeaponEffectModifier()
+            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
             {
-                EffectType = SO.WeaponEffectType.BoomerangMode,
+                EffectType = WeaponEffectType.BoomerangMode,
                 Value = 1
-            };
-            runtimeStats.AddpendWeaponModifier(weaponModify);
+            });
         }
     }
 }

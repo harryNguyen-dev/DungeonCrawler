@@ -63,6 +63,16 @@ namespace PlayerController
             FaceTowards(moveDirection, moveRotateSpeed);
         }
 
+        /// <summary>Xoay tức thì về hướng chỉ định (skill aim).</summary>
+        public void SnapFaceDirection(Vector3 worldDirection)
+        {
+            worldDirection.y = 0f;
+            if (worldDirection.sqrMagnitude < 0.0001f)
+                return;
+
+            transform.rotation = Quaternion.LookRotation(worldDirection.normalized);
+        }
+
         /// <summary>Xoay tức thì về enemy gần nhất trước khi đánh.</summary>
         public void SnapFaceAimDirection()
         {

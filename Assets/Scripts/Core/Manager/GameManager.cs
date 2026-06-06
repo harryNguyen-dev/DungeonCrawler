@@ -58,7 +58,7 @@ namespace Core
                 Global.GlobalEntities.Instance.SpawnPlayer(false);
             }
 
-            Core.Save.WeaponProgressService.SyncEquippedWeaponCache();
+            Core.Save.HeroProgressService.SyncEquippedHeroCache();
             Global.GlobalEvents.RaiseLobbyReady();
         }
 

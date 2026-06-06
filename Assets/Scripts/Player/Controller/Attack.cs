@@ -17,6 +17,7 @@ namespace PlayerController
         private float attackCooldown;
         private int numberOfProjectiles = 1;
         private float lastAttackTime;
+        private PlayerDash playerDash;
         private bool canAttack = true;
 
         private void Start()
@@ -25,6 +26,7 @@ namespace PlayerController
             playerEvents = GetComponent<PlayerEvents>();
             playerAnimation = GetComponent<PlayerAnimation>();
             playerRotate = GetComponent<Rotate>();
+            playerDash = GetComponent<PlayerDash>();
             attackCooldown = playerStats.GetAttackCooldown();
             if (playerStats.runtimeStats.TryGetEffect(SO.WeaponEffectType.NumberOfProjectiles, out var value))
             {
@@ -40,6 +42,17 @@ namespace PlayerController
             if (playerEvents == null) return;
             playerEvents.OnAttackSpeedChanged -= OnAttackChanged;
             playerEvents.OnNumberOfProjectileChanged -= OnNumberOfProjectileChanged;
+        }
+
+        public void SetFirePoint(Transform point)
+        {
+            firePoint = point;
+        }
+
+        public void ApplyWeapon(SO.WeaponSO weapon)
+        {
+            if (weapon?.projectilePrefab != null)
+                projectilePrefab = weapon.projectilePrefab;
         }
 
         public void SetAttackEnabled(bool enabled)
@@ -58,16 +71,7 @@ namespace PlayerController
         private void Update()
         {
             if (!canAttack) return;
-
-            // Cũ: đánh ngay, model đã xoay theo chuột liên tục (Rotate.LateUpdate)
-            // if (InputManager.Instance.IsAttacking())
-            // {
-            //     if (Time.time >= lastAttackTime + attackCooldown)
-            //     {
-            //         PerformAttack();
-            //         lastAttackTime = Time.time;
-            //     }
-            // }
+            if (playerDash != null && playerDash.IsDashing) return;
 
             if (InputManager.Instance.IsAttacking())
             {
@@ -112,7 +116,7 @@ namespace PlayerController
                 var projectileController = projectileInstance.GetComponent<Projectile.ProjectileController>();
                 if (projectileController != null)
                 {
-                    projectileController.SetDamage(playerStats.GetAttackDamage());
+                    projectileController.SetDamage(playerStats.RollAttackDamage());
                     projectileController.SetEffects(playerStats.runtimeStats.RuntimeEffects);
                     projectileController.SetProjectileActive();
                 }

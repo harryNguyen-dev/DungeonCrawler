@@ -28,6 +28,8 @@ namespace SO {
         public int MoveSpeed;
         public int MaxHealth;
         public int Amor;
+        [Range(0f, 1f)]
+        public float CritChance;
         public float DefaultExpGainMultiplier = 1f;
         public float DefaultGoldGainMultiplier = 1f;
 
