@@ -26,6 +26,7 @@ namespace SO
 
         [Header("Rewards")]
         [Min(0)] public int GoldDrop = 5;
+        [Min(0)] public int ExpDrop = 20;
     }
 
 }

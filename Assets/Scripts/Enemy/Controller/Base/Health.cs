@@ -170,11 +170,14 @@ namespace EnemyController
             if (isDead) return;
             isDead = true;
             var goldDrop = enemyData != null ? enemyData.GoldDrop : 5;
+            var expDrop = enemyData != null ? enemyData.ExpDrop : 20;
             baseEnemyAnimation?.SetDieTrigger();
             CancelStatusEffects();
 
+            DropPool.Instance?.SpawnFromEnemy(transform.position, goldDrop, expDrop);
+
             Debug.Log("Enemy died!");
-            Global.GlobalEvents.RaiseEnemyDie(goldDrop);
+            Global.GlobalEvents.RaiseEnemyDie(0);
             ReturnToPoolAsync().Forget();
         }
         private async UniTaskVoid ReturnToPoolAsync()

@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 54c8949279f911f4aa000c2b4d0faf9b
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/New UI/1.3.0UI/Ranks/gold2.png
+  uploadId: 816960
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -154,10 +161,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 293814
-  packageName: BulletHell Elemental Template
-  packageVersion: 1.5.0
-  assetPath: Assets/BulletHellTemplate/ThirdPartyResources/New UI/1.3.0UI/Ranks/gold2.png
-  uploadId: 816960

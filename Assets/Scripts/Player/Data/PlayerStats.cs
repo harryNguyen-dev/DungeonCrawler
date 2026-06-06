@@ -34,19 +34,15 @@ namespace PlayerController
             runtimeStats.InitializeRuntimeDictionary();
         }
 
-        private void OnEnable() => Global.GlobalEvents.OnEnemyDie += AddExperience;
-        private void OnDisable() => Global.GlobalEvents.OnEnemyDie -= AddExperience;
-
-        private void AddExperience(int _)
+        public void CollectExp(int baseAmount)
         {
-            currentExp += Mathf.RoundToInt(20 * runtimeStats.DefaultExpGainMultiplier); // Mỗi quái cho 20 Exp
-            Debug.Log($"Exp: {currentExp}/{expToNextLevel}");
+            if (baseAmount <= 0) return;
+
+            currentExp += Mathf.RoundToInt(baseAmount * runtimeStats.DefaultExpGainMultiplier);
             events.InvokeExpChanged(currentExp, expToNextLevel);
 
             if (currentExp >= expToNextLevel)
-            {
                 LevelUp();
-            }
         }
 
         private void LevelUp()

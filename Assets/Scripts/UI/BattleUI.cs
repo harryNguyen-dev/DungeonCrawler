@@ -46,6 +46,7 @@ namespace CustomUI
             GlobalEvents.OnMatchReset += HandleMatchReset;
             GlobalEvents.OnDungeonGenerated += HandleDungeonGenerated;
             GlobalEvents.OnRunStarsChanged += HandleRunStarsChanged;
+            GlobalEvents.OnRunGoldChanged += HandleRunGoldChanged;
             GlobalEvents.OnEnemyDie += HandleEnemyKilled;
 
             if (GlobalEntities.Instance?.PlayerEvents != null)
@@ -64,6 +65,7 @@ namespace CustomUI
             GlobalEvents.OnMatchReset -= HandleMatchReset;
             GlobalEvents.OnDungeonGenerated -= HandleDungeonGenerated;
             GlobalEvents.OnRunStarsChanged -= HandleRunStarsChanged;
+            GlobalEvents.OnRunGoldChanged -= HandleRunGoldChanged;
             GlobalEvents.OnEnemyDie -= HandleEnemyKilled;
             UnbindPlayerEvents();
             UnwireAttackButton();
@@ -135,15 +137,16 @@ namespace CustomUI
             SetBar(expBarFill, expText, current, required);
         }
 
-        private void HandleEnemyKilled(int goldDropped)
+        private void HandleRunGoldChanged(int totalRunGold)
+        {
+            runGold = totalRunGold;
+            RefreshCurrency();
+        }
+
+        private void HandleEnemyKilled(int _)
         {
             enemiesKilled++;
-
-            var multiplier = GlobalEntities.Instance?.PlayerStats?.runtimeStats?.DefaultGoldGainMultiplier ?? 1f;
-            runGold += Mathf.RoundToInt(goldDropped * multiplier);
             RefreshCurrency();
-
-            RefreshExp();
         }
 
         private void RefreshAll()

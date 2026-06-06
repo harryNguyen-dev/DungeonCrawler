@@ -72,6 +72,8 @@ namespace Core
             runGold = 0;
             enemiesKilled = 0;
 
+            Global.GlobalEvents.RaiseRunGoldChanged(runGold);
+
             Global.GlobalVariable.CurrentSeed = 0;
             Global.GlobalVariable.PlayerSpawnPosition = Vector3.zero;
             Global.GlobalVariable.TotalRoomCount = 0;
@@ -103,13 +105,19 @@ namespace Core
             Global.GlobalEvents.OnEnemyDie -= HandleEnemyKilled;
         }
 
-        private void HandleEnemyKilled(int goldDropped)
+        private void HandleEnemyKilled(int _)
         {
             if (isGameOver) return;
-
             enemiesKilled++;
+        }
+
+        public void CollectGold(int baseAmount)
+        {
+            if (isGameOver || baseAmount <= 0) return;
+
             var multiplier = Global.GlobalEntities.Instance?.PlayerStats?.runtimeStats?.DefaultGoldGainMultiplier ?? 1f;
-            runGold += Mathf.RoundToInt(goldDropped * multiplier);
+            runGold += Mathf.RoundToInt(baseAmount * multiplier);
+            Global.GlobalEvents.RaiseRunGoldChanged(runGold);
         }
 
         private void HandleBossDefeated()
