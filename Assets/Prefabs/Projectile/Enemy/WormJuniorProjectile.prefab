@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c325d298183101a459fe708d8ef86e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.PooledObject
-  _poolId: 10
+  _poolId: 103
 --- !u!1 &782037467162940132
 GameObject:
   m_ObjectHideFlags: 0

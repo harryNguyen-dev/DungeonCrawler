@@ -53,15 +53,15 @@ namespace Core.SpawnManager
             }
 
             GameObject enemyInstance = null;
-            if (usePooling && poolId != PoolId.None && ObjectPoolingManager.Instance != null)
+            if (usePooling && poolId != PoolId.None && EnemyPool.Instance != null)
             {
-                enemyInstance = ObjectPoolingManager.Instance.Get(poolId, spawnPoint.position, spawnPoint.rotation);
+                enemyInstance = EnemyPool.Instance.Get(poolId, spawnPoint.position, spawnPoint.rotation);
             }
 
             if (enemyInstance == null)
             {
                 enemyInstance = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
-                ObjectPoolingManager.NotifySpawnedFromPool(enemyInstance);
+                ObjectPoolBase.NotifySpawnedFromPool(enemyInstance);
             }
 
             Global.GlobalEntities.Instance.RegisterEnemy(enemyInstance);

@@ -65,7 +65,7 @@ namespace EnemyController
 
             isInitialized = false;
             ProjectileVfxHelper.ResetTrails(trails);
-            ObjectPoolingManager.SafeReturn(gameObject);
+            PoolReturn.SafeReturn(gameObject);
         }
 
         public void OnSpawnedFromPool()

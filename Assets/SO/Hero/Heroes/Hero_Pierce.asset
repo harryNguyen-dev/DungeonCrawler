@@ -30,9 +30,4 @@ MonoBehaviour:
   visualLocalScale: {x: 1, y: 1, z: 1}
   unlockedByDefault: 0
   unlockCost: 250
-  damagePerTier: 5
-  maxDamageTier: 3
-  damageUpgradeCosts: 5a0000008c000000c8000000
-  cooldownReductionPerTier: 0.05
-  maxFireRateTier: 2
-  fireRateUpgradeCosts: 5a00000096000000
+  upgrades: []

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9135408958944889374}
   m_Layer: 7
-  m_Name: HeroVisual_Default
+  m_Name: HeroVisual_Finn
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

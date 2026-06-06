@@ -25,28 +25,20 @@ namespace Core
         public int MaxSize => Mathf.Max(0, _maxSize);
     }
 
-    public class ObjectPoolingManager : MonoBehaviour
+    public abstract class ObjectPoolBase : MonoBehaviour
     {
-        public static ObjectPoolingManager Instance { get; private set; }
+        protected abstract string LogName { get; }
 
         [SerializeField] List<PoolConfig> _entries = new();
         [SerializeField] Transform _poolRoot;
 
         readonly Dictionary<PoolId, Pool> _pools = new();
 
-        void Awake()
+        protected void BuildPools()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-
             if (_poolRoot == null)
             {
-                var go = new GameObject("PooledObjects");
+                var go = new GameObject($"{LogName}_Root");
                 go.transform.SetParent(transform, false);
                 _poolRoot = go.transform;
             }
@@ -58,24 +50,24 @@ namespace Core
 
                 if (_pools.ContainsKey(config.Id))
                 {
-                    Debug.LogError($"ObjectPoolingManager: duplicate PoolId '{config.Id}' — skipping duplicate entry.");
+                    Debug.LogError($"{LogName}: duplicate PoolId '{config.Id}' — skipping duplicate entry.");
                     continue;
                 }
 
                 var holder = new GameObject($"Pool_{config.Id}").transform;
                 holder.SetParent(_poolRoot, false);
-                _pools[config.Id] = new Pool(config, holder);
+                _pools[config.Id] = new Pool(config, holder, LogName);
             }
         }
 
-        void Start()
+        protected void PrewarmAll()
         {
             foreach (var pool in _pools.Values)
                 pool.Prewarm();
         }
 
 #if UNITY_EDITOR
-        void OnValidate()
+        protected void ValidateEntries()
         {
             if (_entries == null) return;
             var seen = new HashSet<PoolId>();
@@ -83,34 +75,16 @@ namespace Core
             {
                 if (e == null || e.Id == PoolId.None) continue;
                 if (!seen.Add(e.Id))
-                    Debug.LogWarning($"ObjectPoolingManager: duplicate PoolId '{e.Id}' in serialized list.");
+                    Debug.LogWarning($"{LogName}: duplicate PoolId '{e.Id}' in serialized list.");
             }
         }
 #endif
 
-        void OnDestroy()
-        {
-            if (Instance == this)
-                Instance = null;
-        }
-
-        /// <summary>Return to pool when safe; destroy if the manager is already gone (e.g. scene unload).</summary>
-        public static void SafeReturn(GameObject instance)
-        {
-            if (instance == null) return;
-
-            if (Instance != null)
-                Instance.Return(instance);
-            else
-                Destroy(instance);
-        }
-
-        /// <summary>Activate an instance from the pool (or create one if allowed).</summary>
         public GameObject Get(PoolId id, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             if (!_pools.TryGetValue(id, out var pool))
             {
-                Debug.LogError($"ObjectPoolingManager: no pool for '{id}'.");
+                Debug.LogError($"{LogName}: no pool for '{id}'.");
                 return null;
             }
 
@@ -122,7 +96,6 @@ namespace Core
 
         public GameObject Get(PoolId id) => Get(id, Vector3.zero, Quaternion.identity, null);
 
-        /// <summary>Return an instance spawned by this manager (must have <see cref="PooledObject"/>).</summary>
         public void Return(GameObject instance)
         {
             if (instance == null) return;
@@ -132,14 +105,14 @@ namespace Core
 
             if (!instance.TryGetComponent<PooledObject>(out var tag) || tag.PoolId == PoolId.None)
             {
-                Debug.LogWarning("ObjectPoolingManager.Return: object has no PooledObject / PoolId — destroying.");
+                Debug.LogWarning($"{LogName}.Return: object has no PooledObject / PoolId — destroying.");
                 Destroy(instance);
                 return;
             }
 
             if (!_pools.TryGetValue(tag.PoolId, out var pool))
             {
-                Debug.LogWarning($"ObjectPoolingManager.Return: unknown pool '{tag.PoolId}' — destroying.");
+                Debug.LogWarning($"{LogName}.Return: unknown pool '{tag.PoolId}' — destroying.");
                 Destroy(instance);
                 return;
             }
@@ -157,13 +130,9 @@ namespace Core
             Return(instance);
         }
 
-        /// <summary>Gọi sau Instantiate thủ công để kích hoạt IPoolable (AI, Health, Attack...).</summary>
-        public static void NotifySpawnedFromPool(GameObject instance)
-        {
-            NotifySpawned(instance);
-        }
+        public static void NotifySpawnedFromPool(GameObject instance) => NotifySpawned(instance);
 
-        static void NotifySpawned(GameObject instance)
+        protected static void NotifySpawned(GameObject instance)
         {
             if (instance == null) return;
             var poolables = instance.GetComponentsInChildren<IPoolable>(true);
@@ -182,13 +151,15 @@ namespace Core
         {
             readonly PoolConfig _config;
             readonly Transform _holder;
+            readonly string _logName;
             readonly Stack<GameObject> _inactive = new();
             int _created;
 
-            public Pool(PoolConfig config, Transform holder)
+            public Pool(PoolConfig config, Transform holder, string logName)
             {
                 _config = config;
                 _holder = holder;
+                _logName = logName;
             }
 
             public void Prewarm()
@@ -213,7 +184,7 @@ namespace Core
                 {
                     if (_config.MaxSize > 0 && _created >= _config.MaxSize)
                     {
-                        Debug.LogWarning($"ObjectPoolingManager: pool '{_config.Id}' is at max size ({_config.MaxSize}).");
+                        Debug.LogWarning($"{_logName}: pool '{_config.Id}' is at max size ({_config.MaxSize}).");
                         return null;
                     }
 

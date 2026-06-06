@@ -8,13 +8,19 @@ namespace PlayerController
         private Attack attack;
         private Rotate playerRotate;
 
-        private void Start()
+        private void Awake()
         {
             attack = GetComponentInParent<Attack>();
             playerRotate = GetComponentInParent<Rotate>();
         }
+
         public void AE_OnAttack()
         {
+            if (attack == null)
+                attack = GetComponentInParent<Attack>();
+            if (playerRotate == null)
+                playerRotate = GetComponentInParent<Rotate>();
+
             playerRotate?.SnapFaceAimDirection();
             attack?.SpawnProjectile().Forget();
         }

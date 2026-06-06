@@ -1,10 +1,5 @@
 fileFormatVersion: 2
 guid: 295915f4b8a84684ab79c2be6b043492
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 290679
@@ -12,3 +7,8 @@ AssetOrigin:
   packageVersion: 2.0.1
   assetPath: Assets/KayKit/Characters/KayKit - Adventurers (for Unity)/Prefabs/Accessories/quiver.prefab
   uploadId: 831988
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

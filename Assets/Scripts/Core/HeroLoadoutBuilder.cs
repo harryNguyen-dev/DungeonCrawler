@@ -63,19 +63,18 @@ namespace Core
             foreach (var effect in weapon.intrinsicEffects)
                 result.WeaponEffectsSetup.Add(effect);
 
-            var damageTier = HeroProgressService.GetDamageTier(hero.heroId);
-            var fireRateTier = HeroProgressService.GetFireRateTier(hero.heroId);
-            var healthTier = HeroProgressService.GetHealthTier(hero.heroId);
-            var critTier = HeroProgressService.GetCritTier(hero.heroId);
+            var upgradeTier = HeroProgressService.GetUpgradeTier(hero.heroId);
+            hero.GetAccumulatedBonuses(
+                upgradeTier,
+                out var damageBonus,
+                out var healthBonus,
+                out var cooldownReduction,
+                out var critChanceBonus);
 
-            result.AttackDamage += damageTier * hero.damagePerTier;
-            result.MaxHealth += healthTier * hero.healthPerTier;
-            result.CritChance = Mathf.Min(
-                HeroSO.MaxCritChance,
-                result.CritChance + critTier * hero.critChancePerTier);
-            result.AttackCooldown = Mathf.Max(
-                HeroSO.MinAttackCooldown,
-                result.AttackCooldown - fireRateTier * hero.cooldownReductionPerTier);
+            result.AttackDamage += damageBonus;
+            result.MaxHealth += healthBonus;
+            result.CritChance = Mathf.Min(HeroSO.MaxCritChance, result.CritChance + critChanceBonus);
+            result.AttackCooldown = Mathf.Max(HeroSO.MinAttackCooldown, result.AttackCooldown - cooldownReduction);
 
             result.InitializeRuntimeDictionary();
             return result;

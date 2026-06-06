@@ -41,6 +41,25 @@ namespace CustomUI
             backButton?.onClick.RemoveListener(OnBackClicked);
         }
 
+        private void OnEnable()
+        {
+            GlobalEvents.OnSaveReset += HandleSaveReset;
+        }
+
+        private void OnDisable()
+        {
+            GlobalEvents.OnSaveReset -= HandleSaveReset;
+        }
+
+        private void HandleSaveReset()
+        {
+            if (!IsOpen)
+                return;
+
+            ShowListPanel();
+            BindData();
+        }
+
         public void Close()
         {
             if (characterSelectionUIPanel != null)

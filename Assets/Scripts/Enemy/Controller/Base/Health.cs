@@ -197,9 +197,9 @@ namespace EnemyController
             }
             Global.GlobalEntities.Instance?.UnregisterEnemy(gameObject);
 
-            if (Core.ObjectPoolingManager.Instance != null)
+            if (Core.EnemyPool.Instance != null)
             {
-                Core.ObjectPoolingManager.Instance.Return(gameObject);
+                Core.EnemyPool.Instance.Return(gameObject);
             }
             else
             {

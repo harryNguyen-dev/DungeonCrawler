@@ -98,7 +98,7 @@ namespace Projectile
 
         private void DespawnProjectile()
         {
-            ObjectPoolingManager.SafeReturn(gameObject);
+            PoolReturn.SafeReturn(gameObject);
         }
 
         private void SpawnHitVfx(Vector3 position, Vector3 normal) =>

@@ -26,6 +26,7 @@ namespace Global
         public static event Action OnRequestLevelSelectUI;
         public static event Action OnRequestHeroLoadoutUI;
         public static event Action OnMetaGoldChanged;
+        public static event Action OnSaveReset;
         public static event Action<int> OnRunGoldChanged;
         public static event Action<int> OnRunStarsChanged;
 
@@ -36,6 +37,7 @@ namespace Global
         public static void RaiseRequestLevelSelectUI() => OnRequestLevelSelectUI?.Invoke();
         public static void RaiseRequestHeroLoadoutUI() => OnRequestHeroLoadoutUI?.Invoke();
         public static void RaiseMetaGoldChanged() => OnMetaGoldChanged?.Invoke();
+        public static void RaiseSaveReset() => OnSaveReset?.Invoke();
         public static void RaiseRunGoldChanged(int totalRunGold) => OnRunGoldChanged?.Invoke(totalRunGold);
         public static void RaiseRunStarsChanged(int stars) => OnRunStarsChanged?.Invoke(stars);
         public static void RaiseDungeonGenerationStarted() => OnDungeonGenerationStarted?.Invoke();

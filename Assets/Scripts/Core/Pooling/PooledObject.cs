@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Core
 {
     /// <summary>
-    /// Attached by <see cref="ObjectPoolingManager"/> to instances so <see cref="ObjectPoolingManager.Return"/> can resolve the pool.
+    /// Attached by pool managers to instances so <see cref="PoolReturn.SafeReturn"/> can resolve the correct pool.
     /// </summary>
     public sealed class PooledObject : MonoBehaviour
     {

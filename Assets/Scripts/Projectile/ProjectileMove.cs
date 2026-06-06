@@ -117,7 +117,7 @@ namespace Projectile
             if (onDespawnRequested != null)
                 onDespawnRequested.Invoke();
             else
-                ObjectPoolingManager.SafeReturn(gameObject);
+                PoolReturn.SafeReturn(gameObject);
         }
 
         public void OnSpawnedFromPool()

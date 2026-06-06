@@ -70,11 +70,26 @@ namespace CustomUI
         private void OnEnable()
         {
             GlobalEvents.OnMetaGoldChanged += OnMetaGoldChanged;
+            GlobalEvents.OnSaveReset += HandleSaveReset;
         }
 
         private void OnDisable()
         {
             GlobalEvents.OnMetaGoldChanged -= OnMetaGoldChanged;
+            GlobalEvents.OnSaveReset -= HandleSaveReset;
+        }
+
+        private void HandleSaveReset()
+        {
+            HideConfirmPanel();
+
+            if (!gameObject.activeInHierarchy)
+                return;
+
+            if (activeCategoryIndex == 0)
+                BindCharactersTab();
+
+            characterSelectionUI?.BindData();
         }
 
         private void OnDestroy()

@@ -1,10 +1,5 @@
 fileFormatVersion: 2
 guid: 09a62b3cd2b07474ba0fb53c993a9277
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 290679
@@ -12,3 +7,8 @@ AssetOrigin:
   packageVersion: 2.0.1
   assetPath: Assets/KayKit/Characters/KayKit - Adventurers (for Unity)/Prefabs/Accessories/potion_large_blue.prefab
   uploadId: 831988
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

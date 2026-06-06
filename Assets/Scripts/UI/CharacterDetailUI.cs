@@ -65,11 +65,13 @@ namespace CustomUI
         private void OnEnable()
         {
             GlobalEvents.OnMetaGoldChanged += RefreshIfVisible;
+            GlobalEvents.OnSaveReset += RefreshIfVisible;
         }
 
         private void OnDisable()
         {
             GlobalEvents.OnMetaGoldChanged -= RefreshIfVisible;
+            GlobalEvents.OnSaveReset -= RefreshIfVisible;
         }
 
         private void OnDestroy()
@@ -170,7 +172,7 @@ namespace CustomUI
 
             var unlocked = HeroProgressService.IsUnlocked(selectedHero.heroId);
             upgradeButton.gameObject.SetActive(unlocked);
-            upgradeButton.interactable = unlocked && CanUpgradeAny(selectedHero);
+            upgradeButton.interactable = unlocked && HeroProgressService.CanUpgrade(selectedHero);
         }
 
         private void OnEquipClicked()
@@ -190,57 +192,8 @@ namespace CustomUI
             if (selectedHero == null)
                 return;
 
-            if (TryUpgradeNext(selectedHero))
+            if (HeroProgressService.TryUpgrade(selectedHero))
                 BindData();
-        }
-
-        private static bool TryUpgradeNext(HeroSO hero)
-        {
-            if (HeroProgressService.GetDamageTier(hero.heroId) < hero.maxDamageTier
-                && HeroProgressService.TryUpgradeDamage(hero))
-                return true;
-
-            if (HeroProgressService.GetFireRateTier(hero.heroId) < hero.maxFireRateTier
-                && HeroProgressService.TryUpgradeFireRate(hero))
-                return true;
-
-            if (HeroProgressService.GetHealthTier(hero.heroId) < hero.maxHealthTier
-                && HeroProgressService.TryUpgradeHealth(hero))
-                return true;
-
-            if (HeroProgressService.GetCritTier(hero.heroId) < hero.maxCritTier
-                && HeroProgressService.TryUpgradeCrit(hero))
-                return true;
-
-            return false;
-        }
-
-        private static bool CanUpgradeAny(HeroSO hero)
-        {
-            if (hero == null)
-                return false;
-
-            if (HeroProgressService.GetDamageTier(hero.heroId) < hero.maxDamageTier
-                && LevelProgressService.GetMetaGold() >= hero.GetDamageUpgradeCost(
-                    HeroProgressService.GetDamageTier(hero.heroId)))
-                return true;
-
-            if (HeroProgressService.GetFireRateTier(hero.heroId) < hero.maxFireRateTier
-                && LevelProgressService.GetMetaGold() >= hero.GetFireRateUpgradeCost(
-                    HeroProgressService.GetFireRateTier(hero.heroId)))
-                return true;
-
-            if (HeroProgressService.GetHealthTier(hero.heroId) < hero.maxHealthTier
-                && LevelProgressService.GetMetaGold() >= hero.GetHealthUpgradeCost(
-                    HeroProgressService.GetHealthTier(hero.heroId)))
-                return true;
-
-            if (HeroProgressService.GetCritTier(hero.heroId) < hero.maxCritTier
-                && LevelProgressService.GetMetaGold() >= hero.GetCritUpgradeCost(
-                    HeroProgressService.GetCritTier(hero.heroId)))
-                return true;
-
-            return false;
         }
 
         private void OnNormalSkillClicked() => ToggleSkillPanel(SkillPanelMode.NormalAttack);

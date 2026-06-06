@@ -55,8 +55,18 @@ namespace PlayerController
             return true;
         }
 
+        private void EnsurePlayerRefs()
+        {
+            if (playerAnimation == null)
+                playerAnimation = GetComponent<PlayerAnimation>();
+            if (attack == null)
+                attack = GetComponent<Attack>();
+        }
+
         private void RebindFromHierarchy()
         {
+            EnsurePlayerRefs();
+
             Transform searchRoot = activeVisual != null ? activeVisual.transform : transform;
 
             var animator = searchRoot.GetComponentInChildren<Animator>();
@@ -93,6 +103,7 @@ namespace PlayerController
 
         private void BindFirePoint(Transform firePoint)
         {
+            EnsurePlayerRefs();
             attack?.SetFirePoint(firePoint);
         }
     }

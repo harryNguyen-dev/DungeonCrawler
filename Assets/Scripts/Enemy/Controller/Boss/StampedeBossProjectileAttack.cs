@@ -206,9 +206,9 @@ namespace EnemyController
             GameObject bulletObj = null;
             if (projectilePrefab.TryGetComponent<PooledObject>(out var pooled) &&
                 pooled.PoolId != PoolId.None &&
-                ObjectPoolingManager.Instance != null)
+                ProjectilePool.Instance != null)
             {
-                bulletObj = ObjectPoolingManager.Instance.Get(pooled.PoolId, spawnPos, rot);
+                bulletObj = ProjectilePool.Instance.Get(pooled.PoolId, spawnPos, rot);
             }
             else
             {

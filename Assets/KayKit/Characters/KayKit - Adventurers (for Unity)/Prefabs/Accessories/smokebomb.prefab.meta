@@ -1,10 +1,5 @@
 fileFormatVersion: 2
 guid: 8656418e94b8d5844944a0add90c2041
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 290679
@@ -12,3 +7,8 @@ AssetOrigin:
   packageVersion: 2.0.1
   assetPath: Assets/KayKit/Characters/KayKit - Adventurers (for Unity)/Prefabs/Accessories/smokebomb.prefab
   uploadId: 831988
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

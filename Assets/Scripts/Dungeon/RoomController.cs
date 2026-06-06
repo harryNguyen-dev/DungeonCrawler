@@ -538,11 +538,11 @@ public class RoomController : MonoBehaviour
 
 
 
-        if (poolId != PoolId.None && ObjectPoolingManager.Instance != null)
+        if (poolId != PoolId.None && EnemyPool.Instance != null)
 
         {
 
-            var fromPool = ObjectPoolingManager.Instance.Get(poolId, position, rotation);
+            var fromPool = EnemyPool.Instance.Get(poolId, position, rotation);
 
             if (fromPool != null)
 
@@ -554,7 +554,7 @@ public class RoomController : MonoBehaviour
 
         var instance = Object.Instantiate(prefab, position, rotation);
 
-        ObjectPoolingManager.NotifySpawnedFromPool(instance);
+        ObjectPoolBase.NotifySpawnedFromPool(instance);
 
         return instance;
 

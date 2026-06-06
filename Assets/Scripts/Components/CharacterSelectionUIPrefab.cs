@@ -58,13 +58,8 @@ namespace Components
             }
         }
 
-        private static int GetMetaLevel(string heroId)
-        {
-            return HeroProgressService.GetDamageTier(heroId)
-                   + HeroProgressService.GetFireRateTier(heroId)
-                   + HeroProgressService.GetHealthTier(heroId)
-                   + HeroProgressService.GetCritTier(heroId);
-        }
+        private static int GetMetaLevel(string heroId) =>
+            HeroProgressService.GetUpgradeTier(heroId);
 
         private void OnChooseClicked()
         {

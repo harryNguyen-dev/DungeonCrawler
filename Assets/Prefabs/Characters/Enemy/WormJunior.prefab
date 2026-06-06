@@ -596,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c325d298183101a459fe708d8ef86e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.PooledObject
-  _poolId: 11
+  _poolId: 6
 --- !u!114 &6273112280860854908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController.StampedeBossProjectileAttack
   enemyData: {fileID: 11400000, guid: 3ddbd4b07f5cc354d9d036eb89eef977, type: 2}
-  projectilePrefab: {fileID: 705700206895292680, guid: 008cedc2d94ceb446bcf69af13cb5eaa, type: 3}
+  projectilePrefab: {fileID: 705700206895292680, guid: 76c603bd212f7a04db05740f62b39d49, type: 3}
   firePoint: {fileID: 8800011000000000002}
   useAnimationEvents: 1
   spreadHalfAngle: 22.5

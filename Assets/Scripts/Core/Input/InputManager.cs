@@ -57,8 +57,8 @@ public class InputManager : MonoBehaviour
     {
         UpdateKeyboardSkillAim();
 
-#if UNITY_EDITOR
-        if (Debug.isDebugBuild && Keyboard.current != null && Keyboard.current.pKey.wasPressedThisFrame)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (Keyboard.current != null && Keyboard.current.pKey.wasPressedThisFrame)
             Core.Save.LevelProgressService.ResetSave();
 #endif
     }

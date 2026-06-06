@@ -67,9 +67,9 @@ namespace EnemyController
             var poolId = projectilePrefab.GetComponent<Core.PooledObject>().PoolId;
             // Lấy đạn từ Pool thay vì Instantiate trực tiếp để tối ưu hiệu năng
             GameObject bulletObj = null;
-            if (Core.ObjectPoolingManager.Instance != null)
+            if (Core.ProjectilePool.Instance != null)
             {
-                bulletObj = Core.ObjectPoolingManager.Instance.Get(poolId, spawnPos, Quaternion.LookRotation(shootDirection));
+                bulletObj = Core.ProjectilePool.Instance.Get(poolId, spawnPos, Quaternion.LookRotation(shootDirection));
             }
             else
             {

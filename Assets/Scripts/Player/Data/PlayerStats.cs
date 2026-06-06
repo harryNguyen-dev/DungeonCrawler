@@ -50,6 +50,14 @@ namespace PlayerController
             attack?.ApplyWeapon(EquippedWeapon);
         }
 
+        public void RefreshFromProgress()
+        {
+            ApplyEquippedHeroConfig();
+            events.InvokeMaxHealthChanged(GetMaxHealth());
+            events.InvokeAttackDamageChanged(GetAttackDamage());
+            events.InvokeAttackSpeedChanged(GetAttackCooldown());
+        }
+
         public void CollectExp(int baseAmount)
         {
             if (baseAmount <= 0) return;

@@ -94,25 +94,36 @@ namespace PlayerController
 
         public async UniTask SpawnProjectile()
         {
-            if (projectilePrefab == null || firePoint == null) return;
+            if (projectilePrefab == null)
+            {
+                Debug.LogWarning("[PlayerController] SpawnProjectile aborted: projectilePrefab is null.");
+                return;
+            }
+
+            if (firePoint == null)
+            {
+                Debug.LogWarning("[PlayerController] SpawnProjectile aborted: firePoint is null.");
+                return;
+            }
 
             Debug.Log($"[PlayerController] Spawn {numberOfProjectiles} projectiles");
             for (int i = 0; i < numberOfProjectiles; i++)
             {
-                // var projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
                 GameObject projectile = projectilePrefab;
                 PoolId poolId = PoolId.None;
-                if(projectile != null && projectile.TryGetComponent<Core.PooledObject>(out var poolable))
-                {
+                if (projectile != null && projectile.TryGetComponent<PooledObject>(out var poolable))
                     poolId = poolable.PoolId;
-                }
+
                 GameObject projectileInstance = null;
-                if(poolId != PoolId.None && ObjectPoolingManager.Instance != null)
+                if (poolId != PoolId.None && ProjectilePool.Instance != null)
+                    projectileInstance = ProjectilePool.Instance.Get(poolId, firePoint.position, firePoint.rotation);
+
+                if (projectileInstance == null)
                 {
-                    projectileInstance = ObjectPoolingManager.Instance.Get(poolId, firePoint.position, firePoint.rotation);
+                    Debug.LogWarning($"[PlayerController] Failed to spawn projectile from pool '{poolId}'.");
+                    continue;
                 }
-                // TODO-check null reference
-                
+
                 var projectileController = projectileInstance.GetComponent<Projectile.ProjectileController>();
                 if (projectileController != null)
                 {

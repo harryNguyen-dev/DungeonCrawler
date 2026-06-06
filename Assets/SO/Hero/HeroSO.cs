@@ -9,6 +9,21 @@ namespace SO
         public const float CritDamageMultiplier = 2f;
         public const float MaxCritChance = 1f;
 
+        private static readonly HeroUpgradeStep[] DefaultUpgrades =
+        {
+            new() { cost = 75, damageBonus = 5 },
+            new() { cost = 120, damageBonus = 5 },
+            new() { cost = 180, damageBonus = 5 },
+            new() { cost = 80, cooldownReduction = 0.05f },
+            new() { cost = 140, cooldownReduction = 0.05f },
+            new() { cost = 70, healthBonus = 15 },
+            new() { cost = 110, healthBonus = 15 },
+            new() { cost = 160, healthBonus = 15 },
+            new() { cost = 85, critChanceBonus = 0.02f },
+            new() { cost = 130, critChanceBonus = 0.02f },
+            new() { cost = 190, critChanceBonus = 0.02f },
+        };
+
         [Header("Identity")]
         public string heroId;
         public string displayName;
@@ -39,43 +54,39 @@ namespace SO
         public bool unlockedByDefault;
         public int unlockCost = 200;
 
-        [Header("Meta upgrades — Damage")]
-        public int damagePerTier = 5;
-        public int maxDamageTier = 3;
-        public int[] damageUpgradeCosts = { 75, 120, 180 };
+        [Header("Meta upgrades")]
+        public HeroUpgradeStep[] upgrades;
 
-        [Header("Meta upgrades — Fire rate")]
-        public float cooldownReductionPerTier = 0.05f;
-        public int maxFireRateTier = 2;
-        public int[] fireRateUpgradeCosts = { 80, 140 };
+        public int MaxUpgradeTier => GetUpgrades().Length;
 
-        [Header("Meta upgrades — Health")]
-        public int healthPerTier = 15;
-        public int maxHealthTier = 3;
-        public int[] healthUpgradeCosts = { 70, 110, 160 };
+        public HeroUpgradeStep[] GetUpgrades() =>
+            upgrades != null && upgrades.Length > 0 ? upgrades : DefaultUpgrades;
 
-        [Header("Meta upgrades — Crit chance")]
-        public float critChancePerTier = 0.02f;
-        public int maxCritTier = 3;
-        public int[] critUpgradeCosts = { 85, 130, 190 };
-
-        public int GetDamageUpgradeCost(int nextTierIndex) =>
-            GetUpgradeCost(damageUpgradeCosts, nextTierIndex);
-
-        public int GetFireRateUpgradeCost(int nextTierIndex) =>
-            GetUpgradeCost(fireRateUpgradeCosts, nextTierIndex);
-
-        public int GetHealthUpgradeCost(int nextTierIndex) =>
-            GetUpgradeCost(healthUpgradeCosts, nextTierIndex);
-
-        public int GetCritUpgradeCost(int nextTierIndex) =>
-            GetUpgradeCost(critUpgradeCosts, nextTierIndex);
-
-        private static int GetUpgradeCost(int[] costs, int nextTierIndex)
+        public int GetUpgradeCost(int tierIndex)
         {
-            if (costs == null || nextTierIndex < 0 || nextTierIndex >= costs.Length)
+            var steps = GetUpgrades();
+            if (tierIndex < 0 || tierIndex >= steps.Length)
                 return 0;
-            return costs[nextTierIndex];
+            return steps[tierIndex].cost;
+        }
+
+        public void GetAccumulatedBonuses(int tier, out int damageBonus, out int healthBonus,
+            out float cooldownReduction, out float critChanceBonus)
+        {
+            damageBonus = 0;
+            healthBonus = 0;
+            cooldownReduction = 0f;
+            critChanceBonus = 0f;
+
+            var steps = GetUpgrades();
+            var count = Mathf.Clamp(tier, 0, steps.Length);
+            for (var i = 0; i < count; i++)
+            {
+                damageBonus += steps[i].damageBonus;
+                healthBonus += steps[i].healthBonus;
+                cooldownReduction += steps[i].cooldownReduction;
+                critChanceBonus += steps[i].critChanceBonus;
+            }
         }
     }
 }

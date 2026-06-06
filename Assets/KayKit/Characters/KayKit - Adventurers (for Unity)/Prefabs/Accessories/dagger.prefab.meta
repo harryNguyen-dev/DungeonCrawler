@@ -1,10 +1,5 @@
 fileFormatVersion: 2
 guid: 8fd15d63933e32d4ba35255c389be30b
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 290679
@@ -12,3 +7,8 @@ AssetOrigin:
   packageVersion: 2.0.1
   assetPath: Assets/KayKit/Characters/KayKit - Adventurers (for Unity)/Prefabs/Accessories/dagger.prefab
   uploadId: 831988
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

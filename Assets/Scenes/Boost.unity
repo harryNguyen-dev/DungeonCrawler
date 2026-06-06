@@ -242,7 +242,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &155206997
+--- !u!1 &910000001
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -250,47 +250,168 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 155206998}
-  - component: {fileID: 155206999}
+  - component: {fileID: 910000002}
+  - component: {fileID: 910000003}
+  - component: {fileID: 910000004}
+  - component: {fileID: 910000005}
+  - component: {fileID: 910000006}
   m_Layer: 0
-  m_Name: DropPool
+  m_Name: PoolManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &155206998
+--- !u!4 &910000002
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155206997}
+  m_GameObject: {fileID: 910000001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 783.10333, y: -0.00006, z: -97.94881}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 910000008}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &155206999
+--- !u!114 &910000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155206997}
+  m_GameObject: {fileID: 910000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f1a2b3c4d5e6f7890123456789abc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.EnemyPool
+  _entries:
+  - _id: 1
+    _prefab: {fileID: 7300521822030121898, guid: 3321688a488f8d346803067249606818, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 2
+    _prefab: {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 3
+    _prefab: {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 4
+    _prefab: {fileID: 7300521822030121898, guid: d97a8d1847edbc54cb1fc94afcc4d3d0, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 5
+    _prefab: {fileID: 7300521822030121898, guid: fd08bae9289e1d74b8c735be9709ba39, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 6
+    _prefab: {fileID: 7300521822030121898, guid: d33c3a63b764ff04797a827d01fa4d0c, type: 3}
+    _prewarmCount: 2
+    _maxSize: 2
+  _poolRoot: {fileID: 910000008}
+--- !u!114 &910000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f1a2b3c4d5e6f7890123456789abc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.ProjectilePool
+  _entries:
+  - _id: 101
+    _prefab: {fileID: 705700206895292680, guid: 79e78d02455e6c84fb43700d9eb6feaa, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 102
+    _prefab: {fileID: 705700206895292680, guid: 008cedc2d94ceb446bcf69af13cb5eaa, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 103
+    _prefab: {fileID: 705700206895292680, guid: 76c603bd212f7a04db05740f62b39d49, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 104
+    _prefab: {fileID: 705700206895292680, guid: 0edb51427189bab418104a9d314c2c90, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  - _id: 105
+    _prefab: {fileID: 705700206895292680, guid: 0b1a6d8d707a8f24b93b185e278380cc, type: 3}
+    _prewarmCount: 10
+    _maxSize: 10
+  _poolRoot: {fileID: 910000008}
+--- !u!114 &910000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b30c0423276bde0469776f2f6094d1b8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DropPool
+  m_EditorClassIdentifier: Assembly-CSharp::Core.DropPool
   goldPrefab: {fileID: 2945858431063803397, guid: c09fd136873ba25438f994b8b92be84b, type: 3}
   expPrefab: {fileID: 2945858431063803397, guid: f2625719834858949a5c60fbbbf55586, type: 3}
   prewarmCount: 12
   spawnRadius: 0.35
-  poolRoot: {fileID: 155206998}
+  poolRoot: {fileID: 910000008}
+--- !u!114 &910000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eb0c3a2062c9ae4fa27d968b86fde99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.SoundEffectsPool
+  maxConcurrent: 32
+  initialPoolSize: 8
+--- !u!1 &910000007
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910000008}
+  m_Layer: 0
+  m_Name: PoolContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &910000008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910000007}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 910000002}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &245371885
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,7 +923,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 30979e99157c4ad43824e1b840cc7bdc, type: 2}
   - {fileID: 11400000, guid: aa36d6fe3395ab94ebf8b00d7d24e00e, type: 2}
   Chapter1Catalog: {fileID: 11400000, guid: 4d5e6f708192a3b4c5d6e7f8091a2b3c, type: 2}
-  WeaponCatalog: {fileID: 0}
   HeroCatalog: {fileID: 11400000, guid: 4cdb897d233fb8b4f872763260f7c2f9, type: 2}
   DefaultDashConfig: {fileID: 11400000, guid: 4490137a6f625f741a9a875938bf0997, type: 2}
   EnemyPrefabs:
@@ -1687,4 +1807,4 @@ SceneRoots:
   - {fileID: 1072475213}
   - {fileID: 3900000002}
   - {fileID: 533341495}
-  - {fileID: 155206998}
+  - {fileID: 910000002}

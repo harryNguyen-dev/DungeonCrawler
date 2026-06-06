@@ -212,7 +212,7 @@ namespace Global
             for (int i = AvailableEnemies.Count - 1; i >= 0; i--)
             {
                 if (AvailableEnemies[i] != null)
-                    Core.ObjectPoolingManager.SafeReturn(AvailableEnemies[i]);
+                    Core.PoolReturn.SafeReturn(AvailableEnemies[i]);
             }
 
             AvailableEnemies.Clear();
@@ -230,7 +230,7 @@ namespace Global
             foreach (var projectile in projectiles)
             {
                 if (projectile != null)
-                    Core.ObjectPoolingManager.SafeReturn(projectile.gameObject);
+                    Core.PoolReturn.SafeReturn(projectile.gameObject);
             }
         }
 

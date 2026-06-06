@@ -199,12 +199,19 @@ namespace Core.Save
             }
 
             cachedData = CreateFreshSaveData();
-            HeroProgressService.EnsureHeroDefaults(cachedData);
             HeroProgressService.SyncEquippedHeroCache();
+            Global.GlobalVariable.OpenLevelSelectOnLobbyReturn = false;
             Save(cachedData);
+            RefreshRuntimeAfterSaveReset();
             Global.GlobalEvents.RaiseMetaGoldChanged();
+            Global.GlobalEvents.RaiseSaveReset();
             Global.GlobalEvents.RaiseLobbyReady();
             Debug.Log("[LevelProgressService] Save data reset.");
+        }
+
+        private static void RefreshRuntimeAfterSaveReset()
+        {
+            Global.GlobalEntities.Instance?.PlayerStats?.RefreshFromProgress();
         }
 
         private static string SavePath => Path.Combine(Application.persistentDataPath, SaveFileName);
@@ -238,9 +245,13 @@ namespace Core.Save
 
         private static LevelProgressData CreateFreshSaveData()
         {
-            var data = new LevelProgressData { highestUnlockedIndex = 0 };
-            EnsureLevelStarsList(data);
-            HeroProgressService.EnsureHeroDefaults(data);
+            var data = new LevelProgressData
+            {
+                highestUnlockedIndex = 0,
+                metaGold = 0,
+                levelStars = new List<LevelStarEntry>()
+            };
+            HeroProgressService.ApplyFreshDefaults(data);
             return data;
         }
 

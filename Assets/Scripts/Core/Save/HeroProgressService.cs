@@ -9,10 +9,7 @@ namespace Core.Save
     public class HeroUpgradeEntry
     {
         public string heroId;
-        public int damageTier;
-        public int fireRateTier;
-        public int healthTier;
-        public int critTier;
+        public int upgradeTier;
     }
 
     public static class HeroProgressService
@@ -69,97 +66,35 @@ namespace Core.Save
             return true;
         }
 
-        public static int GetDamageTier(string heroId)
+        public static int GetUpgradeTier(string heroId) =>
+            GetOrCreateEntry(heroId).upgradeTier;
+
+        public static bool CanUpgrade(HeroSO hero)
         {
-            return GetOrCreateEntry(heroId).damageTier;
+            if (hero == null || !IsUnlocked(hero.heroId))
+                return false;
+
+            var tier = GetUpgradeTier(hero.heroId);
+            if (tier >= hero.MaxUpgradeTier)
+                return false;
+
+            return LevelProgressService.GetMetaGold() >= hero.GetUpgradeCost(tier);
         }
 
-        public static int GetFireRateTier(string heroId)
-        {
-            return GetOrCreateEntry(heroId).fireRateTier;
-        }
-
-        public static int GetHealthTier(string heroId)
-        {
-            return GetOrCreateEntry(heroId).healthTier;
-        }
-
-        public static int GetCritTier(string heroId)
-        {
-            return GetOrCreateEntry(heroId).critTier;
-        }
-
-        public static bool TryUpgradeDamage(HeroSO hero)
+        public static bool TryUpgrade(HeroSO hero)
         {
             if (hero == null || !IsUnlocked(hero.heroId))
                 return false;
 
             var entry = GetOrCreateEntry(hero.heroId);
-            if (entry.damageTier >= hero.maxDamageTier)
+            if (entry.upgradeTier >= hero.MaxUpgradeTier)
                 return false;
 
-            var cost = hero.GetDamageUpgradeCost(entry.damageTier);
+            var cost = hero.GetUpgradeCost(entry.upgradeTier);
             if (!LevelProgressService.TrySpendMetaGold(cost))
                 return false;
 
-            entry.damageTier++;
-            PersistEntry(entry);
-            GlobalEvents.RaiseMetaGoldChanged();
-            return true;
-        }
-
-        public static bool TryUpgradeFireRate(HeroSO hero)
-        {
-            if (hero == null || !IsUnlocked(hero.heroId))
-                return false;
-
-            var entry = GetOrCreateEntry(hero.heroId);
-            if (entry.fireRateTier >= hero.maxFireRateTier)
-                return false;
-
-            var cost = hero.GetFireRateUpgradeCost(entry.fireRateTier);
-            if (!LevelProgressService.TrySpendMetaGold(cost))
-                return false;
-
-            entry.fireRateTier++;
-            PersistEntry(entry);
-            GlobalEvents.RaiseMetaGoldChanged();
-            return true;
-        }
-
-        public static bool TryUpgradeHealth(HeroSO hero)
-        {
-            if (hero == null || !IsUnlocked(hero.heroId))
-                return false;
-
-            var entry = GetOrCreateEntry(hero.heroId);
-            if (entry.healthTier >= hero.maxHealthTier)
-                return false;
-
-            var cost = hero.GetHealthUpgradeCost(entry.healthTier);
-            if (!LevelProgressService.TrySpendMetaGold(cost))
-                return false;
-
-            entry.healthTier++;
-            PersistEntry(entry);
-            GlobalEvents.RaiseMetaGoldChanged();
-            return true;
-        }
-
-        public static bool TryUpgradeCrit(HeroSO hero)
-        {
-            if (hero == null || !IsUnlocked(hero.heroId))
-                return false;
-
-            var entry = GetOrCreateEntry(hero.heroId);
-            if (entry.critTier >= hero.maxCritTier)
-                return false;
-
-            var cost = hero.GetCritUpgradeCost(entry.critTier);
-            if (!LevelProgressService.TrySpendMetaGold(cost))
-                return false;
-
-            entry.critTier++;
+            entry.upgradeTier++;
             PersistEntry(entry);
             GlobalEvents.RaiseMetaGoldChanged();
             return true;
@@ -168,6 +103,31 @@ namespace Core.Save
         public static void SyncEquippedHeroCache()
         {
             GlobalVariable.EquippedHeroId = GetEquippedHeroId();
+        }
+
+        public static void ApplyFreshDefaults(LevelProgressData data)
+        {
+            if (data == null)
+                return;
+
+            data.heroUpgrades = new List<HeroUpgradeEntry>();
+            data.unlockedHeroIds = new List<string> { StarterHeroId };
+
+            var catalog = Global.GlobalEntities.Instance?.HeroCatalog;
+            if (catalog?.heroes != null)
+            {
+                foreach (var hero in catalog.heroes)
+                {
+                    if (hero == null || string.IsNullOrEmpty(hero.heroId))
+                        continue;
+
+                    if (hero.unlockedByDefault && !data.unlockedHeroIds.Contains(hero.heroId))
+                        data.unlockedHeroIds.Add(hero.heroId);
+                }
+            }
+
+            var defaultHero = catalog?.GetDefaultHero();
+            data.equippedHeroId = defaultHero != null ? defaultHero.heroId : StarterHeroId;
         }
 
         public static void EnsureHeroDefaults(LevelProgressData data)

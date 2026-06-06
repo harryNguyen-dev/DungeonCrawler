@@ -60,6 +60,7 @@ namespace CustomUI
             RefreshMetaGold();
             GlobalEvents.OnLobbyReady += RefreshBattleButton;
             GlobalEvents.OnMetaGoldChanged += RefreshMetaGold;
+            GlobalEvents.OnSaveReset += HandleSaveReset;
 
             if (!IsCharacterFlowOpen())
                 ShowLobbyHeroPreview();
@@ -75,6 +76,7 @@ namespace CustomUI
         {
             GlobalEvents.OnLobbyReady -= RefreshBattleButton;
             GlobalEvents.OnMetaGoldChanged -= RefreshMetaGold;
+            GlobalEvents.OnSaveReset -= HandleSaveReset;
         }
 
         private void OnDestroy()
@@ -118,6 +120,19 @@ namespace CustomUI
         private bool IsCharacterFlowOpen()
         {
             return characterSelectionUI != null && characterSelectionUI.IsOpen;
+        }
+
+        private void HandleSaveReset()
+        {
+            shopUI?.Close();
+            characterSelectionUI?.Close();
+            HideCreditPanel();
+            selectMapsUI?.Close();
+            RefreshMetaGold();
+            RefreshBattleButton();
+
+            if (!IsCharacterFlowOpen())
+                ShowLobbyHeroPreview();
         }
 
         private void RefreshBattleButton()

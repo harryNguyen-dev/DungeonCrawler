@@ -25,6 +25,7 @@ namespace CustomUI
         {
             GlobalEvents.OnRequestHeroLoadoutUI += Open;
             GlobalEvents.OnMetaGoldChanged += RefreshMetaGold;
+            GlobalEvents.OnSaveReset += HandleSaveReset;
 
             if (equipButton != null)
                 equipButton.onClick.AddListener(OnEquipClicked);
@@ -40,6 +41,7 @@ namespace CustomUI
         {
             GlobalEvents.OnRequestHeroLoadoutUI -= Open;
             GlobalEvents.OnMetaGoldChanged -= RefreshMetaGold;
+            GlobalEvents.OnSaveReset -= HandleSaveReset;
 
             if (equipButton != null)
                 equipButton.onClick.RemoveListener(OnEquipClicked);
@@ -169,6 +171,15 @@ namespace CustomUI
         {
             if (metaGoldText != null)
                 metaGoldText.text = LevelProgressService.GetMetaGold().ToString();
+        }
+
+        private void HandleSaveReset()
+        {
+            if (loadoutPanel == null || !loadoutPanel.activeSelf)
+                return;
+
+            BuildHeroList();
+            RefreshMetaGold();
         }
 
         private void HidePanel()

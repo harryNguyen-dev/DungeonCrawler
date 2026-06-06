@@ -110,8 +110,8 @@ namespace PlayerController
                 poolId = poolable.PoolId;
 
             GameObject instance = null;
-            if (poolId != PoolId.None && ObjectPoolingManager.Instance != null)
-                instance = ObjectPoolingManager.Instance.Get(poolId, spawnPos, rotation);
+            if (poolId != PoolId.None && ProjectilePool.Instance != null)
+                instance = ProjectilePool.Instance.Get(poolId, spawnPos, rotation);
             else
                 instance = Instantiate(prefab, spawnPos, rotation);
 

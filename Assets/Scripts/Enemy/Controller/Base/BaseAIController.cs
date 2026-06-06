@@ -170,7 +170,7 @@ namespace EnemyController
         public virtual void SpawnFinish()
         {
             // StartAILoop();
-            // Đảm bảo components đã được cache (phòng trường hợp OnSpawned gọi trước cả Awake/Start tùy ObjectPoolingManager)
+            // Đảm bảo components đã được cache (phòng trường hợp OnSpawned gọi trước cả Awake/Start tùy pool manager)
             EnsureComponentsInitialized(); 
 
             // Cập nhật lại chỉ số mới từ ScriptableObject phòng khi bạn đổi chỉ số lúc chạy game
