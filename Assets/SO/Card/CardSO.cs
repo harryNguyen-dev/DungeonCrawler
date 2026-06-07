@@ -30,12 +30,6 @@ namespace SO
         // EFFECT (in-run cards)
         AddOneProjectile,
         ProjectileBoomerang,
-
-        // Weapon-only traits — not used in card pool (see CardPoolFilter)
-        ProjectileFireOnHit,
-        ProjectileFrozenOnHit,
-        ProjectilePierce,
-        ExplosiveImpact,
     }
     
     public enum CardTier

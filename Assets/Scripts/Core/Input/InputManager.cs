@@ -9,14 +9,9 @@ public class InputManager : MonoBehaviour
 
     private InputSystem_Actions inputActions;
     private Core.Joystick moveJoystick;
-    private Core.Joystick skillAimJoystick;
     private bool uiAttackHeld;
     private bool uiDashPressedThisFrame;
-
-    private bool skillAimHeld;
-    private bool skillAimReleasedThisFrame;
-    private Vector2 skillAimReleaseVector;
-    private bool keyboardSkillAimHeld;
+    private bool uiSkillPressedThisFrame;
 
     private void Awake()
     {
@@ -55,7 +50,8 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        UpdateKeyboardSkillAim();
+        if (Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame)
+            uiSkillPressedThisFrame = true;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (Keyboard.current != null && Keyboard.current.pKey.wasPressedThisFrame)
@@ -66,7 +62,7 @@ public class InputManager : MonoBehaviour
     private void LateUpdate()
     {
         uiDashPressedThisFrame = false;
-        skillAimReleasedThisFrame = false;
+        uiSkillPressedThisFrame = false;
     }
 
     public void RegisterMoveJoystick(Core.Joystick joystick)
@@ -77,39 +73,10 @@ public class InputManager : MonoBehaviour
         moveJoystick = joystick;
     }
 
-    public void RegisterSkillAimJoystick(Core.Joystick joystick)
-    {
-        if (joystick == null || joystick.Role != Core.Joystick.JoystickRole.SkillAim)
-            return;
-
-        skillAimJoystick = joystick;
-    }
-
     public void UnregisterMoveJoystick(Core.Joystick joystick)
     {
         if (moveJoystick == joystick)
             moveJoystick = null;
-    }
-
-    public void UnregisterSkillAimJoystick(Core.Joystick joystick)
-    {
-        if (skillAimJoystick == joystick)
-            skillAimJoystick = null;
-    }
-
-    public void NotifySkillAimPressed()
-    {
-        skillAimHeld = true;
-    }
-
-    public void NotifySkillAimReleased(Vector2 releaseDirection)
-    {
-        if (!skillAimHeld)
-            return;
-
-        skillAimHeld = false;
-        skillAimReleasedThisFrame = true;
-        skillAimReleaseVector = releaseDirection;
     }
 
     public Vector2 GetMovementVector()
@@ -125,51 +92,6 @@ public class InputManager : MonoBehaviour
         return inputActions.Player.Move.ReadValue<Vector2>();
     }
 
-    /// <summary>Current aim direction while holding skill aim joystick (or keyboard Q).</summary>
-    public Vector2 GetSkillAimVector()
-    {
-        return ResolveSkillAimDirection(includeMoveFallback: keyboardSkillAimHeld);
-    }
-
-    private Vector2 ResolveSkillAimDirection(bool includeMoveFallback)
-    {
-        if (skillAimJoystick != null && skillAimJoystick.IsHeld)
-        {
-            Vector2 joystickInput = skillAimJoystick.Direction;
-            if (joystickInput.sqrMagnitude > JoystickDeadzoneSqr)
-                return Vector2.ClampMagnitude(joystickInput, 1f);
-        }
-
-        if (keyboardSkillAimHeld || includeMoveFallback)
-        {
-            if (inputActions != null)
-            {
-                Vector2 look = inputActions.Player.Look.ReadValue<Vector2>();
-                if (look.sqrMagnitude > JoystickDeadzoneSqr)
-                    return Vector2.ClampMagnitude(look, 1f);
-            }
-
-            if (includeMoveFallback)
-            {
-                Vector2 move = GetMovementVector();
-                if (move.sqrMagnitude > JoystickDeadzoneSqr)
-                    return move;
-            }
-        }
-
-        return Vector2.zero;
-    }
-
-    public bool IsSkillAimHeld() => skillAimHeld || keyboardSkillAimHeld;
-
-    public bool WasSkillAimReleased()
-    {
-        return skillAimReleasedThisFrame;
-    }
-
-    /// <summary>Aim direction captured at the moment skill aim was released.</summary>
-    public Vector2 GetSkillAimReleaseVector() => skillAimReleaseVector;
-
     public Vector2 GetMousePosition()
     {
         return Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
@@ -179,31 +101,17 @@ public class InputManager : MonoBehaviour
 
     public void SetUiDashPressed() => uiDashPressedThisFrame = true;
 
+    public void SetUiSkillPressed() => uiSkillPressedThisFrame = true;
+
     /// <summary>True while the Normal Attack UI button is held.</summary>
     public bool IsAttacking() => uiAttackHeld;
 
     public bool WasDashPressed() => uiDashPressedThisFrame;
 
+    public bool WasSkillPressed() => uiSkillPressedThisFrame;
+
     public bool WasPausePressed()
     {
         return Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
-    }
-
-    private void UpdateKeyboardSkillAim()
-    {
-        if (Keyboard.current == null)
-            return;
-
-        bool qHeld = Keyboard.current.qKey.isPressed;
-
-        if (qHeld && !keyboardSkillAimHeld)
-            keyboardSkillAimHeld = true;
-
-        if (!qHeld && keyboardSkillAimHeld)
-        {
-            keyboardSkillAimHeld = false;
-            skillAimReleasedThisFrame = true;
-            skillAimReleaseVector = ResolveSkillAimDirection(includeMoveFallback: true);
-        }
     }
 }

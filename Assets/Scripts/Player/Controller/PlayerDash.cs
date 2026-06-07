@@ -18,6 +18,15 @@ namespace PlayerController
 
         public bool IsDashing => isDashing;
 
+        public bool TryGetCooldown(out float remaining, out float duration)
+        {
+            duration = GetCooldown();
+            remaining = duration > 0f
+                ? Mathf.Max(0f, lastDashTime + duration - Time.time)
+                : 0f;
+            return remaining > 0f;
+        }
+
         private void Awake()
         {
             movement = GetComponent<Movement>();

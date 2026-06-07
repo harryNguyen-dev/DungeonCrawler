@@ -11,6 +11,8 @@ namespace CustomUI
 {
     public class CharacterDetailUI : MonoBehaviour
     {
+        private const string IconChildName = "Icon";
+
         private enum SkillPanelMode
         {
             None,
@@ -118,7 +120,27 @@ namespace CustomUI
             BindPreview();
             BindEquipState();
             BindUpgradeState();
+            BindSkillButtonIcons();
             ShowSkillPanel(SkillPanelMode.None);
+        }
+
+        private void BindSkillButtonIcons()
+        {
+            SetButtonIcon(normalSkillButton, selectedHero?.boundWeapon?.icon);
+            SetButtonIcon(specialSkillButton, selectedHero?.skill?.icon);
+        }
+
+        private static void SetButtonIcon(Button button, Sprite icon)
+        {
+            if (button == null)
+                return;
+
+            var iconTransform = button.transform.Find(IconChildName);
+            if (iconTransform == null || !iconTransform.TryGetComponent(out Image iconImage))
+                return;
+
+            iconImage.sprite = icon;
+            iconImage.enabled = icon != null;
         }
 
         private void BindHeroStats()
@@ -274,11 +296,7 @@ namespace CustomUI
                 return;
             }
 
-            var description =
-                $"Distance: {dash.distance:0.#}m\n" +
-                $"Duration: {dash.duration:0.##}s\n" +
-                $"Cooldown: {dash.cooldown:0.#}s\n" +
-                $"I-frames: {dash.iFrameDuration:0.##}s";
+            var description = $"Dash forward to evade incoming attacks.\nCooldown: {dash.cooldown:0.#}s";
 
             SetSkillPanelContent(null, "Dash", description);
         }

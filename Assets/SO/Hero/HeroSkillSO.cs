@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,32 @@ namespace SO
         Projectile,
         Cone,
         GroundAoE,
-        Beam
+        Beam,
+        SelfBuff,
+    }
+
+    public enum SkillDamageMode
+    {
+        Fixed,
+        PercentOfAttack,
+        RollAttackDamage,
+    }
+
+    [Serializable]
+    public struct ConeSkillConfig
+    {
+        public int projectileCount;
+        public float coneAngle;
+        public float spawnDelayMs;
+        public bool centerPelletPierce;
+    }
+
+    [Serializable]
+    public struct BuffSkillConfig
+    {
+        public float duration;
+        public bool refreshOnReuse;
+        public List<StatModifier> modifiers;
     }
 
     [CreateAssetMenu(fileName = "HeroSkill", menuName = "Hero/Hero Skill")]
@@ -24,13 +50,22 @@ namespace SO
         [Header("Combat")]
         public SkillDeliveryType deliveryType = SkillDeliveryType.Projectile;
         public float cooldown = 3f;
+        public SkillDamageMode damageMode = SkillDamageMode.Fixed;
         public int damage = 25;
+        [Range(0f, 2f)]
+        public float damagePercent = 0.45f;
         public float range = 12f;
         public float projectileSpeed = 18f;
         public GameObject skillProjectilePrefab;
         public List<WeaponEffectModifier> skillEffects = new();
 
-        [Header("Cone / AoE (future)")]
+        [Header("Cone")]
+        public ConeSkillConfig coneConfig;
+
+        [Header("Buff")]
+        public BuffSkillConfig buffConfig;
+
+        [Header("AoE (future)")]
         public float coneAngle = 45f;
         public float aoeRadius = 3f;
     }

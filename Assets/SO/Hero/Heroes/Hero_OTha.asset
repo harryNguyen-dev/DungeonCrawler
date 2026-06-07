@@ -23,7 +23,7 @@ MonoBehaviour:
   attackCooldown: 0.45
   critChance: 0.12
   boundWeapon: {fileID: 11400000, guid: 6bc0916e23774d2fa3adac1522907d3c, type: 2}
-  skill: {fileID: 11400000, guid: 1dcf1a8ab10cea942b76c841b6bb12ff, type: 2}
+  skill: {fileID: 11400000, guid: f8e7d6c5b4a39281706f5e4d3c2b1a09, type: 2}
   visualPrefab: {fileID: 2729737082750660509, guid: 8134467059384af43a632edca797443f, type: 3}
   visualLocalPosition: {x: 0, y: 0, z: 0}
   visualLocalEulerAngles: {x: 0, y: 0, z: 0}

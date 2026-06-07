@@ -250,6 +250,9 @@ namespace EditorTools
             if (root.GetComponent<PlayerController.PlayerSkill>() == null)
                 root.AddComponent<PlayerController.PlayerSkill>();
 
+            if (root.GetComponent<PlayerController.Skill.PlayerTimedBuffTracker>() == null)
+                root.AddComponent<PlayerController.Skill.PlayerTimedBuffTracker>();
+
             PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefabPath);
             PrefabUtility.UnloadPrefabContents(root);
         }

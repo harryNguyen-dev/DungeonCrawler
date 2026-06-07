@@ -10,6 +10,10 @@ namespace CustomUI
 {
     public class BattleUI : MonoBehaviour
     {
+        private const string CooldownFillChildName = "CooldownFill";
+        private const string CooldownTextChildName = "CooldownText";
+        private const string IconChildName = "Icon";
+
         [Header("Hero Info")]
         [SerializeField] private Image hpBarFill;
         [SerializeField] private Image expBarFill;
@@ -28,6 +32,7 @@ namespace CustomUI
         [Header("Combat buttons")]
         [SerializeField] private Button normalAttackButton;
         [SerializeField] private Button dashButton;
+        [SerializeField] private Button skillButton;
 
         private EventTrigger attackButtonTrigger;
         private EventTrigger.Entry attackPointerDownEntry;
@@ -37,9 +42,22 @@ namespace CustomUI
         private PlayerEvents playerEvents;
         private PlayerStats playerStats;
         private Health playerHealth;
+        private PlayerSkill playerSkill;
+        private PlayerDash playerDash;
+
+        private CombatButtonView normalAttackView;
+        private CombatButtonView skillButtonView;
+        private CombatButtonView dashButtonView;
 
         private int runGold;
         private int enemiesKilled;
+
+        private void Awake()
+        {
+            normalAttackView = CombatButtonView.Bind(normalAttackButton, bindIcon: true);
+            skillButtonView = CombatButtonView.Bind(skillButton, bindIcon: true);
+            dashButtonView = CombatButtonView.Bind(dashButton, bindIcon: false);
+        }
 
         private void OnEnable()
         {
@@ -59,6 +77,7 @@ namespace CustomUI
             StarDisplayHelper.Apply(star1, star2, star3, 0);
             WireAttackButton();
             WireDashButton();
+            WireSkillButton();
         }
 
         private void OnDisable()
@@ -72,6 +91,13 @@ namespace CustomUI
             UnbindPlayerEvents();
             UnwireAttackButton();
             UnwireDashButton();
+            UnwireSkillButton();
+            ClearCombatButtonCooldowns();
+        }
+
+        private void Update()
+        {
+            RefreshCombatButtonCooldowns();
         }
 
         private void BindPlayer()
@@ -86,11 +112,19 @@ namespace CustomUI
             playerEvents = entities.PlayerEvents;
             if (playerStats == null || playerEvents == null) return;
 
+            var playerInstance = entities.PlayerInstance;
+            if (playerInstance != null)
+            {
+                playerSkill = playerInstance.GetComponent<PlayerSkill>();
+                playerDash = playerInstance.GetComponent<PlayerDash>();
+            }
+
             playerEvents.OnHealthChanged += HandleHealthChanged;
             playerEvents.OnMaxHealthChanged += HandleMaxHealthChanged;
             playerEvents.OnExpChanged += HandleExpChanged;
 
             RefreshAll();
+            RefreshCombatButtonIcons();
         }
 
         private void UnbindPlayerEvents()
@@ -108,10 +142,13 @@ namespace CustomUI
             UnbindPlayerEvents();
             playerStats = null;
             playerHealth = null;
+            playerSkill = null;
+            playerDash = null;
             runGold = 0;
             enemiesKilled = 0;
             RefreshCurrency();
             StarDisplayHelper.Apply(star1, star2, star3, 0);
+            ClearCombatButtonCooldowns();
         }
 
         private void HandleDungeonGenerated(int _)
@@ -271,6 +308,141 @@ namespace CustomUI
         private static void OnDashButtonClicked()
         {
             InputManager.Instance?.SetUiDashPressed();
+        }
+
+        private void WireSkillButton()
+        {
+            if (skillButton == null)
+                return;
+
+            skillButton.onClick.RemoveAllListeners();
+            skillButton.onClick.AddListener(OnSkillButtonClicked);
+        }
+
+        private void UnwireSkillButton()
+        {
+            if (skillButton != null)
+                skillButton.onClick.RemoveAllListeners();
+        }
+
+        private static void OnSkillButtonClicked()
+        {
+            InputManager.Instance?.SetUiSkillPressed();
+        }
+
+        private void RefreshCombatButtonIcons()
+        {
+            normalAttackView.SetIcon(playerStats?.EquippedWeapon?.icon);
+            skillButtonView.SetIcon(playerStats?.ActiveSkill?.icon);
+        }
+
+        private void RefreshCombatButtonCooldowns()
+        {
+            normalAttackView.ClearCooldown();
+
+            if (playerSkill != null && playerSkill.TryGetCooldown(out var skillRemaining, out var skillDuration))
+                skillButtonView.ApplyCooldown(skillRemaining, skillDuration);
+            else
+                skillButtonView.ClearCooldown();
+
+            if (playerDash != null && playerDash.TryGetCooldown(out var dashRemaining, out var dashDuration))
+                dashButtonView.ApplyCooldown(dashRemaining, dashDuration);
+            else
+                dashButtonView.ClearCooldown();
+        }
+
+        private void ClearCombatButtonCooldowns()
+        {
+            normalAttackView.ClearCooldown();
+            skillButtonView.ClearCooldown();
+            dashButtonView.ClearCooldown();
+        }
+
+        private readonly struct CombatButtonView
+        {
+            private readonly Image cooldownFill;
+            private readonly TMP_Text cooldownText;
+            private readonly Image icon;
+
+            private CombatButtonView(Image cooldownFill, TMP_Text cooldownText, Image icon)
+            {
+                this.cooldownFill = cooldownFill;
+                this.cooldownText = cooldownText;
+                this.icon = icon;
+            }
+
+            public static CombatButtonView Bind(Button button, bool bindIcon)
+            {
+                if (button == null)
+                    return default;
+
+                var root = button.transform;
+                var fillTransform = root.Find(CooldownFillChildName);
+                var textTransform = root.Find(CooldownTextChildName);
+                Transform iconTransform = bindIcon ? root.Find(IconChildName) : null;
+
+                Image fillImage = null;
+                TMP_Text text = null;
+                Image iconImage = null;
+
+                if (fillTransform != null)
+                    fillTransform.TryGetComponent(out fillImage);
+                if (textTransform != null)
+                    textTransform.TryGetComponent(out text);
+                if (iconTransform != null)
+                    iconTransform.TryGetComponent(out iconImage);
+
+                return new CombatButtonView(fillImage, text, iconImage);
+            }
+
+            public void SetIcon(Sprite sprite)
+            {
+                if (icon == null)
+                    return;
+
+                icon.sprite = sprite;
+                icon.enabled = sprite != null;
+            }
+
+            public void ApplyCooldown(float remaining, float duration)
+            {
+                if (duration <= 0f || remaining <= 0f)
+                {
+                    ClearCooldown();
+                    return;
+                }
+
+                var fillAmount = Mathf.Clamp01(remaining / duration);
+
+                if (cooldownFill != null)
+                {
+                    cooldownFill.gameObject.SetActive(true);
+                    cooldownFill.fillAmount = fillAmount;
+                }
+
+                if (cooldownText != null)
+                {
+                    cooldownText.gameObject.SetActive(true);
+                    cooldownText.text = remaining >= 1f
+                        ? Mathf.CeilToInt(remaining).ToString()
+                        : remaining.ToString("0.#");
+                }
+            }
+
+            public void ClearCooldown()
+            {
+                if (cooldownFill != null)
+                {
+                    cooldownFill.fillAmount = 0f;
+                    cooldownFill.gameObject.SetActive(false);
+                }
+
+                if (cooldownText != null)
+                {
+                    cooldownText.text = string.Empty;
+                    cooldownText.gameObject.SetActive(false);
+                }
+            }
         }
     }
 }

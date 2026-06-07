@@ -32,6 +32,9 @@ namespace SO {
         public float CritChance;
         public float DefaultExpGainMultiplier = 1f;
         public float DefaultGoldGainMultiplier = 1f;
+        public float DefaultHealMultiplier = 1f;
+        [Range(0f, 1f)]
+        public float ThornReflectPercent;
 
         [Header("Weapon Stats")]
         public List<WeaponEffectModifier> WeaponEffectsSetup = new List<WeaponEffectModifier>();

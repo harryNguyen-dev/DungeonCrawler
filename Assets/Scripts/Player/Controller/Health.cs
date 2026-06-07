@@ -38,7 +38,8 @@ namespace PlayerController
         }
         private void SetHealHealth(int amount)
         {
-            currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+            var scaledAmount = Mathf.RoundToInt(amount * playerStats.GetHealMultiplier());
+            currentHealth = Mathf.Min(currentHealth + scaledAmount, maxHealth);
             events.InvokeChangeHealth(currentHealth, maxHealth);
         }
 
@@ -46,7 +47,7 @@ namespace PlayerController
 
         public void SetInvulnerable(bool value) => invulnerable = value;
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, EnemyController.Health attacker = null)
         {
             if (invulnerable)
                 return;
@@ -54,10 +55,23 @@ namespace PlayerController
             currentHealth -= damage;
             Debug.Log("[PlayerController Health] Health: " + currentHealth);
             events.InvokeChangeHealth(currentHealth, maxHealth);
+            ApplyThornReflect(damage, attacker);
+
             if (currentHealth <= 0)
-            {
                 Eliminate();
-            }
+        }
+
+        private void ApplyThornReflect(int damageTaken, EnemyController.Health attacker)
+        {
+            if (attacker == null || attacker.IsDead || damageTaken <= 0)
+                return;
+
+            var reflectPercent = playerStats.GetThornReflectPercent();
+            if (reflectPercent <= 0f)
+                return;
+
+            var reflectDamage = Mathf.Max(1, Mathf.RoundToInt(damageTaken * reflectPercent));
+            attacker.TakeDamage(reflectDamage);
         }
         public void Eliminate()
         {

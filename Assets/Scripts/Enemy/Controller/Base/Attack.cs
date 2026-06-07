@@ -67,7 +67,8 @@ namespace EnemyController
                     : null;
                 if (playerHealth != null)
                 {
-                    playerHealth.TakeDamage(damage);
+                    var attacker = GetComponentInParent<Health>() ?? GetComponent<Health>();
+                    playerHealth.TakeDamage(damage, attacker);
                 }
 
                 t = 0;

@@ -58,6 +58,8 @@ namespace Core
             result.Amor = 0;
             result.DefaultExpGainMultiplier = 1f;
             result.DefaultGoldGainMultiplier = 1f;
+            result.DefaultHealMultiplier = 1f;
+            result.ThornReflectPercent = 0f;
             result.WeaponEffectsSetup = new System.Collections.Generic.List<WeaponEffectModifier>();
 
             foreach (var effect in weapon.intrinsicEffects)

@@ -111,7 +111,7 @@ namespace CustomUI
             var pool = new List<CardSO>();
             foreach (var card in GlobalEntities.Instance.GetAllCards())
             {
-                if (CardPoolFilter.IsEligibleForPool(card))
+                if (card != null)
                     pool.Add(card);
             }
 

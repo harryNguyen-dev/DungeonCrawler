@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponId: weapon_otha
   displayName: Pyro Cannon
   description: Infuses shots with fire, burning enemies over time.
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 7d8a25a25b04ecd49807d0087a69704d, type: 3}
   projectilePrefab: {fileID: 705700206895292680, guid: 0b1a6d8d707a8f24b93b185e278380cc, type: 3}
   intrinsicEffects:
   - EffectType: 0

@@ -106,7 +106,7 @@ namespace EnemyController
 
                     var playerHealth = Global.GlobalEntities.Instance?.PlayerHealth;
                     if (playerHealth != null)
-                        playerHealth.TakeDamage(enemyData.Damage);
+                        playerHealth.TakeDamage(enemyData.Damage, GetComponent<Health>());
                 }
             }
         }

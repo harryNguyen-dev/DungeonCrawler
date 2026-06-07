@@ -7,8 +7,7 @@ namespace Core
     {
         public enum JoystickRole
         {
-            Move,
-            SkillAim
+            Move
         }
 
         [SerializeField] private JoystickRole role = JoystickRole.Move;
@@ -16,7 +15,6 @@ namespace Core
         [SerializeField] private RectTransform backgroundTransform;
 
         private Vector2 inputVector;
-        private Vector2 lastNonZeroAim;
         private bool isHeld;
 
         public JoystickRole Role => role;
@@ -44,40 +42,21 @@ namespace Core
             if (InputManager.Instance == null)
                 return;
 
-            if (role == JoystickRole.SkillAim)
-                InputManager.Instance.RegisterSkillAimJoystick(this);
-            else
-                InputManager.Instance.RegisterMoveJoystick(this);
+            InputManager.Instance.RegisterMoveJoystick(this);
         }
 
         private void OnDisable()
         {
-            if (isHeld && role == JoystickRole.SkillAim)
-            {
-                InputManager.Instance?.NotifySkillAimReleased(
-                    inputVector.sqrMagnitude > 0.01f ? inputVector : lastNonZeroAim);
-            }
-
             isHeld = false;
             inputVector = Vector2.zero;
 
-            if (InputManager.Instance == null)
-                return;
-
-            if (role == JoystickRole.SkillAim)
-                InputManager.Instance.UnregisterSkillAimJoystick(this);
-            else
+            if (InputManager.Instance != null)
                 InputManager.Instance.UnregisterMoveJoystick(this);
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             isHeld = true;
-            lastNonZeroAim = Vector2.zero;
-
-            if (role == JoystickRole.SkillAim)
-                InputManager.Instance?.NotifySkillAimPressed();
-
             OnDrag(eventData);
         }
 
@@ -92,45 +71,23 @@ namespace Core
                 ? direction.normalized
                 : direction / radius;
 
-            if (role == JoystickRole.SkillAim && inputVector.sqrMagnitude > 0.01f)
-                lastNonZeroAim = inputVector;
-
             joystickTransform.anchoredPosition = (inputVector * radius) * handleLimit;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            ReleaseSkillAimIfNeeded();
             ResetHandle();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (role != JoystickRole.SkillAim)
-            {
-                ResetHandle();
-                return;
-            }
-
-            ReleaseSkillAimIfNeeded();
             ResetHandle();
-        }
-
-        private void ReleaseSkillAimIfNeeded()
-        {
-            if (role != JoystickRole.SkillAim || !isHeld)
-                return;
-
-            InputManager.Instance?.NotifySkillAimReleased(
-                inputVector.sqrMagnitude > 0.01f ? inputVector : lastNonZeroAim);
-            isHeld = false;
         }
 
         private void ResetHandle()
         {
             isHeld = false;
             inputVector = Vector2.zero;
-            lastNonZeroAim = Vector2.zero;
             if (joystickTransform != null)
                 joystickTransform.anchoredPosition = Vector2.zero;
         }

@@ -1,67 +1,68 @@
+using System;
+using System.Collections.Generic;
 using SO;
 using UnityEngine;
 
 namespace PlayerController
 {
     public class PlayerEffect : MonoBehaviour
-    {   
+    {
+        private static readonly Dictionary<CardEffect, Action<PlayerStats, CardSO>> Handlers =
+            new()
+            {
+                [CardEffect.IncreaseDamage] = (stats, card) =>
+                    stats.UpgradeAttackDamage(Mathf.RoundToInt(card.Value)),
+
+                [CardEffect.IncreaseAttackSpeed] = (stats, card) =>
+                    stats.UpgradeAttackSpeed(card.Value),
+
+                [CardEffect.IncreaseMaxHealth] = (stats, card) =>
+                    stats.UpgradeMaxHealth(Mathf.RoundToInt(card.Value)),
+
+                [CardEffect.HealHealth] = (stats, card) =>
+                    stats.HealHealth(Mathf.RoundToInt(card.Value)),
+
+                [CardEffect.IncreaseAmor] = (stats, card) =>
+                    stats.UpgradeIncreaseAmor(Mathf.RoundToInt(card.Value)),
+
+                [CardEffect.ThornArmor] = (stats, card) =>
+                    stats.UpgradeThornReflect(card.Value),
+
+                [CardEffect.IncreaseRunSpeed] = (stats, card) =>
+                    stats.UpgradeIncreaseRunSpeed(card.Value),
+
+                [CardEffect.InceaseHealSpeed] = (stats, card) =>
+                    stats.UpgradeIncreaseHealSpeed(card.Value),
+
+                [CardEffect.IncreaseExpGain] = (stats, card) =>
+                    stats.UpgradeIncreaseExpGain(card.Value),
+
+                [CardEffect.IncreaseGoldGain] = (stats, card) =>
+                    stats.UpgradeIncreaseGoldGain(card.Value),
+
+                [CardEffect.AddOneProjectile] = (stats, card) =>
+                    stats.AddOneProjectile(Mathf.RoundToInt(card.Value)),
+
+                [CardEffect.ProjectileBoomerang] = (stats, _) =>
+                    stats.AddProjectileBoomerange(),
+            };
+
         public void BuildEffectForPlayer(CardSO cardData)
         {
-            CardEffect effect = cardData.Effect;
+            if (cardData == null || cardData.Effect == CardEffect.None)
+                return;
+
             var playerStats = GetComponent<PlayerStats>();
-            switch (effect)
+            if (playerStats == null)
+                return;
+
+            if (Handlers.TryGetValue(cardData.Effect, out var apply))
             {
-                case CardEffect.None: 
-                    break;
-
-                case CardEffect.IncreaseDamage:
-                    playerStats.UpgradeAttackDamage(Mathf.RoundToInt(cardData.Value));
-                    break;
-                case CardEffect.IncreaseAttackSpeed:
-                    playerStats.UpgradeAttackSpeed(cardData.Value);
-                    break;
-
-                case CardEffect.IncreaseMaxHealth:
-                    playerStats.UpgradeMaxHealth(Mathf.RoundToInt(cardData.Value));
-                    break;
-                case CardEffect.HealHealth:
-                    playerStats.HealHealth(Mathf.RoundToInt(cardData.Value));
-                    break;
-
-                case CardEffect.IncreaseAmor:
-                    playerStats.UpgradeIncreaseAmor(Mathf.RoundToInt(cardData.Value));
-                    break;
-                case CardEffect.ThornArmor:
-                    break;
-
-                case CardEffect.IncreaseRunSpeed:
-                    playerStats.UpgradeIncreaseRunSpeed(cardData.Value);
-                    break;
-                case CardEffect.InceaseHealSpeed:
-                    break;
-                case CardEffect.IncreaseExpGain:
-                    playerStats.UpgradeIncreaseExpGain(cardData.Value);
-                    break;
-                case CardEffect.IncreaseGoldGain:
-                    playerStats.UpgradeIncreaseGoldGain(cardData.Value);
-                    break;
-                
-                case CardEffect.AddOneProjectile:
-                    playerStats.AddOneProjectile(Mathf.RoundToInt(cardData.Value));
-                    break;
-                case CardEffect.ProjectileFireOnHit:
-                case CardEffect.ProjectileFrozenOnHit:
-                case CardEffect.ProjectilePierce:
-                case CardEffect.ExplosiveImpact:
-                    Debug.LogWarning($"[PlayerEffect] Card {cardData.CardID} is a weapon trait and should not be picked.");
-                    break;
-                case CardEffect.ProjectileBoomerang:
-                    playerStats.AddProjectileBoomerange();
-                    break;
-
-                default:
-                    break;
+                apply(playerStats, cardData);
+                return;
             }
+
+            Debug.LogWarning($"[PlayerEffect] No handler for card effect {cardData.Effect} ({cardData.CardID}).");
         }
     }
 }

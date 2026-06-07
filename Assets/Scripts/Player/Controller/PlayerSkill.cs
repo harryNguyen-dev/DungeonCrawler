@@ -1,5 +1,6 @@
 using Core;
 using Cysharp.Threading.Tasks;
+using PlayerController.Skill;
 using SO;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace PlayerController
     {
         private PlayerStats playerStats;
         private PlayerAnimation playerAnimation;
+        private Attack attack;
         private Rotate playerRotate;
         private HeroSkillSO activeSkill;
         private float lastSkillTime = -999f;
@@ -19,8 +21,12 @@ namespace PlayerController
         {
             playerStats = GetComponent<PlayerStats>();
             playerAnimation = GetComponent<PlayerAnimation>();
-            playerRotate = GetComponent<Rotate>();
             playerDash = GetComponent<PlayerDash>();
+            attack = GetComponent<Attack>();
+            playerRotate = GetComponent<Rotate>();
+
+            if (GetComponent<PlayerTimedBuffTracker>() == null)
+                gameObject.AddComponent<PlayerTimedBuffTracker>();
         }
 
         public void SetSkillEnabled(bool enabled)
@@ -33,6 +39,15 @@ namespace PlayerController
             activeSkill = skill;
         }
 
+        public bool TryGetCooldown(out float remaining, out float duration)
+        {
+            duration = activeSkill != null ? activeSkill.cooldown : 0f;
+            remaining = duration > 0f
+                ? Mathf.Max(0f, lastSkillTime + duration - Time.time)
+                : 0f;
+            return remaining > 0f;
+        }
+
         private void Update()
         {
             if (!canUseSkill || activeSkill == null)
@@ -42,17 +57,7 @@ namespace PlayerController
                 return;
 
             var input = InputManager.Instance;
-            if (input == null)
-                return;
-
-            if (input.IsSkillAimHeld())
-            {
-                Vector3 aimDirection = GetLiveAimDirection();
-                if (aimDirection.sqrMagnitude > 0.0001f)
-                    playerRotate?.SnapFaceDirection(aimDirection);
-            }
-
-            if (!input.WasSkillAimReleased())
+            if (input == null || !input.WasSkillPressed())
                 return;
 
             if (Time.time < lastSkillTime + activeSkill.cooldown)
@@ -65,86 +70,34 @@ namespace PlayerController
         {
             lastSkillTime = Time.time;
 
-            Vector3 aimDirection = GetReleaseAimDirection();
-            playerRotate?.SnapFaceDirection(aimDirection);
+            playerRotate?.SnapFaceAimDirection();
+            var direction = transform.forward;
             playerAnimation?.SetSkill();
 
             await UniTask.Yield(PlayerLoopTiming.Update);
-            SpawnSkillProjectile(aimDirection);
+            ExecuteActiveSkill(direction);
         }
 
-        private Vector3 GetLiveAimDirection()
+        private void ExecuteActiveSkill(Vector3 direction)
         {
-            return ToWorldDirection(InputManager.Instance.GetSkillAimVector());
-        }
-
-        private Vector3 GetReleaseAimDirection()
-        {
-            var release = InputManager.Instance.GetSkillAimReleaseVector();
-            var world = ToWorldDirection(release);
-            if (world.sqrMagnitude > 0.0001f)
-                return world;
-
-            return transform.forward;
-        }
-
-        private static Vector3 ToWorldDirection(Vector2 input)
-        {
-            if (input.sqrMagnitude <= 0.01f)
-                return Vector3.zero;
-
-            return new Vector3(input.x, 0f, input.y).normalized;
-        }
-
-        private void SpawnSkillProjectile(Vector3 direction)
-        {
-            if (activeSkill.skillProjectilePrefab == null)
+            if (activeSkill == null || playerStats == null)
                 return;
 
-            var spawnPos = transform.position + Vector3.up * 1f;
-            var rotation = Quaternion.LookRotation(direction);
-
-            GameObject prefab = activeSkill.skillProjectilePrefab;
-            PoolId poolId = PoolId.None;
-            if (prefab.TryGetComponent<PooledObject>(out var poolable))
-                poolId = poolable.PoolId;
-
-            GameObject instance = null;
-            if (poolId != PoolId.None && ProjectilePool.Instance != null)
-                instance = ProjectilePool.Instance.Get(poolId, spawnPos, rotation);
-            else
-                instance = Instantiate(prefab, spawnPos, rotation);
-
-            if (instance == null)
-                return;
-
-            var projectileController = instance.GetComponent<Projectile.ProjectileController>();
-            if (projectileController != null)
+            if (activeSkill.deliveryType != SkillDeliveryType.SelfBuff
+                && activeSkill.skillProjectilePrefab == null)
             {
-                int damage = activeSkill.damage > 0
-                    ? activeSkill.damage
-                    : playerStats.GetAttackDamage();
-
-                projectileController.SetDamage(damage);
-                projectileController.SetEffects(BuildSkillEffects());
-                projectileController.SetProjectileActive();
+                Debug.LogWarning($"[PlayerSkill] Skill '{activeSkill.skillId}' missing projectile prefab.");
+                return;
             }
 
-            var move = instance.GetComponent<Projectile.ProjectileMove>();
-            if (move != null && activeSkill.projectileSpeed > 0f)
-                move.SetSpeed(activeSkill.projectileSpeed);
-        }
+            var context = new SkillExecutionContext(
+                activeSkill,
+                playerStats,
+                transform,
+                attack != null ? attack.GetFirePoint() : null,
+                direction);
 
-        private System.Collections.Generic.Dictionary<WeaponEffectType, float> BuildSkillEffects()
-        {
-            var effects = new System.Collections.Generic.Dictionary<WeaponEffectType, float>();
-            if (activeSkill.skillEffects == null)
-                return effects;
-
-            foreach (var modifier in activeSkill.skillEffects)
-                effects[modifier.EffectType] = modifier.Value;
-
-            return effects;
+            SkillDeliveryRegistry.Execute(activeSkill.deliveryType, context);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Core;
 using Cysharp.Threading.Tasks;
+using PlayerController.Skill;
 using UnityEngine;
 
 namespace PlayerController
@@ -49,6 +50,8 @@ namespace PlayerController
             firePoint = point;
         }
 
+        public Transform GetFirePoint() => firePoint;
+
         public void ApplyWeapon(SO.WeaponSO weapon)
         {
             if (weapon?.projectilePrefab != null)
@@ -58,6 +61,15 @@ namespace PlayerController
         public void SetAttackEnabled(bool enabled)
         {
             canAttack = enabled;
+        }
+
+        public bool TryGetCooldown(out float remaining, out float duration)
+        {
+            duration = attackCooldown;
+            remaining = duration > 0f
+                ? Mathf.Max(0f, lastAttackTime + duration - Time.time)
+                : 0f;
+            return remaining > 0f;
         }
 
         private void OnAttackChanged(float attackSpeed) => attackCooldown = attackSpeed;
@@ -106,31 +118,16 @@ namespace PlayerController
                 return;
             }
 
+            var shootRotation = firePoint.rotation;
             Debug.Log($"[PlayerController] Spawn {numberOfProjectiles} projectiles");
             for (int i = 0; i < numberOfProjectiles; i++)
             {
-                GameObject projectile = projectilePrefab;
-                PoolId poolId = PoolId.None;
-                if (projectile != null && projectile.TryGetComponent<PooledObject>(out var poolable))
-                    poolId = poolable.PoolId;
-
-                GameObject projectileInstance = null;
-                if (poolId != PoolId.None && ProjectilePool.Instance != null)
-                    projectileInstance = ProjectilePool.Instance.Get(poolId, firePoint.position, firePoint.rotation);
-
-                if (projectileInstance == null)
-                {
-                    Debug.LogWarning($"[PlayerController] Failed to spawn projectile from pool '{poolId}'.");
-                    continue;
-                }
-
-                var projectileController = projectileInstance.GetComponent<Projectile.ProjectileController>();
-                if (projectileController != null)
-                {
-                    projectileController.SetDamage(playerStats.RollAttackDamage());
-                    projectileController.SetEffects(playerStats.runtimeStats.RuntimeEffects);
-                    projectileController.SetProjectileActive();
-                }
+                SkillProjectileSpawner.Spawn(
+                    projectilePrefab,
+                    firePoint.position,
+                    shootRotation,
+                    playerStats.RollAttackDamage(),
+                    playerStats.runtimeStats.RuntimeEffects);
 
                 await UniTask.Delay(100);
             }

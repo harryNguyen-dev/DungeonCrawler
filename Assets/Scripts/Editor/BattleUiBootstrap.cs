@@ -25,19 +25,19 @@ namespace EditorTools
             }
 
             var hudRoot = battleUi.transform;
-            var moveJoy = GameObject.Find("MoveJoystick");
-            if (moveJoy == null)
+            if (GameObject.Find("MoveJoystick") == null)
             {
                 Debug.LogError("[BattleUiBootstrap] MoveJoystick not found.");
                 return;
             }
 
-            EnsureSkillAimJoystick(hudRoot, moveJoy);
-            RemoveLegacySkillButton(hudRoot);
+            RemoveSkillAimJoystick(hudRoot);
             var dashBtn = EnsureButton(hudRoot, "DashButton", "Dash", new Vector2(-320f, 120f));
+            var skillBtn = EnsureButton(hudRoot, "SkillButton", "Skill", new Vector2(-320f, 220f));
 
             var battleSo = new SerializedObject(battleUi);
             battleSo.FindProperty("dashButton").objectReferenceValue = dashBtn;
+            battleSo.FindProperty("skillButton").objectReferenceValue = skillBtn;
             battleSo.ApplyModifiedPropertiesWithoutUndo();
 
             WireGlobalEntitiesInOpenScenes();
@@ -80,40 +80,23 @@ namespace EditorTools
                 EditorSceneManager.OpenScene(activeScenePath);
         }
 
-        private static GameObject EnsureSkillAimJoystick(Transform hudRoot, GameObject moveJoy)
+        private static void RemoveSkillAimJoystick(Transform hudRoot)
         {
             var existing = hudRoot.Find("SkillAimJoystick");
             if (existing != null)
-                return existing.gameObject;
-
-            var skillJoy = Object.Instantiate(moveJoy, hudRoot);
-            skillJoy.name = "SkillAimJoystick";
-
-            var rt = skillJoy.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(1f, 0f);
-            rt.anchorMax = new Vector2(1f, 0f);
-            rt.pivot = new Vector2(1f, 0f);
-            rt.anchoredPosition = new Vector2(-270f, 99f);
-
-            var joy = skillJoy.GetComponent<Joystick>();
-            var so = new SerializedObject(joy);
-            so.FindProperty("role").enumValueIndex = (int)Joystick.JoystickRole.SkillAim;
-            so.ApplyModifiedPropertiesWithoutUndo();
-            return skillJoy;
-        }
-
-        private static void RemoveLegacySkillButton(Transform hudRoot)
-        {
-            var legacy = hudRoot.Find("SkillButton");
-            if (legacy != null)
-                Object.DestroyImmediate(legacy.gameObject);
+                Object.DestroyImmediate(existing.gameObject);
         }
 
         private static Button EnsureButton(Transform hudRoot, string name, string label, Vector2 anchoredPos)
         {
             var existing = hudRoot.Find(name);
             if (existing != null)
+            {
+                var existingTxt = existing.GetComponentInChildren<TMP_Text>();
+                if (existingTxt != null)
+                    existingTxt.text = label;
                 return existing.GetComponent<Button>();
+            }
 
             var attackTransform = hudRoot.Find("NormalAttack");
             if (attackTransform == null)

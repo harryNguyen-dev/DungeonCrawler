@@ -110,8 +110,38 @@ namespace PlayerController
 
         public void UpgradeAttackSpeed(float amount)
         {
-            runtimeStats.AttackCooldown -= amount;
+            ModifyAttackCooldown(-amount);
+        }
+
+        public void ModifyAttackCooldown(float delta)
+        {
+            runtimeStats.AttackCooldown = Mathf.Max(HeroSO.MinAttackCooldown, runtimeStats.AttackCooldown + delta);
             events.InvokeAttackSpeedChanged(runtimeStats.AttackCooldown);
+        }
+
+        public void ModifyCritChance(float delta)
+        {
+            runtimeStats.CritChance = Mathf.Clamp(runtimeStats.CritChance + delta, 0f, HeroSO.MaxCritChance);
+        }
+
+        public void ModifyWeaponEffect(WeaponEffectType type, float delta)
+        {
+            if (Mathf.Approximately(delta, 0f))
+                return;
+
+            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
+            {
+                EffectType = type,
+                Value = delta
+            });
+
+            if (type == WeaponEffectType.NumberOfProjectiles)
+                events.InvokeNumberOfProjectileChanged(Mathf.RoundToInt(runtimeStats.RuntimeEffects[type]));
+        }
+
+        public void ModifyProjectileCount(int delta)
+        {
+            ModifyWeaponEffect(WeaponEffectType.NumberOfProjectiles, delta);
         }
 
         public void UpgradeAttackDamage(int amount)
@@ -153,6 +183,20 @@ namespace PlayerController
             runtimeStats.DefaultGoldGainMultiplier += amount;
         }
 
+        public void UpgradeIncreaseHealSpeed(float amount)
+        {
+            runtimeStats.DefaultHealMultiplier += amount;
+        }
+
+        public void UpgradeThornReflect(float amount)
+        {
+            runtimeStats.ThornReflectPercent = Mathf.Clamp01(runtimeStats.ThornReflectPercent + amount);
+        }
+
+        public float GetHealMultiplier() => runtimeStats.DefaultHealMultiplier;
+
+        public float GetThornReflectPercent() => runtimeStats.ThornReflectPercent;
+
         public void AddOneProjectile(int amount)
         {
             var weaponModify = new WeaponEffectModifier
@@ -162,33 +206,6 @@ namespace PlayerController
             };
             runtimeStats.AddpendWeaponModifier(weaponModify);
             events.InvokeNumberOfProjectileChanged(Mathf.RoundToInt(runtimeStats.RuntimeEffects[WeaponEffectType.NumberOfProjectiles]));
-        }
-
-        public void AddProjectileFireOnHit(int amount)
-        {
-            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
-            {
-                EffectType = WeaponEffectType.FireDamage,
-                Value = amount
-            });
-        }
-
-        public void AddProjectileFrozenOnHit(int amount)
-        {
-            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
-            {
-                EffectType = WeaponEffectType.FrozenDuration,
-                Value = amount
-            });
-        }
-
-        public void AddProjectilePierce()
-        {
-            runtimeStats.AddpendWeaponModifier(new WeaponEffectModifier
-            {
-                EffectType = WeaponEffectType.PierceCount,
-                Value = 1
-            });
         }
 
         public void AddProjectileBoomerange()
