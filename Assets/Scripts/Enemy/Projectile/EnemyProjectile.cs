@@ -29,7 +29,7 @@ namespace EnemyController
             isInitialized = true;
 
             ProjectileVfxHelper.PlayMuzzle(muzzlePrefab, transform.position, transform.forward);
-            ProjectileVfxHelper.PlayTrails(trails);
+            ProjectileVfxHelper.RestartProjectileVisuals(gameObject, trails);
         }
 
         private void Update()
@@ -48,14 +48,22 @@ namespace EnemyController
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (!IsPlayerHit(other)) return;
+            if (!isInitialized || damage <= 0) return;
 
-            var playerHealth = Global.GlobalEntities.Instance?.PlayerHealth;
+            var playerHealth = other.GetComponentInParent<PlayerController.Health>()
+                ?? Global.GlobalEntities.Instance?.PlayerHealth;
             if (playerHealth != null)
                 playerHealth.TakeDamage(damage);
 
             var hitPoint = other.ClosestPoint(transform.position);
             ReturnToPool(hitPoint, -transform.forward);
+        }
+
+        private static bool IsPlayerHit(Collider other)
+        {
+            if (other.CompareTag("Player")) return true;
+            return other.gameObject.layer == LayerMask.NameToLayer("Player");
         }
 
         private void ReturnToPool(Vector3? hitPoint = null, Vector3? hitNormal = null)

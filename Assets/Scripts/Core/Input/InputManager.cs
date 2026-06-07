@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class InputManager : MonoBehaviour
     private const float JoystickDeadzoneSqr = 0.01f;
 
     private InputSystem_Actions inputActions;
-    private Core.Joystick moveJoystick;
+    private Joystick moveJoystick;
     private bool uiAttackHeld;
     private bool uiDashPressedThisFrame;
     private bool uiSkillPressedThisFrame;
@@ -31,12 +32,14 @@ public class InputManager : MonoBehaviour
     {
         if (Instance != this || inputActions == null) return;
         inputActions.Player.Enable();
+        SceneManager.sceneUnloaded += HandleSceneUnloaded;
     }
 
     private void OnDisable()
     {
         if (Instance != this || inputActions == null) return;
         inputActions.Player.Disable();
+        SceneManager.sceneUnloaded -= HandleSceneUnloaded;
     }
 
     private void OnDestroy()
@@ -65,25 +68,30 @@ public class InputManager : MonoBehaviour
         uiSkillPressedThisFrame = false;
     }
 
-    public void RegisterMoveJoystick(Core.Joystick joystick)
+    private void HandleSceneUnloaded(Scene scene)
     {
-        if (joystick == null || joystick.Role != Core.Joystick.JoystickRole.Move)
-            return;
-
-        moveJoystick = joystick;
+        if (moveJoystick != null && moveJoystick.gameObject.scene == scene)
+            moveJoystick = null;
     }
 
-    public void UnregisterMoveJoystick(Core.Joystick joystick)
+    private Joystick ResolveMoveJoystick()
     {
-        if (moveJoystick == joystick)
-            moveJoystick = null;
+        if (moveJoystick != null)
+            return moveJoystick;
+
+        var sceneJoystick = Object.FindFirstObjectByType<Joystick>();
+        if (sceneJoystick != null)
+            moveJoystick = sceneJoystick;
+
+        return moveJoystick;
     }
 
     public Vector2 GetMovementVector()
     {
-        if (moveJoystick != null)
+        var joystick = ResolveMoveJoystick();
+        if (joystick != null)
         {
-            Vector2 joystickInput = moveJoystick.Direction;
+            Vector2 joystickInput = joystick.Direction;
             if (joystickInput.sqrMagnitude > JoystickDeadzoneSqr)
                 return Vector2.ClampMagnitude(joystickInput, 1f);
         }

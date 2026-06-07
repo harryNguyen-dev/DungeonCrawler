@@ -4,18 +4,37 @@ namespace EnemyController
 {
     public class BaseReciverAnimationEvent : MonoBehaviour
     {
-        private BaseAttack attacks;
+        private BaseAttack[] attacks;
         private BaseAIController baseAIController;
 
         private void Start()
         {
-            attacks = GetComponentInParent<BaseAttack>();
+            attacks = GetComponentsInParent<BaseAttack>(true);
             baseAIController = GetComponentInParent<BaseAIController>();
         }
 
         public void AE_OnAttack()
         {
-            attacks?.OnAnimationAttackEvent();
+            if (attacks == null || attacks.Length == 0)
+                return;
+
+            foreach (var attack in attacks)
+            {
+                if (attack != null && attack.IsAttackInProgress)
+                {
+                    attack.OnAnimationAttackEvent();
+                    return;
+                }
+            }
+
+            foreach (var attack in attacks)
+            {
+                if (attack != null && attack.enabled)
+                {
+                    attack.OnAnimationAttackEvent();
+                    return;
+                }
+            }
         }
 
         public void AE_OnSpawnFinish()

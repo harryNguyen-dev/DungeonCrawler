@@ -988,6 +988,10 @@ MonoBehaviour:
     _prefab: {fileID: 7300521822030121898, guid: d33c3a63b764ff04797a827d01fa4d0c, type: 3}
     _prewarmCount: 2
     _maxSize: 2
+  - _id: 7
+    _prefab: {fileID: 7300521822030121898, guid: 3a4935f33bd4d4b45b481edef41920cf, type: 3}
+    _prewarmCount: 2
+    _maxSize: 2
   _poolRoot: {fileID: 910000008}
 --- !u!114 &910000004
 MonoBehaviour:
@@ -1022,6 +1026,14 @@ MonoBehaviour:
     _prefab: {fileID: 705700206895292680, guid: 0b1a6d8d707a8f24b93b185e278380cc, type: 3}
     _prewarmCount: 10
     _maxSize: 10
+  - _id: 106
+    _prefab: {fileID: 705700206895292680, guid: 3ccd4b06cbb536247b02309f54bb3c60, type: 3}
+    _prewarmCount: 20
+    _maxSize: 48
+  - _id: 107
+    _prefab: {fileID: 705700206895292680, guid: 52d4329e7808e86478287c49192e3be4, type: 3}
+    _prewarmCount: 20
+    _maxSize: 48
   _poolRoot: {fileID: 910000008}
 --- !u!114 &910000005
 MonoBehaviour:

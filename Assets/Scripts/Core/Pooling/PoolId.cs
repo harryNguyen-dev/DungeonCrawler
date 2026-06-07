@@ -13,11 +13,15 @@ namespace Core
         EvergreenBaby = 4,
         WormBaby = 5,
         WormJunior = 6,
+        ImpMisChiefRangeJunior = 7,
+
 
         BaitProjectile = 101,
         ImpMisChiefRangerProjectile = 102,
         WormJuniorProjectile = 103,
         FinnAttack = 104,
         OthaAttack = 105,
+        ImpMisChiefJuniorProjectile_1 = 106,
+        ImpMisChiefJuniorProjectile_2 = 107,
     }
 }

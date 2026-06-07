@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fe3ff6bc4babd042bfc313acde85cd8, type: 3}
   m_Name: Boss_Ch1_01
   m_EditorClassIdentifier: Assembly-CSharp::SO.BossConfigSO
-  bossPrefab: {fileID: 7300521822030121898, guid: d33c3a63b764ff04797a827d01fa4d0c, type: 3}
-  healthMultiplier: 4
+  bossPrefab: {fileID: 7300521822030121898, guid: 3a4935f33bd4d4b45b481edef41920cf, type: 3}
+  healthMultiplier: 8
   spawnDelayMs: 500

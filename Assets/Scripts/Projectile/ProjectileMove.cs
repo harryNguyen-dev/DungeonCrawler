@@ -42,7 +42,7 @@ namespace Projectile
             this.canMove = true;
 
             PlayMuzzleVfx();
-            PlayTrailVfx();
+            RestartBodyVfx();
 
             if (isBoomerang)
             {
@@ -108,7 +108,7 @@ namespace Projectile
         private void PlayMuzzleVfx() =>
             ProjectileVfxHelper.PlayMuzzle(muzzlePrefab, transform.position, transform.forward);
 
-        private void PlayTrailVfx() => ProjectileVfxHelper.PlayTrails(trails);
+        private void RestartBodyVfx() => ProjectileVfxHelper.RestartProjectileVisuals(gameObject, trails);
 
         private void StopTrailVfx() => ProjectileVfxHelper.ResetTrails(trails);
 

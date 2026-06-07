@@ -25,9 +25,9 @@ namespace EditorTools
             }
 
             var hudRoot = battleUi.transform;
-            if (GameObject.Find("MoveJoystick") == null)
+            if (Object.FindFirstObjectByType<Joystick>() == null)
             {
-                Debug.LogError("[BattleUiBootstrap] MoveJoystick not found.");
+                Debug.LogError("[BattleUiBootstrap] Joystick not found in scene.");
                 return;
             }
 

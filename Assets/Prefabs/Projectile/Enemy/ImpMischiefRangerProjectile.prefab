@@ -4825,7 +4825,7 @@ ParticleSystemRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341913022006337916}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -4993,7 +4993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c27becbb6c02b14b820ef017da00975, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
-  speed: 10
+  speed: 15
   maxLifetime: 5
   muzzlePrefab: {fileID: 1227067792111776, guid: 3bf95822b44596146bfc0a09d3a5c836, type: 3}
   hitPrefab: {fileID: 3017430761128806937, guid: 3228f98b14aee294082e5301c771a6c7, type: 3}
