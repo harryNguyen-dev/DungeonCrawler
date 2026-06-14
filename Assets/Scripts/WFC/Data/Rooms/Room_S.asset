@@ -19,3 +19,4 @@ MonoBehaviour:
   south: 1
   west: 0
   weight: 0.244
+  minimapSprite: {fileID: 21300000, guid: 9a38b8bfa7dafa84ca525552bb98ce04, type: 3}

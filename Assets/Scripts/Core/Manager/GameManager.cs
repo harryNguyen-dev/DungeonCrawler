@@ -214,7 +214,7 @@ namespace Core
             RefreshRunStars();
         }
 
-        private void HandleRoomCleared()
+        private void HandleRoomCleared(Vector2Int gridPos)
         {
             clearedRooms++;
             Debug.Log($"Room {clearedRooms} cleared. Stars tracked against total: {totalRooms}");

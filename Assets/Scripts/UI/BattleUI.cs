@@ -34,6 +34,10 @@ namespace CustomUI
         [SerializeField] private Button dashButton;
         [SerializeField] private Button skillButton;
 
+        [Header("Settings")]
+        [SerializeField] private Button settingsButton;
+        [SerializeField] private SettingBattleUI settingBattleUI;
+
         private EventTrigger attackButtonTrigger;
         private EventTrigger.Entry attackPointerDownEntry;
         private EventTrigger.Entry attackPointerUpEntry;
@@ -67,6 +71,11 @@ namespace CustomUI
             GlobalEvents.OnRunStarsChanged += HandleRunStarsChanged;
             GlobalEvents.OnRunGoldChanged += HandleRunGoldChanged;
             GlobalEvents.OnEnemyDie += HandleEnemyKilled;
+            GlobalEvents.OnDungeonSceneLoaded += HandleSettingLoadingStarted;
+            GlobalEvents.OnDungeonGenerationStarted += HandleSettingLoadingStarted;
+            GlobalEvents.OnDungeonGenerated += HandleSettingLoadingFinished;
+            GlobalEvents.OnRequestBattleCardUI += HandleSettingCardPickShown;
+            GlobalEvents.OnGameOver += HandleSettingGameOver;
 
             if (GlobalEntities.Instance?.PlayerEvents != null)
             {
@@ -78,6 +87,7 @@ namespace CustomUI
             WireAttackButton();
             WireDashButton();
             WireSkillButton();
+            WireSettingsButton();
         }
 
         private void OnDisable()
@@ -88,16 +98,25 @@ namespace CustomUI
             GlobalEvents.OnRunStarsChanged -= HandleRunStarsChanged;
             GlobalEvents.OnRunGoldChanged -= HandleRunGoldChanged;
             GlobalEvents.OnEnemyDie -= HandleEnemyKilled;
+            GlobalEvents.OnDungeonSceneLoaded -= HandleSettingLoadingStarted;
+            GlobalEvents.OnDungeonGenerationStarted -= HandleSettingLoadingStarted;
+            GlobalEvents.OnDungeonGenerated -= HandleSettingLoadingFinished;
+            GlobalEvents.OnRequestBattleCardUI -= HandleSettingCardPickShown;
+            GlobalEvents.OnGameOver -= HandleSettingGameOver;
             UnbindPlayerEvents();
             UnwireAttackButton();
             UnwireDashButton();
             UnwireSkillButton();
+            UnwireSettingsButton();
             ClearCombatButtonCooldowns();
         }
 
         private void Update()
         {
             RefreshCombatButtonCooldowns();
+
+            if (InputManager.Instance != null && InputManager.Instance.WasPausePressed())
+                settingBattleUI?.Toggle();
         }
 
         private void BindPlayer()
@@ -149,7 +168,16 @@ namespace CustomUI
             RefreshCurrency();
             StarDisplayHelper.Apply(star1, star2, star3, 0);
             ClearCombatButtonCooldowns();
+            settingBattleUI?.NotifyMatchReset();
         }
+
+        private void HandleSettingLoadingStarted() => settingBattleUI?.NotifyLoadingStarted();
+
+        private void HandleSettingLoadingFinished(int _) => settingBattleUI?.NotifyLoadingFinished();
+
+        private void HandleSettingCardPickShown() => settingBattleUI?.NotifyCardPickShown();
+
+        private void HandleSettingGameOver() => settingBattleUI?.NotifyGameOver();
 
         private void HandleDungeonGenerated(int _)
         {
@@ -328,6 +356,26 @@ namespace CustomUI
         private static void OnSkillButtonClicked()
         {
             InputManager.Instance?.SetUiSkillPressed();
+        }
+
+        private void WireSettingsButton()
+        {
+            if (settingsButton == null)
+                return;
+
+            settingsButton.onClick.RemoveAllListeners();
+            settingsButton.onClick.AddListener(OnSettingsButtonClicked);
+        }
+
+        private void UnwireSettingsButton()
+        {
+            if (settingsButton != null)
+                settingsButton.onClick.RemoveAllListeners();
+        }
+
+        private void OnSettingsButtonClicked()
+        {
+            settingBattleUI?.Show();
         }
 
         private void RefreshCombatButtonIcons()

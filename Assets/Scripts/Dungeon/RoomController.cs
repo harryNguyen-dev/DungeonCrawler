@@ -58,6 +58,8 @@ public class RoomController : MonoBehaviour
 
     private RoomType roomType = RoomType.Combat;
 
+    private Vector2Int gridPosition;
+
     private WaveConfigSO _roomWaveConfig;
 
     private int _seedSalt;
@@ -130,6 +132,24 @@ public class RoomController : MonoBehaviour
 
 
 
+    public RoomType GetRoomType() => roomType;
+
+
+
+    public void SetGridPosition(Vector2Int pos) => gridPosition = pos;
+
+    public Vector2Int GridPosition => gridPosition;
+
+    public bool TryGetMinimapZoneCollider(out Collider collider)
+    {
+        collider = GetComponent<Collider>();
+        if (collider == null)
+            collider = GetComponentInChildren<Collider>();
+        return collider != null;
+    }
+
+
+
     private void OnTriggerEnter(Collider other)
 
     {
@@ -163,6 +183,8 @@ public class RoomController : MonoBehaviour
 
 
         isPlayerReached = true;
+
+        GlobalEvents.RaiseRoomEntered(gridPosition);
 
         var ct = this.GetCancellationTokenOnDestroy();
 
@@ -282,7 +304,7 @@ public class RoomController : MonoBehaviour
 
         IsCleared = true;
 
-        GlobalEvents.RaiseRoomCleared();
+        GlobalEvents.RaiseRoomCleared(gridPosition);
 
         Debug.Log("[RoomController] boss room cleared (win via OnBossDefeated)");
 
@@ -436,7 +458,7 @@ public class RoomController : MonoBehaviour
 
             IsCleared = true;
 
-            GlobalEvents.RaiseRoomCleared();
+            GlobalEvents.RaiseRoomCleared(gridPosition);
 
             return;
 

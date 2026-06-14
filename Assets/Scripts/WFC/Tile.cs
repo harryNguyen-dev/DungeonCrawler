@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Minimap;
 using UnityEngine;
 
 namespace WFC {
@@ -57,6 +58,16 @@ namespace WFC {
 
             room.SetSeedSalt(SeedSaltFromGrid());
             room.SetRoomType(RoomType.Combat);
+            room.SetGridPosition(GridPosition);
+            RegisterMinimapZone();
+        }
+
+        private void RegisterMinimapZone()
+        {
+            if (SpawnedObject == null)
+                return;
+
+            MinimapService.Instance?.RegisterZoneFromRoom(SpawnedObject, GridPosition);
         }
 
         public void DespawnObject()
@@ -76,6 +87,8 @@ namespace WFC {
             if (room == null) return;
             room.SetSeedSalt(SeedSaltFromGrid());
             room.SetRoomType(RoomType.Start);
+            room.SetGridPosition(GridPosition);
+            RegisterMinimapZone();
         }
 
         public void SetCombatRoom()
@@ -84,6 +97,8 @@ namespace WFC {
             if (room == null) return;
             room.SetSeedSalt(SeedSaltFromGrid());
             room.SetRoomType(RoomType.Combat);
+            room.SetGridPosition(GridPosition);
+            RegisterMinimapZone();
         }
 
         public void ConfigureAsHallwayRoom()
@@ -94,6 +109,8 @@ namespace WFC {
             if (room == null) return;
             room.SetSeedSalt(SeedSaltFromGrid());
             room.SetRoomType(RoomType.Hallway);
+            room.SetGridPosition(GridPosition);
+            RegisterMinimapZone();
         }
 
         private int SeedSaltFromGrid() => GridPosition.x * 73856093 ^ GridPosition.y;

@@ -19,6 +19,9 @@ namespace WFC
         [Range(0, 1)]
         public float weight;
 
+        [Header("Minimap")]
+        public Sprite minimapSprite;
+
         public ConnectorType GetConnector(Direction direction)
         {
             switch (direction)

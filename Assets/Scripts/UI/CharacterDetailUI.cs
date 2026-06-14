@@ -35,6 +35,7 @@ namespace CustomUI
         [SerializeField] private TMP_Text currentHealthText;
         [SerializeField] private TMP_Text currentDamageText;
         [SerializeField] private TMP_Text currentCritChanceText;
+        [SerializeField] private TMP_Text goldUpgradeText;
         [SerializeField] private RawImage characterRenderTexture;
         [SerializeField] private TMP_Text heroNameText;
 
@@ -189,12 +190,25 @@ namespace CustomUI
 
         private void BindUpgradeState()
         {
-            if (upgradeButton == null)
-                return;
-
             var unlocked = HeroProgressService.IsUnlocked(selectedHero.heroId);
-            upgradeButton.gameObject.SetActive(unlocked);
-            upgradeButton.interactable = unlocked && HeroProgressService.CanUpgrade(selectedHero);
+            var tier = HeroProgressService.GetUpgradeTier(selectedHero.heroId);
+            var atMaxTier = tier >= selectedHero.MaxUpgradeTier;
+
+            if (upgradeButton != null)
+            {
+                upgradeButton.gameObject.SetActive(unlocked);
+                upgradeButton.interactable = unlocked && HeroProgressService.CanUpgrade(selectedHero);
+            }
+
+            if (goldUpgradeText != null)
+            {
+                if (!unlocked)
+                    goldUpgradeText.text = string.Empty;
+                else if (atMaxTier)
+                    goldUpgradeText.text = "MAX";
+                else
+                    goldUpgradeText.text = selectedHero.GetUpgradeCost(tier).ToString();
+            }
         }
 
         private void OnEquipClicked()

@@ -13281,6 +13281,7 @@ MonoBehaviour:
   currentHealthText: {fileID: 2069753682}
   currentDamageText: {fileID: 696152077}
   currentCritChanceText: {fileID: 155332323}
+  goldUpgradeText: {fileID: 323274329}
   characterRenderTexture: {fileID: 1008230550}
   heroNameText: {fileID: 2004749563}
   detailSkillPanel: {fileID: 1471099202}

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Global
 {
@@ -16,7 +17,8 @@ namespace Global
         public static event Action OnPlayerEliminated;
         public static event Action<int> OnExperienceGained;
         public static event Action<int> OnLevelUp;
-        public static event Action OnRoomCleared;
+        public static event Action<Vector2Int> OnRoomCleared;
+        public static event Action<Vector2Int> OnRoomEntered;
         public static event Action OnAllRoomsCleared;
         public static event Action OnBossDefeated;
 
@@ -59,7 +61,8 @@ namespace Global
         public static void RaiseLobbyReady() => OnLobbyReady?.Invoke();
         public static void RaiseDungeonSceneLoaded() => OnDungeonSceneLoaded?.Invoke();
         public static void RaiseMatchReset() => OnMatchReset?.Invoke();
-        public static void RaiseRoomCleared() => OnRoomCleared?.Invoke();
+        public static void RaiseRoomCleared(Vector2Int gridPos) => OnRoomCleared?.Invoke(gridPos);
+        public static void RaiseRoomEntered(Vector2Int gridPos) => OnRoomEntered?.Invoke(gridPos);
         public static void RaiseAllRoomsCleared() => OnAllRoomsCleared?.Invoke();
         public static void RaiseBossDefeated() => OnBossDefeated?.Invoke();
     }
