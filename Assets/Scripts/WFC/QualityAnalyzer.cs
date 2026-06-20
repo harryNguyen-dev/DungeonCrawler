@@ -102,7 +102,9 @@ namespace WFC
             WFCData[] allTiles,
             float cellSize,
             Transform spawnParent,
-            HashSet<Vector2Int> reachableCells)
+            HashSet<Vector2Int> reachableCells,
+            bool spawnPrefabs = true,
+            System.Action<Tile> onTileCollapsed = null)
         {
             if (allTiles == null || allTiles.Length == 0) return 0;
 
@@ -132,7 +134,8 @@ namespace WFC
                     tile.CollapsedTile = emptyTile;
                     tile.IsCollapsed = true;
                     tile.PossibleTiles = new List<WFCData> { emptyTile };
-                    tile.SpawnObject(cellSize, spawnParent);
+                    tile.SpawnObject(cellSize, spawnParent, spawnPrefabs);
+                    onTileCollapsed?.Invoke(tile);
                     collapsedCount++;
                 }
             }

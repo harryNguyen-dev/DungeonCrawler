@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System;
 using System.Diagnostics;
 using Core;
 using Debug = UnityEngine.Debug;
@@ -15,7 +16,7 @@ namespace WFC
         [Tooltip("Delay ms giữa các bước spawn (0 = gen nhanh, dùng loading UI che view).")]
         [SerializeField] private int iterationDelayMs = 0;
 
-        private int IterationDelayMs => iterationDelayMs;
+        public int IterationDelayMs => iterationDelayMs;
         [SerializeField] private int gridSize = 30;
 
         [Tooltip("Kích thước thực tế của mỗi ô trong Unity units (VD: 14 nếu prefab là 14x14).")]
@@ -46,6 +47,7 @@ namespace WFC
         public Tile[,] Grid => wfc.Grid;
         public int GridSize => gridSize;
         public float CellSize => cellSize;
+        public WFCData[] AllTiles => allTiles;
 
         private int collapsedTiles;
         private List<Tile> placedRooms = new List<Tile>();
@@ -80,11 +82,17 @@ namespace WFC
 
         private bool _isStandaloneGenTestScene;
         private bool _isGenerating;
+        private bool _spawnPrefabs = true;
+        private Action<Tile> _onDemoTileCollapsed;
+        private Action<List<(Tile from, Tile to)>> _onDemoPrimBuilt;
+        private Action<Tile, Tile, bool> _onDemoCorridorEdgeStarting;
 
         private void Awake()
         {
+            var sceneName = SceneManager.GetActiveScene().name;
             _isStandaloneGenTestScene =
-                SceneManager.GetActiveScene().name == SceneManagerCustom.DungeonGenTestSceneName;
+                sceneName == SceneManagerCustom.DungeonGenTestSceneName
+                || sceneName == SceneManagerCustom.Wfc2DDemoSceneName;
 
             roomPlacer = new RoomPlacer(wfc);
             InitializeGrid();
@@ -348,6 +356,14 @@ namespace WFC
             return tile?.CollapsedTile != null && tile.CollapsedTile.tileType != TileType.Empty;
         }
 
+        private void NotifyDemoTileCollapsed(Tile tile)
+        {
+            if (_onDemoTileCollapsed == null || tile == null)
+                return;
+
+            _onDemoTileCollapsed(tile);
+        }
+
         private void ApplyGenerationRandomSeed()
         {
             if (GlobalVariable.CurrentLevel != null)
@@ -394,7 +410,8 @@ namespace WFC
                     t.CollapsedTile = empty;
                     t.IsCollapsed = true;
                     t.PossibleTiles = new List<WFCData> { empty };
-                    t.SpawnObject(cellSize, spawnParent);
+                    t.SpawnObject(cellSize, spawnParent, _spawnPrefabs);
+                    NotifyDemoTileCollapsed(t);
                     MoveGenerationCameraTarget(t);
                     collapsedTiles++;
                     edgeTiles.Add(t);
@@ -424,7 +441,9 @@ namespace WFC
                 allTiles,
                 cellSize,
                 spawnParent,
-                reachableCells);
+                reachableCells,
+                _spawnPrefabs,
+                NotifyDemoTileCollapsed);
 
             foreach (Tile tile in wfc.Grid)
             {
@@ -446,7 +465,8 @@ namespace WFC
                     nextTile.CollapsedTile = fallback;
                     nextTile.IsCollapsed = true;
                     nextTile.PossibleTiles = new List<WFCData> { fallback };
-                    nextTile.SpawnObject(cellSize, spawnParent);
+                    nextTile.SpawnObject(cellSize, spawnParent, _spawnPrefabs);
+                    NotifyDemoTileCollapsed(nextTile);
                     MoveGenerationCameraTarget(nextTile);
                     wfc.Propagation(nextTile);
                     if (ShouldDelayAfterPrefabPlacement(nextTile))
@@ -456,8 +476,8 @@ namespace WFC
                     continue;
                 }
 
-                wfc.CollapseTile(nextTile);
-                nextTile.SpawnObject(cellSize, spawnParent);
+                wfc.CollapseTile(nextTile, NotifyDemoTileCollapsed);
+                nextTile.SpawnObject(cellSize, spawnParent, _spawnPrefabs);
                 MoveGenerationCameraTarget(nextTile);
                 wfc.Propagation(nextTile);
                 if (ShouldDelayAfterPrefabPlacement(nextTile))
@@ -487,7 +507,14 @@ namespace WFC
 
             _stepTimer.Restart();
             var placeOutcome = await roomPlacer.PlaceRoomMustHaveTiles(
-                _rand, targetRooms, roomEdgeMargin, cellSize, spawnParent, IterationDelayMs);
+                _rand,
+                targetRooms,
+                roomEdgeMargin,
+                cellSize,
+                spawnParent,
+                IterationDelayMs,
+                _spawnPrefabs,
+                NotifyDemoTileCollapsed);
             placedRooms = placeOutcome.placedRooms;
             collapsedTiles += placeOutcome.collapsedDelta;
             _stepTimer.Stop();
@@ -497,7 +524,17 @@ namespace WFC
 
             _stepTimer.Restart();
             var (edges, corridorStats) = await corridor.ConnectRoomsByCorridor(
-                placedRooms, _rand, branchingFactor, cellSize, spawnParent, _pathLengths, IterationDelayMs);
+                placedRooms,
+                _rand,
+                branchingFactor,
+                cellSize,
+                spawnParent,
+                _pathLengths,
+                IterationDelayMs,
+                _spawnPrefabs,
+                NotifyDemoTileCollapsed,
+                _onDemoPrimBuilt,
+                _onDemoCorridorEdgeStarting);
             MSTEdges = edges;
             GlobalEvents.RaiseDungeonGenerationProgress(0.72f);
             _currentStats.mst_edges_total = corridorStats.mst_edges_total;
@@ -546,6 +583,58 @@ namespace WFC
                       $"DeadEnds={LastStats.dead_end_count}, Branches={LastStats.branch_count}, " +
                       $"Success={LastStats.generation_success}, " +
                       $"Time={LastStats.ms_total:F1}ms (R:{LastStats.ms_place_rooms:F1} C:{LastStats.ms_connect_corridors:F1} W:{LastStats.ms_wfc_fill:F1})");
+        }
+
+        /// <summary>
+        /// Headless generation cho demo Canvas 2D — cùng pipeline Battle Scene, không spawn prefab 3D / GlobalEvents.
+        /// </summary>
+        public void ClearDemoDungeon()
+        {
+            ClearSpawnedTiles();
+        }
+
+        public async UniTask<(GenerationStats stats, int attempts)> GenerateDemoWithRetry(
+            int seed,
+            int maxAttempts = 5,
+            bool spawnPrefabs = false,
+            Action<Tile> onTileCollapsed = null,
+            Action<List<(Tile from, Tile to)>> onPrimBuilt = null,
+            Action<Tile, Tile, bool> onCorridorEdgeStarting = null)
+        {
+            int attempts = 0;
+            _spawnPrefabs = spawnPrefabs;
+            _onDemoTileCollapsed = onTileCollapsed;
+            _onDemoPrimBuilt = onPrimBuilt;
+            _onDemoCorridorEdgeStarting = onCorridorEdgeStarting;
+
+            try
+            {
+                while (attempts < maxAttempts)
+                {
+                    attempts++;
+                    int attemptSeed = attempts == 1 ? seed : UnityEngine.Random.Range(0, int.MaxValue);
+
+                    ClearSpawnedTiles();
+                    InitializeGrid();
+                    randomSeed = attemptSeed;
+                    useFixedSeed = true;
+                    await Generate();
+
+                    if (LastStats.generation_success && LastStats.connectivity_complete)
+                        return (LastStats, attempts);
+
+                    Debug.LogWarning($"[WFCGeneration Demo] Attempt {attempts} failed (seed={attemptSeed}). Retrying...");
+                }
+
+                return (LastStats, attempts);
+            }
+            finally
+            {
+                _spawnPrefabs = true;
+                _onDemoTileCollapsed = null;
+                _onDemoPrimBuilt = null;
+                _onDemoCorridorEdgeStarting = null;
+            }
         }
 
         /// <summary>

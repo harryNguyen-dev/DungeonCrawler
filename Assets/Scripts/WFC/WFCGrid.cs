@@ -83,7 +83,7 @@ namespace WFC
             return lowestEntropyTiles[Rand.Next(0, lowestEntropyTiles.Count)];
         }
 
-        public void CollapseTile(Tile tile)
+        public void CollapseTile(Tile tile, Action<Tile> onCollapsed = null)
         {
             if (tile.PossibleTiles.Count == 0)
             {
@@ -105,6 +105,7 @@ namespace WFC
                     tile.CollapsedTile = possibleTile;
                     tile.IsCollapsed = true;
                     tile.PossibleTiles = new List<WFCData> { possibleTile };
+                    onCollapsed?.Invoke(tile);
                     break;
                 }
             }

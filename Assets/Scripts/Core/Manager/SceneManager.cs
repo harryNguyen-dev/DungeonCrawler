@@ -11,6 +11,7 @@ namespace Core
         public const string DungeonSceneName = "BattleScene";
         public const string TestBattleSceneName = "Test";
         public const string DungeonGenTestSceneName = "DungeonGenTest";
+        public const string Wfc2DDemoSceneName = "WFC_2D_Demo";
 
         const float BattleSceneLoadProgressMax = 0.25f;
 

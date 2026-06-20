@@ -41,10 +41,18 @@ namespace WFC
             float cellSize,
             Transform spawnParent,
             List<int> pathLengths,
-            int delayBetweenPrefabPlacementsMs)
+            int delayBetweenPrefabPlacementsMs,
+            bool spawnPrefabs = true,
+            Action<Tile> onTileCollapsed = null,
+            Action<List<(Tile from, Tile to)>> onPrimBuilt = null,
+            Action<Tile, Tile, bool> onCorridorEdgeStarting = null)
         {
             var mstOnlyEdges = Prim.BuildMST(placedRooms);
             int mstCount = mstOnlyEdges.Count;
+
+            onPrimBuilt?.Invoke(new List<(Tile from, Tile to)>(mstOnlyEdges));
+            if (onPrimBuilt != null && delayBetweenPrefabPlacementsMs > 0)
+                await UniTask.Delay(delayBetweenPrefabPlacementsMs);
 
             Prim.AddExtraEdges(mstOnlyEdges, placedRooms, rand, 0.15f);
             int extraTotal = mstOnlyEdges.Count - mstCount;
@@ -55,7 +63,17 @@ namespace WFC
             foreach (var (from, to) in mstOnlyEdges)
             {
                 bool isMstEdge = edgeIndex < mstCount;
-                bool success = await ConnectTwoRooms(from, to, branchingFactor, cellSize, spawnParent, pathLengths, delayBetweenPrefabPlacementsMs);
+                onCorridorEdgeStarting?.Invoke(from, to, isMstEdge);
+                bool success = await ConnectTwoRooms(
+                    from,
+                    to,
+                    branchingFactor,
+                    cellSize,
+                    spawnParent,
+                    pathLengths,
+                    delayBetweenPrefabPlacementsMs,
+                    spawnPrefabs,
+                    onTileCollapsed);
 
                 if (isMstEdge && success)
                     mstSuccess++;
@@ -76,7 +94,9 @@ namespace WFC
             float cellSize,
             Transform spawnParent,
             List<int> pathLengths,
-            int delayBetweenPrefabPlacementsMs)
+            int delayBetweenPrefabPlacementsMs,
+            bool spawnPrefabs,
+            Action<Tile> onTileCollapsed)
         {
             List<Direction> fromDoors = from.CollapsedTile.GetOpenConnector();
             List<Direction> toDoors = to.CollapsedTile.GetOpenConnector();
@@ -107,7 +127,16 @@ namespace WFC
             if (bestPath != null)
             {
                 pathLengths.Add(bestPath.Count);
-                await FitHallwayPath(bestPath, from, to, branchingFactor, cellSize, spawnParent, delayBetweenPrefabPlacementsMs);
+                await FitHallwayPath(
+                    bestPath,
+                    from,
+                    to,
+                    branchingFactor,
+                    cellSize,
+                    spawnParent,
+                    delayBetweenPrefabPlacementsMs,
+                    spawnPrefabs,
+                    onTileCollapsed);
                 return true;
             }
 
@@ -124,7 +153,9 @@ namespace WFC
             int branchingFactor,
             float cellSize,
             Transform spawnParent,
-            int delayBetweenPrefabPlacementsMs)
+            int delayBetweenPrefabPlacementsMs,
+            bool spawnPrefabs,
+            Action<Tile> onTileCollapsed)
         {
             for (int i = 0; i < path.Count; i++)
             {
@@ -132,7 +163,15 @@ namespace WFC
                 Tile prev = (i == 0) ? roomFrom : path[i - 1];
                 Tile next = (i == path.Count - 1) ? roomTo : path[i + 1];
 
-                bool placedPrefab = FitHallwayTile(tile, prev, next, branchingFactor, cellSize, spawnParent);
+                bool placedPrefab = FitHallwayTile(
+                    tile,
+                    prev,
+                    next,
+                    branchingFactor,
+                    cellSize,
+                    spawnParent,
+                    spawnPrefabs,
+                    onTileCollapsed);
                 if (placedPrefab)
                 {
                     await UniTask.Delay(delayBetweenPrefabPlacementsMs);
@@ -142,7 +181,15 @@ namespace WFC
             }
         }
 
-        private bool FitHallwayTile(Tile tile, Tile prev, Tile next, int branchingFactor, float cellSize, Transform spawnParent)
+        private bool FitHallwayTile(
+            Tile tile,
+            Tile prev,
+            Tile next,
+            int branchingFactor,
+            float cellSize,
+            Transform spawnParent,
+            bool spawnPrefabs,
+            Action<Tile> onTileCollapsed)
         {
             HashSet<Direction> requiredOpen = new HashSet<Direction>();
 
@@ -198,7 +245,8 @@ namespace WFC
                 tile.CollapsedTile = bestFit;
                 tile.IsCollapsed = true;
                 tile.PossibleTiles = new List<WFCData> { bestFit };
-                tile.SpawnObject(cellSize, spawnParent);
+                tile.SpawnObject(cellSize, spawnParent, spawnPrefabs);
+                onTileCollapsed?.Invoke(tile);
                 return true;
             }
             else

@@ -20,7 +20,9 @@ namespace WFC
             int roomEdgeMargin,
             float cellSize,
             Transform spawnParent,
-            int delayBetweenPrefabPlacementsMs)
+            int delayBetweenPrefabPlacementsMs,
+            bool spawnPrefabs = true,
+            System.Action<Tile> onTileCollapsed = null)
         {
             int roomsPlaced = 0;
             int collapsedDelta = 0;
@@ -30,7 +32,7 @@ namespace WFC
                 Tile tile = GetRandomTileWithRoomPossibility(rand, roomEdgeMargin);
                 if (tile == null) break;
 
-                if (TryCollapseTileToRoom(tile, rand, cellSize, spawnParent))
+                if (TryCollapseTileToRoom(tile, rand, cellSize, spawnParent, spawnPrefabs, onTileCollapsed))
                 {
                     collapsedDelta++;
                     roomsPlaced++;
@@ -80,7 +82,13 @@ namespace WFC
             return false;
         }
 
-        private bool TryCollapseTileToRoom(Tile tile, System.Random rand, float cellSize, Transform spawnParent)
+        private bool TryCollapseTileToRoom(
+            Tile tile,
+            System.Random rand,
+            float cellSize,
+            Transform spawnParent,
+            bool spawnPrefabs,
+            System.Action<Tile> onTileCollapsed)
         {
             List<WFCData> roomOptions = new List<WFCData>();
             foreach (WFCData p in tile.PossibleTiles)
@@ -117,7 +125,8 @@ namespace WFC
             tile.CollapsedTile = chosen;
             tile.IsCollapsed = true;
             tile.PossibleTiles = new List<WFCData> { chosen };
-            tile.SpawnObject(cellSize, spawnParent);
+            tile.SpawnObject(cellSize, spawnParent, spawnPrefabs);
+            onTileCollapsed?.Invoke(tile);
             return true;
         }
     }

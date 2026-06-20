@@ -27,11 +27,11 @@ namespace WFC {
             PossibleTiles = new List<WFCData>(allTiles);
         }
 
-        public void SpawnObject(float cellSize, Transform parent)
+        public void SpawnObject(float cellSize, Transform parent, bool spawnPrefab = true)
         {
             DespawnObject();
 
-            if (CollapsedTile == null || CollapsedTile.prefab == null) return;
+            if (!spawnPrefab || CollapsedTile == null || CollapsedTile.prefab == null) return;
 
             Vector3 position = new Vector3(GridPosition.x * cellSize, 0, GridPosition.y * cellSize);
             SpawnedObject = Object.Instantiate(CollapsedTile.prefab, position, Quaternion.identity, parent);
