@@ -156,6 +156,7 @@ namespace EnemyController
             if (this == null || gameObject == null || isDead) return;
             baseEnemyAnimation?.SetHitTrigger();
             currentHealth -= damage;
+            Core.GameAudio.PlayEnemyHit(transform.position);
             events.ChangeHealth((int)currentHealth);
             Color colorToFlash = customFlashColor ?? defaultFlashColor;
             hitFlash?.Play(colorToFlash, flashDuration).Forget();
@@ -169,6 +170,7 @@ namespace EnemyController
         {
             if (isDead) return;
             isDead = true;
+            Core.GameAudio.PlayEnemyDeath(transform.position);
             var goldDrop = enemyData != null ? enemyData.GoldDrop : 5;
             var expDrop = enemyData != null ? enemyData.ExpDrop : 20;
             baseEnemyAnimation?.SetDieTrigger();

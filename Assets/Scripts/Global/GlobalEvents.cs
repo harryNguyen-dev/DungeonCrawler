@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace Global
 {
+    public struct RoomEnteredInfo
+    {
+        public Vector2Int GridPosition;
+        public RoomType RoomType;
+        public bool IsBossRoom;
+    }
+
     public static class GlobalEvents
     {
         public static event Action<int> OnDungeonGenerated;
@@ -18,7 +25,7 @@ namespace Global
         public static event Action<int> OnExperienceGained;
         public static event Action<int> OnLevelUp;
         public static event Action<Vector2Int> OnRoomCleared;
-        public static event Action<Vector2Int> OnRoomEntered;
+        public static event Action<RoomEnteredInfo> OnRoomEntered;
         public static event Action OnAllRoomsCleared;
         public static event Action OnBossDefeated;
 
@@ -62,7 +69,7 @@ namespace Global
         public static void RaiseDungeonSceneLoaded() => OnDungeonSceneLoaded?.Invoke();
         public static void RaiseMatchReset() => OnMatchReset?.Invoke();
         public static void RaiseRoomCleared(Vector2Int gridPos) => OnRoomCleared?.Invoke(gridPos);
-        public static void RaiseRoomEntered(Vector2Int gridPos) => OnRoomEntered?.Invoke(gridPos);
+        public static void RaiseRoomEntered(RoomEnteredInfo info) => OnRoomEntered?.Invoke(info);
         public static void RaiseAllRoomsCleared() => OnAllRoomsCleared?.Invoke();
         public static void RaiseBossDefeated() => OnBossDefeated?.Invoke();
     }

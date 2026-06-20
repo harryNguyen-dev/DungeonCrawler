@@ -217,9 +217,9 @@ namespace Core.Minimap
             Initialize(wfc.Grid, wfc.GridSize, wfc.CellSize);
         }
 
-        private void HandleRoomEntered(Vector2Int gridPos)
+        private void HandleRoomEntered(RoomEnteredInfo info)
         {
-            MarkVisited(gridPos);
+            MarkVisited(info.GridPosition);
         }
 
         private void HandleMatchReset()

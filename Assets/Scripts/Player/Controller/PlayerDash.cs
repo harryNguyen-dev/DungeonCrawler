@@ -75,6 +75,7 @@ namespace PlayerController
         {
             isDashing = true;
             lastDashTime = Time.time;
+            Core.GameAudio.PlayPlayerDash(transform.position);
             movement?.SetMovementEnabled(false);
             health?.SetInvulnerable(true);
             playerAnimation?.SetDash();

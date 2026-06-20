@@ -34,6 +34,7 @@ namespace CustomUI
         private int activeCategoryIndex;
         private HeroSO pendingHero;
         private UnityAction[] categoryListeners;
+        private UnityAction cancelConfirmListener;
         private Image[] categoryButtonImages;
 
         private static readonly Color ActiveCategoryColor = ColorUtils.Yellow;
@@ -46,7 +47,8 @@ namespace CustomUI
         {
             backButton?.onClick.AddListener(OnBackClicked);
             confirmSessionButton?.onClick.AddListener(OnConfirmPurchase);
-            cancelSessionButton?.onClick.AddListener(HideConfirmPanel);
+            cancelConfirmListener = () => HideConfirmPanel(true);
+            cancelSessionButton?.onClick.AddListener(cancelConfirmListener);
 
             if (categoryButtons != null)
             {
@@ -96,7 +98,7 @@ namespace CustomUI
         {
             backButton?.onClick.RemoveListener(OnBackClicked);
             confirmSessionButton?.onClick.RemoveListener(OnConfirmPurchase);
-            cancelSessionButton?.onClick.RemoveListener(HideConfirmPanel);
+            cancelSessionButton?.onClick.RemoveListener(cancelConfirmListener);
 
             if (categoryButtons != null && categoryListeners != null)
             {
@@ -120,11 +122,13 @@ namespace CustomUI
 
         private void OnBackClicked()
         {
+            GameAudio.PlayUiBack();
             Close();
         }
 
         private void SelectCategory(int index)
         {
+            GameAudio.PlayUiTab();
             activeCategoryIndex = index;
             RefreshCategoryButtonVisuals();
 
@@ -207,8 +211,11 @@ namespace CustomUI
             RefreshConfirmButton();
         }
 
-        private void HideConfirmPanel()
+        private void HideConfirmPanel(bool playBackSound = false)
         {
+            if (playBackSound)
+                GameAudio.PlayUiBack();
+
             pendingHero = null;
 
             if (confirmSessionPanel != null)
@@ -221,7 +228,12 @@ namespace CustomUI
                 return;
 
             if (!HeroProgressService.TryUnlock(pendingHero))
+            {
+                GameAudio.PlayUiError();
                 return;
+            }
+
+            GameAudio.PlayUiPurchase();
 
             HideConfirmPanel();
 

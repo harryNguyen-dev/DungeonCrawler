@@ -180,6 +180,12 @@ namespace Core
 
         public void StopLoadingAudioPlay() => loadingAudioSource.Stop();
 
+        public void StopAmbientAudio()
+        {
+            ambientAudioSource.Stop();
+            ambientAudioSource.clip = null;
+        }
+
         /// <summary>
         /// Gets the volume based on the tag.
         /// </summary>

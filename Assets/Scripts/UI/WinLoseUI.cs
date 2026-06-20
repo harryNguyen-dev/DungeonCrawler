@@ -111,6 +111,7 @@ namespace CustomUI
 
         private void RestartRun()
         {
+            GameAudio.PlayUiConfirm();
             Time.timeScale = 1f;
             HidePanels();
             SceneManagerCustom.ReloadDungeon();
@@ -118,6 +119,7 @@ namespace CustomUI
 
         private void ExitToHub()
         {
+            GameAudio.PlayUiBack();
             Time.timeScale = 1f;
             HidePanels();
 

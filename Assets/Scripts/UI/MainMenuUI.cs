@@ -92,6 +92,7 @@ namespace CustomUI
         }
         public void OnShopClicked()
         {
+            GameAudio.PlayUiConfirm();
             shopUI?.Open();
         }
         public void ShowLobbyHeroPreview()
@@ -161,6 +162,7 @@ namespace CustomUI
 
         private void OnBattleClicked()
         {
+            GameAudio.PlayUiConfirm();
             var catalog = GlobalEntities.Instance?.Chapter1Catalog;
             if (catalog == null || catalog.LevelCount == 0)
             {
@@ -182,12 +184,14 @@ namespace CustomUI
 
         private void OnHeroClicked()
         {
+            GameAudio.PlayUiConfirm();
             HideLobbyHeroPreview();
             characterSelectionUI?.Open();
         }
 
         private void OnLevelClicked()
         {
+            GameAudio.PlayUiConfirm();
             if (selectMapsUI != null)
             {
                 HideLobbyHeroPreview();
@@ -216,6 +220,7 @@ namespace CustomUI
 
         private void OnExitClicked()
         {
+            GameAudio.PlayUiBack();
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else

@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 50ad3dccfb1aa4ca8a2bd79aa0f1ebe0
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293814
+  packageName: BulletHell Elemental Template
+  packageVersion: 1.5.0
+  assetPath: Assets/BulletHellTemplate/Res/Audio/Music/AudioClip_Music_MorganaRides.wav
+  uploadId: 816960
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 8
+  defaultSettings:
+    serializedVersion: 2
+    loadType: 0
+    sampleRateSetting: 1
+    sampleRateOverride: 44100
+    compressionFormat: 0
+    quality: 1
+    conversionMode: 0
+    preloadAudioData: 1
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  loadInBackground: 1
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

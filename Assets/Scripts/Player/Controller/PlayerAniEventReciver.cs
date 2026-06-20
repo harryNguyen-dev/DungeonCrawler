@@ -22,6 +22,7 @@ namespace PlayerController
                 playerRotate = GetComponentInParent<Rotate>();
 
             playerRotate?.SnapFaceAimDirection();
+            Core.GameAudio.PlayPlayerAttack(transform.position);
             attack?.SpawnProjectile().Forget();
         }
     }

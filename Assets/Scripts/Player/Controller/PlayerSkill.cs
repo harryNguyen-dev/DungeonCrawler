@@ -72,6 +72,7 @@ namespace PlayerController
 
             playerRotate?.SnapFaceAimDirection();
             var direction = transform.forward;
+            Core.GameAudio.PlayPlayerSkill(transform.position);
             playerAnimation?.SetSkill();
 
             await UniTask.Yield(PlayerLoopTiming.Update);

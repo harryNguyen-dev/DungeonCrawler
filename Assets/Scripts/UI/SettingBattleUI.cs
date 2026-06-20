@@ -29,6 +29,8 @@ namespace CustomUI
             if (blockPause || isGameOver || gameObject.activeSelf)
                 return;
 
+            GameAudio.PlayUiPauseOpen();
+
             pausedByMenu = Time.timeScale > 0f;
             Time.timeScale = 0f;
             InputManager.Instance?.SetUiAttackHeld(false);
@@ -97,10 +99,15 @@ namespace CustomUI
                 continueButton.onClick.RemoveListener(OnContinueClicked);
         }
 
-        private void OnContinueClicked() => Hide();
+        private void OnContinueClicked()
+        {
+            GameAudio.PlayUiPauseClose();
+            Hide();
+        }
 
         private void ExitToLobby()
         {
+            GameAudio.PlayUiBack();
             Time.timeScale = 1f;
             pausedByMenu = false;
             gameObject.SetActive(false);

@@ -184,7 +184,16 @@ public class RoomController : MonoBehaviour
 
         isPlayerReached = true;
 
-        GlobalEvents.RaiseRoomEntered(gridPosition);
+        var isBossRoom = false;
+        if (roomType == RoomType.Combat)
+            isBossRoom = DungeonEncounterTracker.RegisterCombatRoomEntered();
+
+        GlobalEvents.RaiseRoomEntered(new RoomEnteredInfo
+        {
+            GridPosition = gridPosition,
+            RoomType = roomType,
+            IsBossRoom = isBossRoom
+        });
 
         var ct = this.GetCancellationTokenOnDestroy();
 
@@ -209,8 +218,6 @@ public class RoomController : MonoBehaviour
 
 
         CloseDoors();
-
-        bool isBossRoom = DungeonEncounterTracker.RegisterCombatRoomEntered();
 
         if (isBossRoom)
 
@@ -603,6 +610,8 @@ public class RoomController : MonoBehaviour
     {
 
         if (doorsController == null) return;
+
+        Core.GameAudio.PlayDoorOpen();
 
         foreach (var doorController in doorsController)
 

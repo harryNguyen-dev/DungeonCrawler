@@ -117,6 +117,7 @@ namespace Core
 
             var multiplier = Global.GlobalEntities.Instance?.PlayerStats?.runtimeStats?.DefaultGoldGainMultiplier ?? 1f;
             runGold += Mathf.RoundToInt(baseAmount * multiplier);
+            Core.GameAudio.PlayGoldPickup();
             Global.GlobalEvents.RaiseRunGoldChanged(runGold);
         }
 

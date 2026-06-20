@@ -38,13 +38,13 @@ namespace CustomUI
             if (scrollViewContent is RectTransform content)
                 contentRect = content;
 
-            closeBtn?.onClick.AddListener(Close);
+            closeBtn?.onClick.AddListener(OnCloseClicked);
         }
 
         private void OnDestroy()
         {
             openTween?.Kill();
-            closeBtn?.onClick.RemoveListener(Close);
+            closeBtn?.onClick.RemoveListener(OnCloseClicked);
         }
 
         private void OnEnable()
@@ -73,6 +73,8 @@ namespace CustomUI
 
         public void Open()
         {
+            GameAudio.PlayUiConfirm();
+
             if (container == null)
                 return;
 
@@ -80,6 +82,12 @@ namespace CustomUI
             container.SetActive(true);
             PopulateMaps();
             PlayOpenTween();
+        }
+
+        private void OnCloseClicked()
+        {
+            GameAudio.PlayUiBack();
+            Close();
         }
 
         public void Close()

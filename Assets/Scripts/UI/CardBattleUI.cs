@@ -87,6 +87,8 @@ namespace CustomUI
 
         private void OnCardSelected(CardSO cardData)
         {
+            Core.GameAudio.PlayCardSelect();
+
             var playerEffect = GlobalEntities.Instance?.PlayerEffect;
             if (playerEffect != null)
                 playerEffect.BuildEffectForPlayer(cardData);

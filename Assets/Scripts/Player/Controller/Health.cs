@@ -38,8 +38,12 @@ namespace PlayerController
         }
         private void SetHealHealth(int amount)
         {
+            if (amount <= 0)
+                return;
+
             var scaledAmount = Mathf.RoundToInt(amount * playerStats.GetHealMultiplier());
             currentHealth = Mathf.Min(currentHealth + scaledAmount, maxHealth);
+            Core.GameAudio.PlayPlayerHeal();
             events.InvokeChangeHealth(currentHealth, maxHealth);
         }
 
@@ -53,6 +57,7 @@ namespace PlayerController
                 return;
 
             currentHealth -= damage;
+            Core.GameAudio.PlayPlayerHit(transform.position);
             Debug.Log("[PlayerController Health] Health: " + currentHealth);
             events.InvokeChangeHealth(currentHealth, maxHealth);
             ApplyThornReflect(damage, attacker);
@@ -75,6 +80,7 @@ namespace PlayerController
         }
         public void Eliminate()
         {
+            Core.GameAudio.PlayPlayerDeath();
             Global.GlobalEvents.RaisePlayerEliminated();
             Debug.Log("Player died!");
             Time.timeScale = 0f;

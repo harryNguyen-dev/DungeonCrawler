@@ -249,9 +249,10 @@ namespace Core
 
         private void TryPlayAudio()
         {
-            if (loadingAudioClip == null) return;
+            var clip = loadingAudioClip != null ? loadingAudioClip : GameAudio.LoadingClip;
+            if (clip == null) return;
             if (AudioManager.Singleton == null) return;
-            AudioManager.Singleton.PlayLoadingMenu(loadingAudioClip, loadingTag);
+            AudioManager.Singleton.PlayLoadingMenu(clip, loadingTag);
         }
 
         private void TryStopAudio()

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10edfcd9a15fd4048ab9b416de077dd5, type: 3}
+  m_Name: GameAudioCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::SO.GameAudioCatalogSO
+  uiClickConfirm: {fileID: 8300000, guid: 3f5750beb07f3664eb7c3017877dd1aa, type: 3}
+  uiClickBack: {fileID: 8300000, guid: a6c2538e305f2f348a7e10fdbc56c654, type: 3}
+  uiClickTab: {fileID: 8300000, guid: 7f69ba1545c43434a8578dc6fa42e2e4, type: 3}
+  uiError: {fileID: 8300000, guid: 8181bfb7372b845489e06e586b9977fc, type: 3}
+  uiPurchase: {fileID: 8300000, guid: 4378cba75df1b28438373bcaee4b7964, type: 3}
+  sfxLoading: {fileID: 8300000, guid: 2e35c68c8068ea3488077660804ad91c, type: 3}
+  musicLobby: {fileID: 8300000, guid: 3f14a2bdd6e6eab47860411f32f0a242, type: 3}
+  musicBattle: {fileID: 8300000, guid: 50ad3dccfb1aa4ca8a2bd79aa0f1ebe0, type: 3}
+  musicBoss: {fileID: 8300000, guid: 98b51e3b5175e48ac895e685c85a53df, type: 3}
+  stingerWin: {fileID: 8300000, guid: e00ac121338f9344b8e1da98b29b0e7b, type: 3}
+  stingerLose: {fileID: 8300000, guid: f32401a57cf6f934db488b8ec58231c4, type: 3}
+  ambientDungeon: {fileID: 8300000, guid: 3820860ab8205481d880a99a045e0db2, type: 3}
+  playerAttack: {fileID: 8300000, guid: a736163d69ec4ed4cb98da950a65b952, type: 3}
+  playerSkill: {fileID: 8300000, guid: fec3669a19f691e4aa5d2ec9d272e3e3, type: 3}
+  playerDash: {fileID: 8300000, guid: 70a956bfc54122341a59723a7282d085, type: 3}
+  playerHit: {fileID: 8300000, guid: 15fe9675f9ca746caa2a2a811a2e76ab, type: 3}
+  playerDeath: {fileID: 0}
+  playerLevelUp: {fileID: 8300000, guid: 8b5b83bddb30c1f4caa804163ac087db, type: 3}
+  playerHeal: {fileID: 8300000, guid: 95455718b254ffe47a652d5f365c740b, type: 3}
+  enemyHit: {fileID: 8300000, guid: 15fe9675f9ca746caa2a2a811a2e76ab, type: 3}
+  enemyDeath: {fileID: 0}
+  enemyMeleeSwing: {fileID: 0}
+  enemyRangedShoot: {fileID: 0}
+  projectileHit: {fileID: 0}
+  explosion: {fileID: 0}
+  roomEnter: {fileID: 0}
+  roomClear: {fileID: 0}
+  doorOpen: {fileID: 0}
+  goldPickup: {fileID: 8300000, guid: 2c2b1c9ead2e6464287480d0026ab608, type: 3}
+  cardReveal: {fileID: 8300000, guid: 8285daf4ed73b5742a6ad547da15fcc9, type: 3}
+  cardSelect: {fileID: 8300000, guid: 8285daf4ed73b5742a6ad547da15fcc9, type: 3}
+  bossIntro: {fileID: 0}
+  bossPhase: {fileID: 0}
+  bossSpecial: {fileID: 0}
+  uiPauseOpen: {fileID: 0}
+  uiPauseClose: {fileID: 0}
