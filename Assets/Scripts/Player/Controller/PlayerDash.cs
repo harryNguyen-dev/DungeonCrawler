@@ -1,4 +1,5 @@
 using Core;
+using Core.Minimap;
 using Cysharp.Threading.Tasks;
 using Global;
 using SO;
@@ -59,7 +60,14 @@ namespace PlayerController
             if (direction.sqrMagnitude < 0.0001f)
                 direction = transform.forward;
 
-            PerformDash(direction.normalized).Forget();
+            direction = direction.normalized;
+            float distance = dashConfig != null ? dashConfig.distance : 4f;
+            MinimapZoneBounds? roomBounds = CombatRoomBoundary.TryGetBounds(out var bounds) ? bounds : null;
+
+            if (!DashTargetResolver.TryResolve(transform.position, direction, distance, roomBounds, out var target))
+                return;
+
+            PerformDash(direction, target).Forget();
         }
 
         private Vector3 GetDashDirection()
@@ -71,7 +79,7 @@ namespace PlayerController
             return transform.forward;
         }
 
-        private async UniTask PerformDash(Vector3 direction)
+        private async UniTask PerformDash(Vector3 direction, Vector3 target)
         {
             isDashing = true;
             lastDashTime = Time.time;
@@ -81,12 +89,10 @@ namespace PlayerController
             playerAnimation?.SetDash();
 
             var config = dashConfig;
-            float distance = config != null ? config.distance : 4f;
             float duration = config != null ? config.duration : 0.2f;
             float iFrameDuration = config != null ? config.iFrameDuration : 0.18f;
 
             Vector3 start = transform.position;
-            Vector3 target = start + direction * distance;
             target = ClampToGround(target);
 
             float elapsed = 0f;

@@ -6,6 +6,8 @@ using System.Threading;
 
 using Core;
 
+using Core.Minimap;
+
 using EnemyController;
 
 using Global;
@@ -597,6 +599,10 @@ public class RoomController : MonoBehaviour
 
         if (doorsController == null) return;
 
+        if (TryGetMinimapZoneCollider(out Collider collider))
+
+            CombatRoomBoundary.Seal(MinimapZoneBounds.FromCollider(collider, gridPosition));
+
         foreach (var doorController in doorsController)
 
             doorController.SetClose();
@@ -610,6 +616,8 @@ public class RoomController : MonoBehaviour
     {
 
         if (doorsController == null) return;
+
+        CombatRoomBoundary.Unseal();
 
         Core.GameAudio.PlayDoorOpen();
 

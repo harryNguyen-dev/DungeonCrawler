@@ -83,6 +83,7 @@ namespace Core
                 Global.GlobalEntities.Instance.ClearRuntimeSceneObjects();
             }
 
+            CombatRoomBoundary.Unseal();
             Global.GlobalEvents.RaiseMatchReset();
             Global.GlobalEvents.RaiseRunStarsChanged(0);
         }
