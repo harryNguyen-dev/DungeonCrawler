@@ -11,6 +11,7 @@ namespace SO
         CritChanceFlat,
         FireDamageFlat,
         ProjectileCountFlat,
+        FrozenDurationFlat,
     }
 
     [Serializable]

@@ -18,10 +18,21 @@ MonoBehaviour:
   icon: {fileID: 0}
   deliveryType: 0
   cooldown: 4
+  damageMode: 0
   damage: 30
+  damagePercent: 0.45
   range: 12
   projectileSpeed: 20
-  skillProjectilePrefab: {fileID: 705700206895292680, guid: 0edb51427189bab418104a9d314c2c90, type: 3}
+  skillProjectilePrefab: {fileID: 0}
   skillEffects: []
+  coneConfig:
+    projectileCount: 0
+    coneAngle: 0
+    spawnDelayMs: 0
+    centerPelletPierce: 0
+  buffConfig:
+    duration: 0
+    refreshOnReuse: 0
+    modifiers: []
   coneAngle: 45
   aoeRadius: 3

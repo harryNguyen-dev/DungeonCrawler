@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 8407845276333677561}
   - component: {fileID: 4140282393009796582}
   - component: {fileID: 8673285317517144234}
+  - component: {fileID: 7940059725516422557}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -269,3 +270,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08de5df5fb75f6544b51e380a05f73a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController.PlayerSkill
+--- !u!114 &7940059725516422557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3023443133490872029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd8c77e7d6b177440bce64a35b6cbf4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController.Skill.PlayerTimedBuffTracker

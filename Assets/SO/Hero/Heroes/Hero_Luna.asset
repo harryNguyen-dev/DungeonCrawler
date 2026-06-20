@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7ee4f0f58ce226469fd8e748429bec6, type: 3}
-  m_Name: Hero_Pierce
+  m_Name: Hero_Luna
   m_EditorClassIdentifier: Assembly-CSharp::SO.HeroSO
-  heroId: hero_pierce
-  displayName: Pierce Striker
-  description: Pierce Striker
-  icon: {fileID: 0}
-  sortOrder: 1
+  heroId: hero_luna
+  displayName: Luna
+  description: Luna
+  icon: {fileID: 21300000, guid: 4906ab499d540fd46a1f11931339b237, type: 3}
+  sortOrder: 3
   maxHealth: 150
   moveSpeed: 10
-  attackDamage: 30
+  attackDamage: 24
   attackCooldown: 0.5
-  critChance: 0.12
-  boundWeapon: {fileID: 11400000, guid: 9aacc57111d341ee9e0ac6701f644aa8, type: 2}
-  skill: {fileID: 11400000, guid: df7fd67612a26f74587e8169c97d3ed9, type: 2}
-  visualPrefab: {fileID: 1310117347759843255, guid: a64bbdce03c5daf49971a60816523dde, type: 3}
+  critChance: 0.1
+  boundWeapon: {fileID: 11400000, guid: f1a2b3c4d5e6478091a2b3c4d5e6f701, type: 2}
+  skill: {fileID: 11400000, guid: e2b3c4d5e6f7488091a2b3c4d5e6f702, type: 2}
+  visualPrefab: {fileID: 343925810146383278, guid: f0ff8f6c92f14bd419fcdd6a58cb99ef, type: 3}
   visualLocalPosition: {x: 0, y: 0, z: 0}
   visualLocalEulerAngles: {x: 0, y: 0, z: 0}
   visualLocalScale: {x: 1, y: 1, z: 1}

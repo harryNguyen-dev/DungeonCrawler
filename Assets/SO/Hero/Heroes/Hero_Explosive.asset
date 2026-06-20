@@ -24,7 +24,7 @@ MonoBehaviour:
   critChance: 0.08
   boundWeapon: {fileID: 11400000, guid: 55b1628fc3a0433cacc225c94e111a51, type: 2}
   skill: {fileID: 11400000, guid: 71133be7f985f284c9cdc0eeb3633f3a, type: 2}
-  visualPrefab: {fileID: 2729737082750660509, guid: 994e61fb5c0d0eb4a8617b43290cf647, type: 3}
+  visualPrefab: {fileID: 1310117347759843255, guid: a64bbdce03c5daf49971a60816523dde, type: 3}
   visualLocalPosition: {x: 0, y: 0, z: 0}
   visualLocalEulerAngles: {x: 0, y: 0, z: 0}
   visualLocalScale: {x: 1, y: 1, z: 1}

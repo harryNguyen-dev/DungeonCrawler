@@ -12,16 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27fc2e2865ceee74ebe329c69035e9ad, type: 3}
   m_Name: Skill_Freeze
   m_EditorClassIdentifier: Assembly-CSharp::SO.HeroSkillSO
-  skillId: skill_freeze
+  skillId: skill_luna
   displayName: Cryo Burst
   description: Cryo Burst
   icon: {fileID: 0}
   deliveryType: 0
   cooldown: 4.5
+  damageMode: 0
   damage: 25
+  damagePercent: 0.45
   range: 12
   projectileSpeed: 20
   skillProjectilePrefab: {fileID: 705700206895292680, guid: 0edb51427189bab418104a9d314c2c90, type: 3}
   skillEffects: []
+  coneConfig:
+    projectileCount: 0
+    coneAngle: 0
+    spawnDelayMs: 0
+    centerPelletPierce: 0
+  buffConfig:
+    duration: 0
+    refreshOnReuse: 0
+    modifiers: []
   coneAngle: 45
   aoeRadius: 3

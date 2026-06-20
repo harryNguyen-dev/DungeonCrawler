@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HeroCatalog_Global
   m_EditorClassIdentifier: Assembly-CSharp::SO.HeroCatalogSO
   heroes:
-  - {fileID: 11400000, guid: cc608ba6acf0eab4b99f2c49f72747f4, type: 2}
+  - {fileID: 11400000, guid: 6cc4689e364ff174e926c02887e5a176, type: 2}
   - {fileID: 11400000, guid: e138b585b0d23b748a58eef5e1760c53, type: 2}
   - {fileID: 11400000, guid: 88b1e5a33e711cb45aa9b2bbecd4ac13, type: 2}
   - {fileID: 11400000, guid: d00ae04ef258899428547cf466b29b65, type: 2}
-  - {fileID: 11400000, guid: f64d72acc0278864687ca9adca571d54, type: 2}
+  - {fileID: 11400000, guid: 2c5c49e1523ba4d44bfded6bf0e11588, type: 2}

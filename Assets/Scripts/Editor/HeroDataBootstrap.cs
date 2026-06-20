@@ -25,6 +25,7 @@ namespace EditorTools
             var dashConfig = LoadOrCreateAsset<DashConfigSO>(DashConfigPath, "DashConfig_Default");
             var projectile = AssetDatabase.LoadAssetAtPath<GameObject>(ProjectilePrefabPath);
             var visualPrefab = EnsureDefaultVisualPrefab();
+            var lunaVisual = LoadVisualPrefab("HeroVisual_Luna") ?? visualPrefab;
 
             var starterWeapon = EnsureWeapon("Weapon_Starter", "weapon_starter", "Pulse Rifle",
                 projectile, WeaponEffectType.NumberOfProjectiles, 1);
@@ -36,10 +37,8 @@ namespace EditorTools
                 projectile,
                 WeaponEffectType.NumberOfProjectiles, 1,
                 WeaponEffectType.ExplosiveRadius, 2.5f);
-            var freezeWeapon = EnsureWeapon("Weapon_Freeze", "weapon_freeze", "Cryo Blaster",
-                projectile,
-                WeaponEffectType.NumberOfProjectiles, 1,
-                WeaponEffectType.FrozenDuration, 2f);
+            var lunaWeapon = EnsureWeapon("Weapon_Luna", "weapon_luna", "Moonbow",
+                projectile, WeaponEffectType.NumberOfProjectiles, 1);
             var fireWeapon = EnsureWeapon("Weapon_Fire", "weapon_fire", "Pyro Cannon",
                 projectile,
                 WeaponEffectType.NumberOfProjectiles, 1,
@@ -48,7 +47,8 @@ namespace EditorTools
             var starterSkill = CreateSkill("Skill_Starter", "skill_starter", "Pulse Burst", 3f, 20, projectile);
             var pierceSkill = CreateSkill("Skill_Pierce", "skill_pierce", "Pierce Line", 4f, 30, projectile);
             var explosiveSkill = CreateSkill("Skill_Explosive", "skill_explosive", "Plasma Grenade", 5f, 40, projectile);
-            var freezeSkill = CreateSkill("Skill_Freeze", "skill_freeze", "Cryo Burst", 4.5f, 25, projectile);
+            var lunaSkill = CreateSelfBuffSkill("Skill_Luna_FrostVeil", "skill_luna_frost_veil", "Frost Veil",
+                8f, 6f, StatModifierType.FrozenDurationFlat, 2.5f);
             var fireSkill = CreateSkill("Skill_Fire", "skill_fire", "Fireball", 3.5f, 35, projectile);
 
             var heroStarter = CreateHero("Hero_Starter", "hero_starter", "Pulse Operative",
@@ -60,8 +60,8 @@ namespace EditorTools
             var heroExplosive = CreateHero("Hero_Explosive", "hero_explosive", "Demolitionist",
                 explosiveWeapon, explosiveSkill, visualPrefab, false, 2, 250,
                 maxHealth: 140, moveSpeed: 9, attackDamage: 32, attackCooldown: 0.55f, critChance: 0.08f);
-            var heroFreeze = CreateHero("Hero_Freeze", "hero_freeze", "Cryo Tech",
-                freezeWeapon, freezeSkill, visualPrefab, false, 3, 250,
+            var heroLuna = CreateHero("Hero_Luna", "hero_luna", "Luna",
+                lunaWeapon, lunaSkill, lunaVisual, false, 3, 250,
                 maxHealth: 150, moveSpeed: 10, attackDamage: 24, attackCooldown: 0.5f, critChance: 0.1f);
             var heroFire = CreateHero("Hero_Fire", "hero_fire", "Pyro Runner",
                 fireWeapon, fireSkill, visualPrefab, false, 4, 250,
@@ -70,7 +70,7 @@ namespace EditorTools
             var catalog = LoadOrCreateAsset<HeroCatalogSO>(CatalogPath, "HeroCatalog_Global");
             catalog.heroes = new System.Collections.Generic.List<HeroSO>
             {
-                heroStarter, heroPierce, heroExplosive, heroFreeze, heroFire
+                heroStarter, heroPierce, heroExplosive, heroLuna, heroFire
             };
 
             EditorUtility.SetDirty(catalog);
@@ -137,6 +137,30 @@ namespace EditorTools
             return skill;
         }
 
+        private static HeroSkillSO CreateSelfBuffSkill(string fileName, string skillId, string displayName,
+            float cooldown, float duration, StatModifierType modifierType, float modifierValue)
+        {
+            var path = $"{SkillFolder}/{fileName}.asset";
+            var skill = LoadOrCreateAsset<HeroSkillSO>(path, fileName);
+            skill.skillId = skillId;
+            skill.displayName = displayName;
+            skill.description = displayName;
+            skill.cooldown = cooldown;
+            skill.damage = 0;
+            skill.deliveryType = SkillDeliveryType.SelfBuff;
+            skill.buffConfig = new BuffSkillConfig
+            {
+                duration = duration,
+                refreshOnReuse = true,
+                modifiers = new System.Collections.Generic.List<StatModifier>
+                {
+                    new StatModifier { type = modifierType, value = modifierValue }
+                }
+            };
+            EditorUtility.SetDirty(skill);
+            return skill;
+        }
+
         private static HeroSO CreateHero(string fileName, string heroId, string displayName,
             WeaponSO weapon, HeroSkillSO skill, GameObject visualPrefab,
             bool unlockedByDefault, int sortOrder, int unlockCost,
@@ -150,7 +174,8 @@ namespace EditorTools
             hero.sortOrder = sortOrder;
             hero.boundWeapon = weapon;
             hero.skill = skill;
-            hero.visualPrefab = visualPrefab;
+            if (visualPrefab != null)
+                hero.visualPrefab = visualPrefab;
             hero.unlockedByDefault = unlockedByDefault;
             hero.unlockCost = unlockCost;
             hero.maxHealth = maxHealth;
@@ -161,6 +186,12 @@ namespace EditorTools
 
             EditorUtility.SetDirty(hero);
             return hero;
+        }
+
+        private static GameObject LoadVisualPrefab(string fileName)
+        {
+            var path = $"{VisualFolder}/{fileName}.prefab";
+            return AssetDatabase.LoadAssetAtPath<GameObject>(path);
         }
 
         private static GameObject EnsureDefaultVisualPrefab()

@@ -19,7 +19,7 @@ MonoBehaviour:
   uiPurchase: {fileID: 8300000, guid: 4378cba75df1b28438373bcaee4b7964, type: 3}
   sfxLoading: {fileID: 8300000, guid: 2e35c68c8068ea3488077660804ad91c, type: 3}
   musicLobby: {fileID: 8300000, guid: 3f14a2bdd6e6eab47860411f32f0a242, type: 3}
-  musicBattle: {fileID: 8300000, guid: 50ad3dccfb1aa4ca8a2bd79aa0f1ebe0, type: 3}
+  musicBattle: {fileID: 8300000, guid: 70a73ae6b724be24e88254c2261d9820, type: 3}
   musicBoss: {fileID: 8300000, guid: 98b51e3b5175e48ac895e685c85a53df, type: 3}
   stingerWin: {fileID: 8300000, guid: e00ac121338f9344b8e1da98b29b0e7b, type: 3}
   stingerLose: {fileID: 8300000, guid: f32401a57cf6f934db488b8ec58231c4, type: 3}
@@ -27,19 +27,19 @@ MonoBehaviour:
   playerAttack: {fileID: 8300000, guid: a736163d69ec4ed4cb98da950a65b952, type: 3}
   playerSkill: {fileID: 8300000, guid: fec3669a19f691e4aa5d2ec9d272e3e3, type: 3}
   playerDash: {fileID: 8300000, guid: 70a956bfc54122341a59723a7282d085, type: 3}
-  playerHit: {fileID: 8300000, guid: 15fe9675f9ca746caa2a2a811a2e76ab, type: 3}
-  playerDeath: {fileID: 0}
+  playerHit: {fileID: 8300000, guid: ba0af24b80669794892b0a0fd2e009f3, type: 3}
+  playerDeath: {fileID: 8300000, guid: ba0af24b80669794892b0a0fd2e009f3, type: 3}
   playerLevelUp: {fileID: 8300000, guid: 8b5b83bddb30c1f4caa804163ac087db, type: 3}
   playerHeal: {fileID: 8300000, guid: 95455718b254ffe47a652d5f365c740b, type: 3}
   enemyHit: {fileID: 8300000, guid: 15fe9675f9ca746caa2a2a811a2e76ab, type: 3}
   enemyDeath: {fileID: 0}
-  enemyMeleeSwing: {fileID: 0}
+  enemyMeleeSwing: {fileID: 8300000, guid: 2475ad2dcded3df429db30606fa5f438, type: 3}
   enemyRangedShoot: {fileID: 0}
   projectileHit: {fileID: 0}
   explosion: {fileID: 0}
-  roomEnter: {fileID: 0}
-  roomClear: {fileID: 0}
-  doorOpen: {fileID: 0}
+  roomEnter: {fileID: 8300000, guid: 8023a00db3b108b48b4846f755c40dbb, type: 3}
+  roomClear: {fileID: 8300000, guid: f01119516abff3a4d86a2a4dc0ad9c7d, type: 3}
+  doorOpen: {fileID: 8300000, guid: 8023a00db3b108b48b4846f755c40dbb, type: 3}
   goldPickup: {fileID: 8300000, guid: 2c2b1c9ead2e6464287480d0026ab608, type: 3}
   cardReveal: {fileID: 8300000, guid: 8285daf4ed73b5742a6ad547da15fcc9, type: 3}
   cardSelect: {fileID: 8300000, guid: 8285daf4ed73b5742a6ad547da15fcc9, type: 3}

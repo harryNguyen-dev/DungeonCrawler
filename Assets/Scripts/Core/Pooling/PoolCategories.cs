@@ -17,6 +17,7 @@ namespace Core
             id == PoolId.WormJuniorProjectile ||
             id == PoolId.FinnAttack ||
             id == PoolId.OthaAttack ||
+            id == PoolId.LunaAttack ||
             id == PoolId.ImpMisChiefJuniorProjectile_1 ||
             id == PoolId.ImpMisChiefJuniorProjectile_2;
     }

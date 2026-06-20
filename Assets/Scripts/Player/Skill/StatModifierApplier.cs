@@ -55,6 +55,10 @@ namespace PlayerController.Skill
                     stats.ModifyProjectileCount(projDelta);
                     return new AppliedStatDelta(modifier.type, 0f, projDelta);
 
+                case StatModifierType.FrozenDurationFlat:
+                    stats.ModifyWeaponEffect(WeaponEffectType.FrozenDuration, modifier.value);
+                    return new AppliedStatDelta(modifier.type, modifier.value, 0);
+
                 default:
                     Debug.LogWarning($"[StatModifierApplier] Unsupported modifier type {modifier.type}");
                     return new AppliedStatDelta(modifier.type, 0f, 0);
@@ -88,6 +92,10 @@ namespace PlayerController.Skill
 
                 case StatModifierType.ProjectileCountFlat:
                     stats.ModifyProjectileCount(-delta.IntDelta);
+                    break;
+
+                case StatModifierType.FrozenDurationFlat:
+                    stats.ModifyWeaponEffect(WeaponEffectType.FrozenDuration, -delta.FloatDelta);
                     break;
             }
         }

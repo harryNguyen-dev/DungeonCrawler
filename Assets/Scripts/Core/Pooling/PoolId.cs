@@ -23,5 +23,6 @@ namespace Core
         OthaAttack = 105,
         ImpMisChiefJuniorProjectile_1 = 106,
         ImpMisChiefJuniorProjectile_2 = 107,
+        LunaAttack = 108,
     }
 }

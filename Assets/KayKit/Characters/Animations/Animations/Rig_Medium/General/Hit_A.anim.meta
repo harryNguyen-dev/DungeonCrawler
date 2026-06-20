@@ -1,11 +1,5 @@
 fileFormatVersion: 2
 guid: 5723a5830e34aa347a0f04446374a546
-NativeFormatImporter:
-  externalObjects: {}
-  mainObjectFileID: 7400000
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 290679
@@ -13,3 +7,9 @@ AssetOrigin:
   packageVersion: 2.0.1
   assetPath: Assets/KayKit/Characters/Animations/Animations/Rig_Medium/General/Hit_A.anim
   uploadId: 831988
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

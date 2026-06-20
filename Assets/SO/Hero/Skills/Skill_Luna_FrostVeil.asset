@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27fc2e2865ceee74ebe329c69035e9ad, type: 3}
-  m_Name: Skill_Fire
+  m_Name: Skill_Luna_FrostVeil
   m_EditorClassIdentifier: Assembly-CSharp::SO.HeroSkillSO
-  skillId: skill_fire
-  displayName: Fireball
-  description: Fireball
-  icon: {fileID: 0}
-  deliveryType: 0
-  cooldown: 3.5
+  skillId: skill_luna_frost_veil
+  displayName: Frost Veil
+  description: Frost Veil
+  icon: {fileID: 21300000, guid: ae2a1d53a7f187e49a916dc1d0b0a535, type: 3}
+  deliveryType: 4
+  cooldown: 8
   damageMode: 0
-  damage: 35
-  damagePercent: 0.45
-  range: 12
-  projectileSpeed: 20
+  damage: 0
+  damagePercent: 0
+  range: 0
+  projectileSpeed: 0
   skillProjectilePrefab: {fileID: 0}
   skillEffects: []
   coneConfig:
@@ -31,8 +31,10 @@ MonoBehaviour:
     spawnDelayMs: 0
     centerPelletPierce: 0
   buffConfig:
-    duration: 0
-    refreshOnReuse: 0
-    modifiers: []
+    duration: 6
+    refreshOnReuse: 1
+    modifiers:
+    - type: 7
+      value: 2.5
   coneAngle: 45
   aoeRadius: 3

@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7ee4f0f58ce226469fd8e748429bec6, type: 3}
-  m_Name: Hero_Freeze
+  m_Name: Hero_Fire
   m_EditorClassIdentifier: Assembly-CSharp::SO.HeroSO
-  heroId: hero_freeze
-  displayName: Cryo Tech
-  description: Cryo Tech
+  heroId: hero_fire
+  displayName: Pyro Runner
+  description: Pyro Runner
   icon: {fileID: 0}
-  sortOrder: 3
+  sortOrder: 4
   maxHealth: 150
   moveSpeed: 10
-  attackDamage: 24
-  attackCooldown: 0.5
-  critChance: 0.1
-  boundWeapon: {fileID: 11400000, guid: 6ef9751676a64e20a633d7cfa290b5a1, type: 2}
-  skill: {fileID: 11400000, guid: c38958d62188d0442bcd77ac6c3b3e69, type: 2}
-  visualPrefab: {fileID: 2729737082750660509, guid: 994e61fb5c0d0eb4a8617b43290cf647, type: 3}
+  attackDamage: 30
+  attackCooldown: 0.45
+  critChance: 0.12
+  boundWeapon: {fileID: 11400000, guid: 5a15cb5feffe63c499dc1935a8715064, type: 2}
+  skill: {fileID: 11400000, guid: 1dcf1a8ab10cea942b76c841b6bb12ff, type: 2}
+  visualPrefab: {fileID: 1310117347759843255, guid: a64bbdce03c5daf49971a60816523dde, type: 3}
   visualLocalPosition: {x: 0, y: 0, z: 0}
   visualLocalEulerAngles: {x: 0, y: 0, z: 0}
   visualLocalScale: {x: 1, y: 1, z: 1}
