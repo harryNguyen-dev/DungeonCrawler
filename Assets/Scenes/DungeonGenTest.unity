@@ -229,8 +229,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267220505da4b5347a9d8f053ed21139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCGeneration
-  gridSize: 20
-  cellSize: 20
+  iterationDelayMs: 0
+  gridSize: 10
+  cellSize: 40
   allTiles:
   - {fileID: 11400000, guid: 55769585c42da3a4fb66e1cd7ff94b33, type: 2}
   - {fileID: 11400000, guid: ff89efd5329767e4b900a08578c391c0, type: 2}
@@ -258,12 +259,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7d25b2ed122ab4248a4c7b82f9fb1b8f, type: 2}
   - {fileID: 11400000, guid: e21d431983d9e364cb24f0d880f93276, type: 2}
   - {fileID: 11400000, guid: 4a1530ddcbb0cd3438ef1d7df023399c, type: 2}
-  roomsToPlace: 20
+  roomsToPlace: 5
   roomEdgeMargin: 1
   spawnParent: {fileID: 1751438101}
+  generationCameraTarget: {fileID: 0}
+  followGeneratedTiles: 1
+  generationCameraTargetHeight: 50
+  overviewCameraDistance: 50
+  overviewCameraVerticalAngle: 50
   branchingFactor: 2
-  useFixedSeed: 0
-  randomSeed: 1181860801
+  useFixedSeed: 1
+  randomSeed: 1107078218
 --- !u!1 &246448068
 GameObject:
   m_ObjectHideFlags: 0

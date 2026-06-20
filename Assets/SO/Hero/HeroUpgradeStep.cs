@@ -9,6 +9,7 @@ namespace SO
         public int cost;
         public int damageBonus;
         public int healthBonus;
+        public int fireDamageBonus;
         public float cooldownReduction;
         [Range(0f, 1f)]
         public float critChanceBonus;

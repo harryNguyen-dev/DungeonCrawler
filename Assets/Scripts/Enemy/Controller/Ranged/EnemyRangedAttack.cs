@@ -82,7 +82,7 @@ namespace EnemyController
                 var projectileScript = bulletObj.GetComponent<EnemyProjectile>();
                 if (projectileScript != null)
                 {
-                    projectileScript.Setup(enemyData.Damage);
+                    projectileScript.Setup(GetEffectiveDamage());
                 }
                 else
                 {

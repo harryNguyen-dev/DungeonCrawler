@@ -19,10 +19,14 @@ MonoBehaviour:
   roomEnterDelayMs: 500
   enemyPool:
   - prefab: {fileID: 7300521822030121898, guid: d97a8d1847edbc54cb1fc94afcc4d3d0, type: 3}
-    weight: 50
+    weight: 34
     healthMultiplier: 1
     damageMultiplier: 1
   - prefab: {fileID: 7300521822030121898, guid: fd08bae9289e1d74b8c735be9709ba39, type: 3}
-    weight: 50
+    weight: 33
+    healthMultiplier: 1
+    damageMultiplier: 1
+  - prefab: {fileID: 7300521822030121898, guid: 3321688a488f8d346803067249606818, type: 3}
+    weight: 33
     healthMultiplier: 1
     damageMultiplier: 1

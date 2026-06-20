@@ -23,8 +23,8 @@ namespace PlayerController
         public event Action<int> OnIncreaseAmor;
         public void InvokeIncreaseAmor(int amount) => OnIncreaseAmor?.Invoke(amount);
         
-        public event Action<int> OnIncreaseMoveSpeed;
-        public void InvokeIncreaseMoveSpeed(int amount) => OnIncreaseMoveSpeed?.Invoke(amount);
+        public event Action<float> OnIncreaseMoveSpeed;
+        public void InvokeIncreaseMoveSpeed(float amount) => OnIncreaseMoveSpeed?.Invoke(amount);
         
         public event Action<int> OnNumberOfProjectileChanged;
         public void InvokeNumberOfProjectileChanged(int amount) => OnNumberOfProjectileChanged?.Invoke(amount);

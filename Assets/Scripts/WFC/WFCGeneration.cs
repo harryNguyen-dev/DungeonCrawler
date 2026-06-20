@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Core;
@@ -72,15 +74,67 @@ namespace WFC
         /// <summary>Random instance dùng cho toàn bộ generation, đảm bảo deterministic với cùng seed.</summary>
         private System.Random _rand;
 
+        private List<int> _seedFallbackOrder;
+        private int _seedFallbackIndex;
+        private bool _useRandomSeedFallback;
+
+        private bool _isStandaloneGenTestScene;
+        private bool _isGenerating;
+
         private void Awake()
         {
+            _isStandaloneGenTestScene =
+                SceneManager.GetActiveScene().name == SceneManagerCustom.DungeonGenTestSceneName;
+
             roomPlacer = new RoomPlacer(wfc);
             InitializeGrid();
-            Global.GlobalEvents.OnGameStart += HandleDungeonGenerated;
+
+            if (!_isStandaloneGenTestScene)
+                Global.GlobalEvents.OnGameStart += HandleDungeonGenerated;
         }
+
+        private void Start()
+        {
+            if (!_isStandaloneGenTestScene) return;
+
+            Debug.Log("[WFCGeneration] DungeonGenTest — auto-generating (standalone, no OnGameStart). Press Space to regenerate.");
+            RunTestGeneration(incrementSeed: false).Forget();
+        }
+
+        private void Update()
+        {
+            if (!_isStandaloneGenTestScene || _isGenerating) return;
+            if (Keyboard.current == null || !Keyboard.current.spaceKey.wasPressedThisFrame) return;
+
+            RunTestGeneration(incrementSeed: true).Forget();
+        }
+
+        private async UniTask RunTestGeneration(bool incrementSeed)
+        {
+            _isGenerating = true;
+            try
+            {
+                if (incrementSeed)
+                {
+                    if (useFixedSeed)
+                        randomSeed++;
+                    await ResetAndGenerate(5);
+                }
+                else
+                {
+                    await GenerateWithRetry(5);
+                }
+            }
+            finally
+            {
+                _isGenerating = false;
+            }
+        }
+
         private void OnDestroy()
         {
-            Global.GlobalEvents.OnGameStart -= HandleDungeonGenerated;
+            if (!_isStandaloneGenTestScene)
+                Global.GlobalEvents.OnGameStart -= HandleDungeonGenerated;
         }
 
         private void HandleDungeonGenerated()
@@ -116,6 +170,7 @@ namespace WFC
             GlobalEvents.RaiseDungeonGenerationStarted();
             GlobalEvents.RaiseDungeonGenerationProgress(0f);
             SetDungeonVisualsVisible(false);
+            PrepareSeedFallbackOrder();
 
             int attempts = 0;
             bool success = false;
@@ -159,19 +214,46 @@ namespace WFC
                     GlobalVariable.CurrentSeed = LastStats.seed;
                     return;
                 }
-                else
-                {
-                    Debug.LogWarning($"Attempt {attempts} failed. Retrying...");
-                    ClearSpawnedTiles();
-                    InitializeGrid();
-                    if (!useFixedSeed) randomSeed = UnityEngine.Random.Range(0, 1000000);
-                }
+
+                Debug.LogWarning($"Attempt {attempts} failed (seed={LastGenerationSeed}). Retrying...");
+                ClearSpawnedTiles();
+                InitializeGrid();
+                AdvanceSeedFallback();
             }
 
             if (!success)
             {
                 Debug.LogError("Failed to generate a valid dungeon after max attempts. Check your constraints/tileset.");
             }
+        }
+
+        private void PrepareSeedFallbackOrder()
+        {
+            _seedFallbackIndex = 0;
+            _useRandomSeedFallback = false;
+            _seedFallbackOrder = GlobalVariable.CurrentLevel?.BuildWfcSeedFallbackOrder();
+        }
+
+        private void AdvanceSeedFallback()
+        {
+            if (GlobalVariable.CurrentLevel != null)
+            {
+                if (_seedFallbackOrder != null && _seedFallbackIndex + 1 < _seedFallbackOrder.Count)
+                {
+                    _seedFallbackIndex++;
+                    Debug.LogWarning(
+                        $"WFC seed fallback: trying seed {_seedFallbackOrder[_seedFallbackIndex]} " +
+                        $"({_seedFallbackIndex + 1}/{_seedFallbackOrder.Count}).");
+                    return;
+                }
+
+                _useRandomSeedFallback = true;
+                Debug.LogWarning("WFC seed fallback: predefined seeds exhausted, using random seed.");
+                return;
+            }
+
+            if (!useFixedSeed)
+                randomSeed = UnityEngine.Random.Range(0, 1000000);
         }
 
         private void ClearSpawnedTiles()
@@ -269,7 +351,14 @@ namespace WFC
         private void ApplyGenerationRandomSeed()
         {
             if (GlobalVariable.CurrentLevel != null)
-                LastGenerationSeed = GlobalVariable.CurrentLevel.wfcSeed;
+            {
+                if (_useRandomSeedFallback)
+                    LastGenerationSeed = UnityEngine.Random.Range(0, int.MaxValue);
+                else if (_seedFallbackOrder != null && _seedFallbackOrder.Count > 0)
+                    LastGenerationSeed = _seedFallbackOrder[_seedFallbackIndex];
+                else
+                    LastGenerationSeed = GlobalVariable.CurrentLevel.PickWfcSeed();
+            }
             else if (useFixedSeed)
                 LastGenerationSeed = randomSeed;
             else

@@ -38,9 +38,8 @@ namespace PlayerController.Skill
                     return new AppliedStatDelta(modifier.type, modifier.value, 0);
 
                 case StatModifierType.MoveSpeedFlat:
-                    var moveDelta = Mathf.RoundToInt(modifier.value);
-                    stats.UpgradeIncreaseRunSpeed(moveDelta);
-                    return new AppliedStatDelta(modifier.type, 0f, moveDelta);
+                    stats.UpgradeIncreaseRunSpeed(modifier.value);
+                    return new AppliedStatDelta(modifier.type, modifier.value, 0);
 
                 case StatModifierType.CritChanceFlat:
                     stats.ModifyCritChance(modifier.value);
@@ -79,7 +78,7 @@ namespace PlayerController.Skill
                     break;
 
                 case StatModifierType.MoveSpeedFlat:
-                    stats.UpgradeIncreaseRunSpeed(-delta.IntDelta);
+                    stats.UpgradeIncreaseRunSpeed(-delta.FloatDelta);
                     break;
 
                 case StatModifierType.CritChanceFlat:

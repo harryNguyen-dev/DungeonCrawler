@@ -17,11 +17,11 @@ MonoBehaviour:
   description: Pulse Operative
   icon: {fileID: 21300000, guid: c822dd3cbc6e38849b4530fdbc5f5f47, type: 3}
   sortOrder: 0
-  maxHealth: 250
+  maxHealth: 240
   moveSpeed: 10
-  attackDamage: 15
+  attackDamage: 16
   attackCooldown: 0.4
-  critChance: 0.5
+  critChance: 0.3
   boundWeapon: {fileID: 11400000, guid: 5d483dab75fe4c03b488e7a2790a3243, type: 2}
   skill: {fileID: 11400000, guid: b7b15107c59f1a8448e8f8791ad07d48, type: 2}
   visualPrefab: {fileID: 2729737082750660509, guid: 994e61fb5c0d0eb4a8617b43290cf647, type: 3}
@@ -31,13 +31,27 @@ MonoBehaviour:
   unlockedByDefault: 1
   unlockCost: 0
   upgrades:
-  - cost: 150
-    damageBonus: 15
-    healthBonus: 50
-    cooldownReduction: 0.1
-    critChanceBonus: 0.1
-  - cost: 150
-    damageBonus: 15
-    healthBonus: 50
-    cooldownReduction: 0.1
-    critChanceBonus: 0.1
+  - cost: 1200
+    damageBonus: 3
+    healthBonus: 30
+    fireDamageBonus: 0
+    cooldownReduction: 0.03
+    critChanceBonus: 0.02
+  - cost: 1500
+    damageBonus: 3
+    healthBonus: 30
+    fireDamageBonus: 0
+    cooldownReduction: 0.03
+    critChanceBonus: 0.03
+  - cost: 1800
+    damageBonus: 3
+    healthBonus: 30
+    fireDamageBonus: 0
+    cooldownReduction: 0.02
+    critChanceBonus: 0.03
+  - cost: 2200
+    damageBonus: 3
+    healthBonus: 30
+    fireDamageBonus: 0
+    cooldownReduction: 0.02
+    critChanceBonus: 0.02

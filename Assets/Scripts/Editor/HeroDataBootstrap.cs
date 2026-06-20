@@ -15,7 +15,9 @@ namespace EditorTools
         private const string CatalogPath = "Assets/SO/Hero/HeroCatalog_Global.asset";
         private const string DashConfigPath = "Assets/SO/Hero/DashConfig_Default.asset";
         private const string PlayerPrefabPath = "Assets/Prefabs/Characters/Hero/Player.prefab";
-        private const string ProjectilePrefabPath = "Assets/Prefabs/Projectile/PrefabAttack.prefab";
+        private const string FinnProjectilePath = "Assets/Prefabs/Projectile/FinnAttack.prefab";
+        private const string OthaProjectilePath = "Assets/Prefabs/Projectile/OThaAttack.prefab";
+        private const string LunaProjectilePath = "Assets/Prefabs/Projectile/LunaAttack.prefab";
 
         [MenuItem("DungeonCrawler/Bootstrap Hero Data")]
         public static void Bootstrap()
@@ -23,54 +25,46 @@ namespace EditorTools
             EnsureFolders();
 
             var dashConfig = LoadOrCreateAsset<DashConfigSO>(DashConfigPath, "DashConfig_Default");
-            var projectile = AssetDatabase.LoadAssetAtPath<GameObject>(ProjectilePrefabPath);
-            var visualPrefab = EnsureDefaultVisualPrefab();
-            var lunaVisual = LoadVisualPrefab("HeroVisual_Luna") ?? visualPrefab;
+            var finnProjectile = AssetDatabase.LoadAssetAtPath<GameObject>(FinnProjectilePath);
+            var othaProjectile = AssetDatabase.LoadAssetAtPath<GameObject>(OthaProjectilePath);
+            var lunaProjectile = AssetDatabase.LoadAssetAtPath<GameObject>(LunaProjectilePath);
+            var finnVisual = LoadVisualPrefab("HeroVisual_Finn") ?? EnsureDefaultVisualPrefab();
+            var othaVisual = LoadVisualPrefab("HeroVisual_OTha") ?? finnVisual;
+            var lunaVisual = LoadVisualPrefab("HeroVisual_Luna") ?? finnVisual;
 
-            var starterWeapon = EnsureWeapon("Weapon_Starter", "weapon_starter", "Pulse Rifle",
-                projectile, WeaponEffectType.NumberOfProjectiles, 1);
-            var pierceWeapon = EnsureWeapon("Weapon_Pierce", "weapon_pierce", "Piercing Wave",
-                projectile,
-                WeaponEffectType.NumberOfProjectiles, 1,
-                WeaponEffectType.PierceCount, 3);
-            var explosiveWeapon = EnsureWeapon("Weapon_Explosive", "weapon_explosive", "Plasma Launcher",
-                projectile,
-                WeaponEffectType.NumberOfProjectiles, 1,
-                WeaponEffectType.ExplosiveRadius, 2.5f);
+            var finnWeapon = EnsureWeapon("Weapon_Starter", "weapon_starter", "Pulse Rifle",
+                finnProjectile, WeaponEffectType.NumberOfProjectiles, 1);
+            var othaWeapon = EnsureWeapon("Weapon_Otha", "weapon_otha", "Pyro Cannon",
+                othaProjectile,
+                WeaponEffectType.NumberOfProjectiles, 5,
+                WeaponEffectType.FireDamage, 6);
             var lunaWeapon = EnsureWeapon("Weapon_Luna", "weapon_luna", "Moonbow",
-                projectile, WeaponEffectType.NumberOfProjectiles, 1);
-            var fireWeapon = EnsureWeapon("Weapon_Fire", "weapon_fire", "Pyro Cannon",
-                projectile,
+                lunaProjectile,
                 WeaponEffectType.NumberOfProjectiles, 1,
-                WeaponEffectType.FireDamage, 8);
+                WeaponEffectType.PierceCount, 1);
 
-            var starterSkill = CreateSkill("Skill_Starter", "skill_starter", "Pulse Burst", 3f, 20, projectile);
-            var pierceSkill = CreateSkill("Skill_Pierce", "skill_pierce", "Pierce Line", 4f, 30, projectile);
-            var explosiveSkill = CreateSkill("Skill_Explosive", "skill_explosive", "Plasma Grenade", 5f, 40, projectile);
+            var finnSkill = CreateConeSkill("Skill_Starter", "skill_starter", "Pulse Burst", 3f, finnProjectile);
+            var othaSkill = CreateOverdriveSkill("Skill_Otha_Overdrive", "skill_otha_overdrive", "Inferno Overdrive");
             var lunaSkill = CreateSelfBuffSkill("Skill_Luna_FrostVeil", "skill_luna_frost_veil", "Frost Veil",
                 8f, 6f, StatModifierType.FrozenDurationFlat, 2.5f);
-            var fireSkill = CreateSkill("Skill_Fire", "skill_fire", "Fireball", 3.5f, 35, projectile);
 
-            var heroStarter = CreateHero("Hero_Starter", "hero_starter", "Pulse Operative",
-                starterWeapon, starterSkill, visualPrefab, true, 0, 0,
-                maxHealth: 150, moveSpeed: 10, attackDamage: 30, attackCooldown: 0.5f, critChance: 0.1f);
-            var heroPierce = CreateHero("Hero_Pierce", "hero_pierce", "Pierce Striker",
-                pierceWeapon, pierceSkill, visualPrefab, false, 1, 250,
-                maxHealth: 150, moveSpeed: 10, attackDamage: 30, attackCooldown: 0.5f, critChance: 0.12f);
-            var heroExplosive = CreateHero("Hero_Explosive", "hero_explosive", "Demolitionist",
-                explosiveWeapon, explosiveSkill, visualPrefab, false, 2, 250,
-                maxHealth: 140, moveSpeed: 9, attackDamage: 32, attackCooldown: 0.55f, critChance: 0.08f);
+            var heroFinn = CreateHero("Hero_Finn", "hero_starter", "Finn",
+                finnWeapon, finnSkill, finnVisual, true, 0, 0,
+                maxHealth: 240, moveSpeed: 10, attackDamage: 16, attackCooldown: 0.4f, critChance: 0.3f,
+                CreateFinnUpgrades());
+            var heroOtha = CreateHero("Hero_OTha", "hero_otha", "Otha",
+                othaWeapon, othaSkill, othaVisual, false, 1, 350,
+                maxHealth: 150, moveSpeed: 10, attackDamage: 18, attackCooldown: 0.5f, critChance: 0.1f,
+                CreateOthaUpgrades());
             var heroLuna = CreateHero("Hero_Luna", "hero_luna", "Luna",
-                lunaWeapon, lunaSkill, lunaVisual, false, 3, 250,
-                maxHealth: 150, moveSpeed: 10, attackDamage: 24, attackCooldown: 0.5f, critChance: 0.1f);
-            var heroFire = CreateHero("Hero_Fire", "hero_fire", "Pyro Runner",
-                fireWeapon, fireSkill, visualPrefab, false, 4, 250,
-                maxHealth: 150, moveSpeed: 10, attackDamage: 30, attackCooldown: 0.45f, critChance: 0.12f);
+                lunaWeapon, lunaSkill, lunaVisual, false, 2, 350,
+                maxHealth: 170, moveSpeed: 11, attackDamage: 22, attackCooldown: 0.45f, critChance: 0.1f,
+                CreateLunaUpgrades());
 
             var catalog = LoadOrCreateAsset<HeroCatalogSO>(CatalogPath, "HeroCatalog_Global");
             catalog.heroes = new System.Collections.Generic.List<HeroSO>
             {
-                heroStarter, heroPierce, heroExplosive, heroLuna, heroFire
+                heroFinn, heroOtha, heroLuna
             };
 
             EditorUtility.SetDirty(catalog);
@@ -79,8 +73,32 @@ namespace EditorTools
             AssetDatabase.Refresh();
 
             WirePlayerPrefab(dashConfig);
-            Debug.Log("[HeroDataBootstrap] Hero data created/updated.");
+            Debug.Log("[HeroDataBootstrap] Finn / Otha / Luna hero data created/updated.");
         }
+
+        private static HeroUpgradeStep[] CreateFinnUpgrades() => new[]
+        {
+            new HeroUpgradeStep { cost = 120, damageBonus = 3, healthBonus = 30, cooldownReduction = 0.03f, critChanceBonus = 0.02f },
+            new HeroUpgradeStep { cost = 150, damageBonus = 3, healthBonus = 30, cooldownReduction = 0.03f, critChanceBonus = 0.03f },
+            new HeroUpgradeStep { cost = 180, damageBonus = 3, healthBonus = 30, cooldownReduction = 0.02f, critChanceBonus = 0.03f },
+            new HeroUpgradeStep { cost = 220, damageBonus = 3, healthBonus = 30, cooldownReduction = 0.02f, critChanceBonus = 0.02f },
+        };
+
+        private static HeroUpgradeStep[] CreateOthaUpgrades() => new[]
+        {
+            new HeroUpgradeStep { cost = 140, damageBonus = 2, healthBonus = 15, cooldownReduction = 0.02f, fireDamageBonus = 1 },
+            new HeroUpgradeStep { cost = 170, damageBonus = 2, healthBonus = 15, cooldownReduction = 0.02f, fireDamageBonus = 1 },
+            new HeroUpgradeStep { cost = 200, damageBonus = 1, healthBonus = 15, cooldownReduction = 0.02f, critChanceBonus = 0.02f },
+            new HeroUpgradeStep { cost = 230, damageBonus = 1, healthBonus = 15, cooldownReduction = 0.02f, critChanceBonus = 0.01f },
+        };
+
+        private static HeroUpgradeStep[] CreateLunaUpgrades() => new[]
+        {
+            new HeroUpgradeStep { cost = 130, damageBonus = 2, healthBonus = 25, cooldownReduction = 0.02f, critChanceBonus = 0.02f },
+            new HeroUpgradeStep { cost = 160, damageBonus = 2, healthBonus = 25, cooldownReduction = 0.02f, critChanceBonus = 0.02f },
+            new HeroUpgradeStep { cost = 190, damageBonus = 2, healthBonus = 25, cooldownReduction = 0.02f, critChanceBonus = 0.01f },
+            new HeroUpgradeStep { cost = 220, damageBonus = 2, healthBonus = 25, cooldownReduction = 0.02f, critChanceBonus = 0.01f },
+        };
 
         private static void EnsureFolders()
         {
@@ -120,8 +138,8 @@ namespace EditorTools
             return weapon;
         }
 
-        private static HeroSkillSO CreateSkill(string fileName, string skillId, string displayName,
-            float cooldown, int damage, GameObject projectilePrefab)
+        private static HeroSkillSO CreateConeSkill(string fileName, string skillId, string displayName,
+            float cooldown, GameObject projectilePrefab)
         {
             var path = $"{SkillFolder}/{fileName}.asset";
             var skill = LoadOrCreateAsset<HeroSkillSO>(path, fileName);
@@ -129,10 +147,43 @@ namespace EditorTools
             skill.displayName = displayName;
             skill.description = displayName;
             skill.cooldown = cooldown;
-            skill.damage = damage;
-            skill.deliveryType = SkillDeliveryType.Projectile;
+            skill.damageMode = SkillDamageMode.RollAttackDamage;
+            skill.damagePercent = 0.45f;
+            skill.deliveryType = SkillDeliveryType.Cone;
             skill.skillProjectilePrefab = projectilePrefab;
             skill.projectileSpeed = 20f;
+            skill.range = 12f;
+            skill.coneConfig = new ConeSkillConfig
+            {
+                projectileCount = 8,
+                coneAngle = 50f,
+                centerPelletPierce = true
+            };
+            EditorUtility.SetDirty(skill);
+            return skill;
+        }
+
+        private static HeroSkillSO CreateOverdriveSkill(string fileName, string skillId, string displayName)
+        {
+            var path = $"{SkillFolder}/{fileName}.asset";
+            var skill = LoadOrCreateAsset<HeroSkillSO>(path, fileName);
+            skill.skillId = skillId;
+            skill.displayName = displayName;
+            skill.description = displayName;
+            skill.cooldown = 12f;
+            skill.damage = 0;
+            skill.deliveryType = SkillDeliveryType.SelfBuff;
+            skill.buffConfig = new BuffSkillConfig
+            {
+                duration = 5f,
+                refreshOnReuse = true,
+                modifiers = new System.Collections.Generic.List<StatModifier>
+                {
+                    new StatModifier { type = StatModifierType.AttackCooldownFlat, value = -0.15f },
+                    new StatModifier { type = StatModifierType.AttackDamagePercent, value = 0.35f },
+                    new StatModifier { type = StatModifierType.FireDamageFlat, value = 4f },
+                }
+            };
             EditorUtility.SetDirty(skill);
             return skill;
         }
@@ -164,7 +215,8 @@ namespace EditorTools
         private static HeroSO CreateHero(string fileName, string heroId, string displayName,
             WeaponSO weapon, HeroSkillSO skill, GameObject visualPrefab,
             bool unlockedByDefault, int sortOrder, int unlockCost,
-            int maxHealth, int moveSpeed, int attackDamage, float attackCooldown, float critChance)
+            int maxHealth, int moveSpeed, int attackDamage, float attackCooldown, float critChance,
+            HeroUpgradeStep[] upgrades)
         {
             var path = $"{HeroAssetsFolder}/{fileName}.asset";
             var hero = LoadOrCreateAsset<HeroSO>(path, fileName);
@@ -183,6 +235,7 @@ namespace EditorTools
             hero.attackDamage = attackDamage;
             hero.attackCooldown = attackCooldown;
             hero.critChance = critChance;
+            hero.upgrades = upgrades;
 
             EditorUtility.SetDirty(hero);
             return hero;

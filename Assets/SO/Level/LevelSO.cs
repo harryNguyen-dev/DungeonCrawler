@@ -12,7 +12,11 @@ namespace SO
         public string levelId = "ch1_01";
 
         [Header("Dungeon")]
+        [Tooltip("Seed mặc định khi wfcSeedPool rỗng.")]
         public int wfcSeed;
+
+        [Tooltip("Mỗi lần generate chọn ngẫu nhiên 1 seed từ pool. Rỗng = dùng wfcSeed.")]
+        public List<int> wfcSeedPool = new();
 
         [Tooltip("0 = dùng roomsToPlace mặc định trên WFCGeneration.")]
         [Min(0)] public int roomsToPlaceOverride;
@@ -38,6 +42,47 @@ namespace SO
         [Min(0.1f)] public float enemyDamageScale = 1f;
 
         public string DisplayLabel => $"Chap {chapter}.{stageIndex}";
+
+        public int PickWfcSeed()
+        {
+            if (wfcSeedPool == null || wfcSeedPool.Count == 0)
+                return wfcSeed;
+
+            return wfcSeedPool[Random.Range(0, wfcSeedPool.Count)];
+        }
+
+        /// <summary>
+        /// Thứ tự thử seed khi generate fail: random 1 seed từ pool, các seed còn lại, rồi wfcSeed nếu chưa có.
+        /// </summary>
+        public List<int> BuildWfcSeedFallbackOrder()
+        {
+            var order = new List<int>();
+            if (wfcSeedPool == null || wfcSeedPool.Count == 0)
+            {
+                order.Add(wfcSeed);
+                return order;
+            }
+
+            int firstIndex = Random.Range(0, wfcSeedPool.Count);
+            order.Add(wfcSeedPool[firstIndex]);
+
+            for (int i = 0; i < wfcSeedPool.Count; i++)
+            {
+                if (i == firstIndex)
+                    continue;
+
+                AddUniqueSeed(order, wfcSeedPool[i]);
+            }
+
+            AddUniqueSeed(order, wfcSeed);
+            return order;
+        }
+
+        private static void AddUniqueSeed(List<int> order, int seed)
+        {
+            if (!order.Contains(seed))
+                order.Add(seed);
+        }
 
         public WaveConfigSO PickCombatWave(int seedSalt) => PickFromPool(combatWavePool, seedSalt);
 

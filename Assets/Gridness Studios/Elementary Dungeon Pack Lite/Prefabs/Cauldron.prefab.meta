@@ -1,10 +1,5 @@
 fileFormatVersion: 2
 guid: d429c8a2280208c43ace747d82fa1864
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 242692
@@ -12,3 +7,8 @@ AssetOrigin:
   packageVersion: 1.0
   assetPath: Assets/Gridness Studios/Elementary Dungeon Pack Lite/Prefabs/Cauldron.prefab
   uploadId: 551791
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

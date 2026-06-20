@@ -50,7 +50,7 @@ namespace PlayerController
             }
         }
 
-        private void ModifyMoveSpeed(int moveSpeed)
+        private void ModifyMoveSpeed(float moveSpeed)
         {
             this.moveSpeed = moveSpeed;
         }

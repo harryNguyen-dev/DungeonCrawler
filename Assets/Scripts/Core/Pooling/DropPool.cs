@@ -50,6 +50,23 @@ namespace Core
                 Spawn(DropType.Exp, position, expValue);
         }
 
+        /// <summary>Spawn several gold pickups that sum to totalGold (e.g. chest reward).</summary>
+        public void SpawnGoldBurst(Vector3 position, int totalGold, int pickupCount = 6)
+        {
+            if (totalGold <= 0) return;
+
+            pickupCount = Mathf.Max(1, pickupCount);
+            var baseValue = totalGold / pickupCount;
+            var remainder = totalGold % pickupCount;
+
+            for (var i = 0; i < pickupCount; i++)
+            {
+                var value = baseValue + (i < remainder ? 1 : 0);
+                if (value > 0)
+                    Spawn(DropType.Gold, position, value);
+            }
+        }
+
         public void Return(DropEntity entity)
         {
             if (entity == null || !_active.Remove(entity))

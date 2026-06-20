@@ -25,7 +25,7 @@ namespace SO {
         [Header("Hero stats")]
         public float AttackCooldown;
         public int AttackDamage;
-        public int MoveSpeed;
+        public float MoveSpeed;
         public int MaxHealth;
         public int Amor;
         [Range(0f, 1f)]
@@ -58,9 +58,9 @@ namespace SO {
             foreach (var effect in WeaponEffectsSetup)
             {
                 if (!RuntimeEffects.ContainsKey(effect.EffectType))
-                {
                     RuntimeEffects.Add(effect.EffectType, effect.Value);
-                }
+                else
+                    RuntimeEffects[effect.EffectType] += effect.Value;
             }
         }
         public bool TryGetEffect(WeaponEffectType type, out float value)

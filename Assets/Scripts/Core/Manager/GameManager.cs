@@ -175,7 +175,7 @@ namespace Core
                 TryUnlockNextMap(level, catalog, clearedIndex, starsEarned, out unlockedNewLevel);
             }
 
-            var metaGain = RunEconomy.CalculateMetaGoldGain(runGold, isWin);
+            var metaGain = RunEconomy.CalculateMetaGoldGain(runGold, isWin, starsEarned);
             var totalMeta = Save.LevelProgressService.AddMetaGold(metaGain);
 
             return new RunSummary

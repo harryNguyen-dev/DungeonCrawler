@@ -1,10 +1,5 @@
 fileFormatVersion: 2
 guid: 41996a6ea1c51594381fbbe2d45b1187
-PrefabImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 242692
@@ -12,3 +7,8 @@ AssetOrigin:
   packageVersion: 1.0
   assetPath: Assets/Gridness Studios/Elementary Dungeon Pack Lite/Prefabs/Sewer_Square.prefab
   uploadId: 551791
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

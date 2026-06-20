@@ -21,6 +21,7 @@ namespace EnemyController
         private int damage;
         private float currentLifetime;
         private bool isInitialized;
+        private bool isDespawning;
 
         public void Setup(int damageValue)
         {
@@ -34,12 +35,19 @@ namespace EnemyController
 
         private void Update()
         {
-            if (!isInitialized) return;
+            if (!isInitialized || isDespawning) return;
 
             if (rotate)
                 transform.Rotate(0f, 0f, rotateAmount, Space.Self);
 
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
+            var step = speed * Time.deltaTime;
+            if (ProjectileEnvironmentCollision.TryGetBlockHit(transform.position, transform.forward, step, out var hit))
+            {
+                ReturnToPool(hit.point, hit.normal);
+                return;
+            }
+
+            transform.Translate(Vector3.forward * step);
 
             currentLifetime += Time.deltaTime;
             if (currentLifetime >= maxLifetime)
@@ -48,8 +56,16 @@ namespace EnemyController
 
         private void OnTriggerEnter(Collider other)
         {
+            if (isDespawning || !isInitialized) return;
+
+            if (ProjectileEnvironmentCollision.IsEnvironmentCollider(other))
+            {
+                ReturnToPool(other.ClosestPoint(transform.position), -transform.forward);
+                return;
+            }
+
             if (!IsPlayerHit(other)) return;
-            if (!isInitialized || damage <= 0) return;
+            if (damage <= 0) return;
 
             var playerHealth = other.GetComponentInParent<PlayerController.Health>()
                 ?? Global.GlobalEntities.Instance?.PlayerHealth;
@@ -68,6 +84,9 @@ namespace EnemyController
 
         private void ReturnToPool(Vector3? hitPoint = null, Vector3? hitNormal = null)
         {
+            if (isDespawning) return;
+            isDespawning = true;
+
             if (hitPoint.HasValue)
                 ProjectileVfxHelper.SpawnHit(hitPrefab, hitPoint.Value, hitNormal ?? -transform.forward);
 
@@ -80,11 +99,13 @@ namespace EnemyController
         {
             currentLifetime = 0f;
             isInitialized = false;
+            isDespawning = false;
         }
 
         public void OnReturnedToPool()
         {
             isInitialized = false;
+            isDespawning = false;
             ProjectileVfxHelper.ResetTrails(trails);
         }
     }

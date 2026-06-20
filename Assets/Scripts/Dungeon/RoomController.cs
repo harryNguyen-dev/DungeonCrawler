@@ -364,7 +364,7 @@ public class RoomController : MonoBehaviour
 
 
         ApplyLevelHealthScale(health);
-
+        ApplyLevelDamageScale(e);
     }
 
 
@@ -508,6 +508,7 @@ public class RoomController : MonoBehaviour
         var e = SpawnEnemyInstance(prefab, spawnPoint.position, spawnPoint.rotation);
 
         ApplySpawnEntryScale(e.GetComponent<Health>(), entry);
+        ApplySpawnCombatScale(e, entry);
 
         GlobalEntities.Instance.RegisterEnemy(e);
 
@@ -552,6 +553,56 @@ public class RoomController : MonoBehaviour
 
 
         health.ApplyRuntimeHealthScale(scale);
+
+    }
+
+
+
+    private void ApplySpawnCombatScale(GameObject enemy, EnemySpawnEntry entry)
+
+    {
+
+        if (enemy == null)
+
+            return;
+
+
+
+        var scaler = EnemyCombatScaler.Ensure(enemy);
+
+        var dmgMult = ActiveLevel != null ? ActiveLevel.enemyDamageScale : 1f;
+
+        if (entry != null)
+
+            dmgMult *= entry.damageMultiplier;
+
+
+
+        scaler.SetDamageMultiplier(dmgMult);
+
+    }
+
+
+
+    private void ApplyLevelDamageScale(GameObject enemy)
+
+    {
+
+        if (enemy == null || ActiveLevel == null)
+
+            return;
+
+
+
+        if (Mathf.Approximately(ActiveLevel.enemyDamageScale, 1f))
+
+            return;
+
+
+
+        var scaler = EnemyCombatScaler.Ensure(enemy);
+
+        scaler.SetDamageMultiplier(ActiveLevel.enemyDamageScale);
 
     }
 

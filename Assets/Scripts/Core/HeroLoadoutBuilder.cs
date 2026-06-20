@@ -71,12 +71,20 @@ namespace Core
                 out var damageBonus,
                 out var healthBonus,
                 out var cooldownReduction,
-                out var critChanceBonus);
+                out var critChanceBonus,
+                out var fireDamageBonus);
 
             result.AttackDamage += damageBonus;
             result.MaxHealth += healthBonus;
             result.CritChance = Mathf.Min(HeroSO.MaxCritChance, result.CritChance + critChanceBonus);
             result.AttackCooldown = Mathf.Max(HeroSO.MinAttackCooldown, result.AttackCooldown - cooldownReduction);
+
+            if (fireDamageBonus > 0)
+                result.AddpendWeaponModifier(new WeaponEffectModifier
+                {
+                    EffectType = WeaponEffectType.FireDamage,
+                    Value = fireDamageBonus
+                });
 
             result.InitializeRuntimeDictionary();
             return result;

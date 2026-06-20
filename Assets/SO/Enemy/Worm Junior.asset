@@ -21,4 +21,5 @@ MonoBehaviour:
   KnockbackForce: 0
   KnockbackDuration: 0
   isBoss: 1
-  GoldDrop: 5
+  GoldDrop: 40
+  ExpDrop: 80

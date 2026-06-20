@@ -16,6 +16,12 @@ MonoBehaviour:
   stageIndex: 1
   levelId: ch1_01
   wfcSeed: 1107078218
+  wfcSeedPool:
+  - 1107078218
+  - 1107078220
+  - 1107078236
+  - 598571
+  - 363168
   roomsToPlaceOverride: 5
   combatWavePool:
   - {fileID: 11400000, guid: b8bce39ed3a3f4840a27673ddaf2ec82, type: 2}
@@ -29,4 +35,4 @@ MonoBehaviour:
   twoStarRoomRatio: 0.5
   unlockNextAtStars: 2
   enemyHealthScale: 1
-  enemyDamageScale: 1
+  enemyDamageScale: 1.0

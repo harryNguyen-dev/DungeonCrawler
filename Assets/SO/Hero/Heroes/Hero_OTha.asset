@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.HeroSO
   heroId: hero_otha
   displayName: Otha
-  description: 'Otha '
+  description: Otha
   icon: {fileID: 21300000, guid: 7b1e3977735fe0b4bbbce25051d1e1ff, type: 3}
-  sortOrder: 4
+  sortOrder: 1
   maxHealth: 150
   moveSpeed: 10
-  attackDamage: 30
-  attackCooldown: 0.45
-  critChance: 0.12
+  attackDamage: 18
+  attackCooldown: 0.5
+  critChance: 0.1
   boundWeapon: {fileID: 11400000, guid: 6bc0916e23774d2fa3adac1522907d3c, type: 2}
   skill: {fileID: 11400000, guid: f8e7d6c5b4a39281706f5e4d3c2b1a09, type: 2}
   visualPrefab: {fileID: 2729737082750660509, guid: 8134467059384af43a632edca797443f, type: 3}
@@ -29,10 +29,29 @@ MonoBehaviour:
   visualLocalEulerAngles: {x: 0, y: 0, z: 0}
   visualLocalScale: {x: 1, y: 1, z: 1}
   unlockedByDefault: 0
-  unlockCost: 250
+  unlockCost: 3500
   upgrades:
-  - cost: 350
-    damageBonus: 30
-    healthBonus: 50
-    cooldownReduction: 0.3
+  - cost: 1400
+    damageBonus: 2
+    healthBonus: 15
+    fireDamageBonus: 1
+    cooldownReduction: 0.02
     critChanceBonus: 0
+  - cost: 1700
+    damageBonus: 2
+    healthBonus: 15
+    fireDamageBonus: 1
+    cooldownReduction: 0.02
+    critChanceBonus: 0
+  - cost: 2000
+    damageBonus: 1
+    healthBonus: 15
+    fireDamageBonus: 0
+    cooldownReduction: 0.02
+    critChanceBonus: 0.02
+  - cost: 2300
+    damageBonus: 1
+    healthBonus: 15
+    fireDamageBonus: 0
+    cooldownReduction: 0.02
+    critChanceBonus: 0.01

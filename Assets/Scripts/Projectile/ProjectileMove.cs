@@ -24,6 +24,7 @@ namespace Projectile
         private Transform playerTransform;
         private Action onReturnStart;
         private Action onDespawnRequested;
+        private Action<Vector3, Vector3> onEnvironmentHit;
         private CancellationTokenSource disableCTS;
 
         public void SetSpeed(float speed)
@@ -32,6 +33,8 @@ namespace Projectile
         }
 
         public void SetDespawnCallback(Action callback) => onDespawnRequested = callback;
+
+        public void SetEnvironmentHitCallback(Action<Vector3, Vector3> callback) => onEnvironmentHit = callback;
 
         public void ActiveSelf(bool isBoomerang, Action onReturnStart)
         {
@@ -94,15 +97,29 @@ namespace Projectile
                 if (direction != Vector3.zero)
                     transform.forward = direction;
 
-                transform.Translate(Vector3.forward * speed * 1.5f * Time.deltaTime);
+                if (!TryMoveForward(speed * 1.5f * Time.deltaTime))
+                    return;
 
                 if (Vector3.Distance(transform.position, playerTransform.position) < 0.5f)
                     RequestDespawn();
             }
-            else
+            else if (!TryMoveForward(speed * Time.deltaTime))
             {
-                transform.Translate(Vector3.forward * speed * Time.deltaTime);
+                return;
             }
+        }
+
+        private bool TryMoveForward(float distance)
+        {
+            if (ProjectileEnvironmentCollision.TryGetBlockHit(transform.position, transform.forward, distance, out var hit))
+            {
+                canMove = false;
+                onEnvironmentHit?.Invoke(hit.point, hit.normal);
+                return false;
+            }
+
+            transform.Translate(Vector3.forward * distance, Space.Self);
+            return true;
         }
 
         private void PlayMuzzleVfx() =>
@@ -132,6 +149,7 @@ namespace Projectile
             isReturning = false;
             playerTransform = null;
             onReturnStart = null;
+            onEnvironmentHit = null;
             StopTrailVfx();
 
             if (disableCTS != null)

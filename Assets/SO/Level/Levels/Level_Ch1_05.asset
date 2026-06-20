@@ -16,13 +16,20 @@ MonoBehaviour:
   stageIndex: 5
   levelId: ch1_05
   wfcSeed: 908005
+  wfcSeedPool:
+  - 908005
+  - 304564
+  - 820702
+  - 301323
+  - 442351
   roomsToPlaceOverride: 6
   combatWavePool:
-  - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
   - {fileID: 11400000, guid: b8bce39ed3a3f4840a27673ddaf2ec82, type: 2}
+  - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
+  - {fileID: 11400000, guid: 44c3dcb1d167b5a458d78f155c1e39ce, type: 2}
   hallwayWavePool:
   - {fileID: 11400000, guid: a9b8c7d6e5f432109876543210fedcba, type: 2}
   hallwaySpawnChance: 0.4
-  boss: {fileID: 11400000, guid: f2e2d3c4b5a697887766554433221100, type: 2}
+  boss: {fileID: 11400000, guid: 12451f63738f861449f3c0af83fd980d, type: 2}
   enemyHealthScale: 1.32
-  enemyDamageScale: 1
+  enemyDamageScale: 1.2

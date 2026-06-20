@@ -28,6 +28,9 @@ namespace EnemyController
         public void SetPlayer(Transform p) => player = p;
         public bool CanAttack() => canAttack;
 
+        protected int GetEffectiveDamage() =>
+            EnemyCombatScaler.GetEffectiveDamage(enemyData, GetComponent<EnemyCombatScaler>());
+
         // Hàm Reset khi lôi từ Pool ra
         public virtual void OnSpawnedFromPool() => canAttack = true;
         public virtual void OnReturnedToPool() { }

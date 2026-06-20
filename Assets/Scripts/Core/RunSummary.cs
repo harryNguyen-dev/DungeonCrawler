@@ -11,7 +11,7 @@ namespace Core
         public int MaxHealth;
         public int AttackDamage;
         public float AttackCooldown;
-        public int MoveSpeed;
+        public float MoveSpeed;
         public int Armor;
 
         public int EnemiesKilled;
@@ -30,12 +30,22 @@ namespace Core
     public static class RunEconomy
     {
         public const float LoseMetaRate = 0.3f;
-        public const int WinBonusGold = 25;
 
-        public static int CalculateMetaGoldGain(int runGold, bool isWin)
+        public static int GetWinClearBonus(int starsEarned)
+        {
+            return starsEarned switch
+            {
+                >= 3 => 100,
+                2 => 60,
+                1 => 30,
+                _ => 0
+            };
+        }
+
+        public static int CalculateMetaGoldGain(int runGold, bool isWin, int starsEarned = 0)
         {
             if (isWin)
-                return runGold + WinBonusGold;
+                return runGold + GetWinClearBonus(starsEarned);
 
             return UnityEngine.Mathf.RoundToInt(runGold * LoseMetaRate);
         }

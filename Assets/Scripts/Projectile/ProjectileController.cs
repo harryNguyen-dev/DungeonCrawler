@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Components;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Core;
@@ -21,12 +22,15 @@ namespace Projectile
         Dictionary<SO.WeaponEffectType, float> effects;
 
         HashSet<EnemyController.Health> enemiesHit = new HashSet<EnemyController.Health>();
+        HashSet<Chest> chestsHit = new HashSet<Chest>();
         private ProjectileMove projectileMove;
+        private bool isDespawning;
 
         private void Awake()
         {
             projectileMove = GetComponent<ProjectileMove>();
             projectileMove.SetDespawnCallback(DespawnProjectile);
+            projectileMove.SetEnvironmentHitCallback(OnEnvironmentHit);
         }
 
         public void SetDamage(int damage)
@@ -57,10 +61,26 @@ namespace Projectile
             hasReturned = true;
             hitCount = 0;
             enemiesHit.Clear();
+            chestsHit.Clear();
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            if (isDespawning) return;
+
+            if (ProjectileEnvironmentCollision.IsEnvironmentCollider(other))
+            {
+                OnEnvironmentHit(other.ClosestPoint(transform.position), -transform.forward);
+                return;
+            }
+
+            var chest = other.GetComponent<Chest>() ?? other.GetComponentInParent<Chest>();
+            if (chest != null)
+            {
+                HandleChestHit(chest, other);
+                return;
+            }
+
             if (!other.CompareTag("Enemy")) return;
 
             var health = other.GetComponent<EnemyController.Health>();
@@ -98,7 +118,44 @@ namespace Projectile
 
         private void DespawnProjectile()
         {
+            if (isDespawning) return;
+            isDespawning = true;
             PoolReturn.SafeReturn(gameObject);
+        }
+
+        private void HandleChestHit(Chest chest, Collider other)
+        {
+            if (chest.IsDestroyed || chestsHit.Contains(chest)) return;
+
+            chestsHit.Add(chest);
+
+            var exactHitPoint = other.ClosestPoint(transform.position);
+            SpawnHitVfx(exactHitPoint, -transform.forward);
+            chest.TakeDamage(damage);
+
+            if (explosiveRadius > 0f)
+            {
+                ApplyExplosiveSplash(exactHitPoint, null);
+                DespawnProjectile();
+                return;
+            }
+
+            hitCount++;
+            if (hitCount > pierceCount)
+            {
+                if (isBoomerang && !hasReturned)
+                    projectileMove.StartReturnState();
+                else
+                    DespawnProjectile();
+            }
+        }
+
+        private void OnEnvironmentHit(Vector3 hitPoint, Vector3 hitNormal)
+        {
+            if (isDespawning) return;
+
+            SpawnHitVfx(hitPoint, hitNormal);
+            DespawnProjectile();
         }
 
         private void SpawnHitVfx(Vector3 position, Vector3 normal) =>
@@ -128,14 +185,18 @@ namespace Projectile
         {
             hitCount = 0;
             hasReturned = false;
+            isDespawning = false;
             enemiesHit.Clear();
+            chestsHit.Clear();
         }
 
         public void OnReturnedToPool()
         {
             hitCount = 0;
             hasReturned = false;
+            isDespawning = false;
             enemiesHit.Clear();
+            chestsHit.Clear();
         }
 
         private void ApplyEffects(EnemyController.Health health, EnemyController.BaseAIController move)

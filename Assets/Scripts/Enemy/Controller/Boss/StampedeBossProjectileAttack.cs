@@ -219,7 +219,7 @@ namespace EnemyController
 
             var projectile = bulletObj.GetComponent<EnemyProjectile>();
             if (projectile != null)
-                projectile.Setup(enemyData.Damage);
+                projectile.Setup(GetEffectiveDamage());
             else
                 Debug.LogError($"[{gameObject.name}] Projectile thiếu EnemyProjectile.");
         }

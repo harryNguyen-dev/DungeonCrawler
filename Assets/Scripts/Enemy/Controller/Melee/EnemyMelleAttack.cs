@@ -49,7 +49,7 @@ namespace EnemyController
             // Check xem player có lướt ra ngoài tầm đánh (AttackRange trong SO) chưa
             if (distance <= enemyData.AttackRange + 0.5f) 
             {
-                Global.GlobalEntities.Instance?.PlayerHealth?.TakeDamage(enemyData.Damage, GetComponent<Health>());
+                Global.GlobalEntities.Instance?.PlayerHealth?.TakeDamage(GetEffectiveDamage(), GetComponent<Health>());
             }
         }
     }

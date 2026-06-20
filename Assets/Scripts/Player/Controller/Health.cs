@@ -56,11 +56,13 @@ namespace PlayerController
             if (invulnerable)
                 return;
 
-            currentHealth -= damage;
+            var armor = playerStats != null ? playerStats.GetArmor() : 0;
+            var mitigated = Mathf.Max(1, damage - armor);
+            currentHealth -= mitigated;
             Core.GameAudio.PlayPlayerHit(transform.position);
             Debug.Log("[PlayerController Health] Health: " + currentHealth);
             events.InvokeChangeHealth(currentHealth, maxHealth);
-            ApplyThornReflect(damage, attacker);
+            ApplyThornReflect(mitigated, attacker);
 
             if (currentHealth <= 0)
                 Eliminate();

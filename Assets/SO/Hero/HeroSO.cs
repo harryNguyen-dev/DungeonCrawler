@@ -71,12 +71,13 @@ namespace SO
         }
 
         public void GetAccumulatedBonuses(int tier, out int damageBonus, out int healthBonus,
-            out float cooldownReduction, out float critChanceBonus)
+            out float cooldownReduction, out float critChanceBonus, out int fireDamageBonus)
         {
             damageBonus = 0;
             healthBonus = 0;
             cooldownReduction = 0f;
             critChanceBonus = 0f;
+            fireDamageBonus = 0;
 
             var steps = GetUpgrades();
             var count = Mathf.Clamp(tier, 0, steps.Length);
@@ -86,6 +87,7 @@ namespace SO
                 healthBonus += steps[i].healthBonus;
                 cooldownReduction += steps[i].cooldownReduction;
                 critChanceBonus += steps[i].critChanceBonus;
+                fireDamageBonus += steps[i].fireDamageBonus;
             }
         }
     }

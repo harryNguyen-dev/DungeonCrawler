@@ -16,10 +16,16 @@ MonoBehaviour:
   stageIndex: 2
   levelId: ch1_02
   wfcSeed: 669854
+  wfcSeedPool:
+  - 669854
+  - 635308
+  - 967558
+  - 405718
+  - 315546
   roomsToPlaceOverride: 5
   combatWavePool:
-  - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
   - {fileID: 11400000, guid: b8bce39ed3a3f4840a27673ddaf2ec82, type: 2}
+  - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
   hallwayWavePool:
   - {fileID: 11400000, guid: a9b8c7d6e5f432109876543210fedcba, type: 2}
   hallwaySpawnChance: 0.5
@@ -28,4 +34,4 @@ MonoBehaviour:
   twoStarRoomRatio: 0.5
   unlockNextAtStars: 2
   enemyHealthScale: 1.08
-  enemyDamageScale: 1
+  enemyDamageScale: 1.05

@@ -15,7 +15,7 @@ MonoBehaviour:
   EnemyName: Treant Minion Evergreen
   MaxHealth: 150
   MoveSpeed: 5
-  Damage: 2
+  Damage: 20
   AttackRange: 2
   AttackCooldown: 1.5
   KnockbackForce: 3

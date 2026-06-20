@@ -96,7 +96,8 @@ namespace PlayerController
         public float GetAttackCooldown() => runtimeStats.AttackCooldown;
         public int GetAttackDamage() => runtimeStats.AttackDamage;
         public float GetCritChance() => runtimeStats.CritChance;
-        public int GetMoveSpeed() => runtimeStats.MoveSpeed;
+        public int GetArmor() => runtimeStats.Amor;
+        public float GetMoveSpeed() => runtimeStats.MoveSpeed;
         public int GetMaxHealth() => runtimeStats.MaxHealth;
 
         public int RollAttackDamage()
@@ -169,7 +170,7 @@ namespace PlayerController
 
         public void UpgradeIncreaseRunSpeed(float amount)
         {
-            runtimeStats.MoveSpeed += Mathf.RoundToInt(amount);
+            runtimeStats.MoveSpeed += amount;
             events.InvokeIncreaseMoveSpeed(runtimeStats.MoveSpeed);
         }
 
