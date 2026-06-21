@@ -1,9 +1,11 @@
+using System;
+using System.IO;
+using System.Text;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WFC;
-
 namespace WFC_2D_Demo
 {
     public class MainCanvas : MonoBehaviour
@@ -13,6 +15,8 @@ namespace WFC_2D_Demo
         [SerializeField] private TMP_InputField seedInputField;
         [SerializeField] private Button WFC_PureBtn;
         [SerializeField] private Button WFC_CustomBtn;
+        [SerializeField] private Button WFC_CustomLoopBtn;
+        [SerializeField] private Button WFC_PureLoopBtn;
         [SerializeField] private Button ResetBtn;
         [SerializeField] private RectTransform gridParent;
 
@@ -21,6 +25,11 @@ namespace WFC_2D_Demo
         [SerializeField] private int maxRetryAttempts = 5;
         [SerializeField] private bool spawn3DForComparison = true;
 
+        [Header("Benchmark")]
+        [SerializeField] private int benchmarkLoopCount = 10000;
+        [SerializeField] private int benchmarkBaseSeed = 12345;
+        [SerializeField] private int benchmarkMaxAttempts = 1;
+        [SerializeField] private int benchmarkYieldEvery = 50;
         [Header("Grid Render")]
         [SerializeField] private Color emptyColor = Color.black;
         [SerializeField] private Color roomFallbackColor = new Color(0.30f, 0.70f, 1f, 1f);
@@ -34,7 +43,7 @@ namespace WFC_2D_Demo
         private WFCCustom customGenerator;
         private WFCPure pureGenerator;
         private bool isGenerating;
-
+        private int[] benchmarkSeeds;
         private void Awake()
         {
             if (wfcGeneration == null)
@@ -74,6 +83,10 @@ namespace WFC_2D_Demo
                 WFC_CustomBtn.onClick.AddListener(OnCustomGenerateClicked);
             if (WFC_PureBtn != null)
                 WFC_PureBtn.onClick.AddListener(OnPureGenerateClicked);
+            if (WFC_CustomLoopBtn != null)
+                WFC_CustomLoopBtn.onClick.AddListener(OnCustomLoopGenerateClicked);
+            if (WFC_PureLoopBtn != null)
+                WFC_PureLoopBtn.onClick.AddListener(OnPureLoopGenerateClicked);
             if (ResetBtn != null)
                 ResetBtn.onClick.AddListener(OnResetClicked);
         }
@@ -84,6 +97,10 @@ namespace WFC_2D_Demo
                 WFC_CustomBtn.onClick.RemoveListener(OnCustomGenerateClicked);
             if (WFC_PureBtn != null)
                 WFC_PureBtn.onClick.RemoveListener(OnPureGenerateClicked);
+            if (WFC_CustomLoopBtn != null)
+                WFC_CustomLoopBtn.onClick.RemoveListener(OnCustomLoopGenerateClicked);
+            if (WFC_PureLoopBtn != null)
+                WFC_PureLoopBtn.onClick.RemoveListener(OnPureLoopGenerateClicked);
             if (ResetBtn != null)
                 ResetBtn.onClick.RemoveListener(OnResetClicked);
         }
@@ -100,6 +117,17 @@ namespace WFC_2D_Demo
             RunPureGenerate().Forget();
         }
 
+        private void OnCustomLoopGenerateClicked()
+        {
+            if (isGenerating) return;
+            RunBenchmarkLoop(isCustom: true).Forget();
+        }
+
+        private void OnPureLoopGenerateClicked()
+        {
+            if (isGenerating) return;
+            RunBenchmarkLoop(isCustom: false).Forget();
+        }
         private void OnResetClicked()
         {
             customGenerator?.Clear();
@@ -174,16 +202,280 @@ namespace WFC_2D_Demo
             }
         }
 
+        private async UniTask RunBenchmarkLoop(bool isCustom)
+        {
+            string version = isCustom ? "Custom" : "Pure";
+
+            if (wfcGeneration == null)
+            {
+                SetInfoText("Thiếu WFCGeneration — gán component giống Battle Scene.");
+                return;
+            }
+
+            if (!isCustom && (wfcGeneration.AllTiles == null || wfcGeneration.AllTiles.Length == 0))
+            {
+                SetInfoText("Thiếu allTiles — gán WFCData trong WFCGeneration.");
+                return;
+            }
+
+            if (isCustom && customGenerator == null)
+            {
+                SetInfoText("Thiếu WFCCustom generator.");
+                return;
+            }
+
+            if (!isCustom && pureGenerator == null)
+            {
+                SetInfoText("Thiếu WFCPure generator.");
+                return;
+            }
+
+            isGenerating = true;
+            SetButtonsInteractable(false);
+
+            try
+            {
+                int[] seeds = EnsureBenchmarkSeeds();
+                string outputDir = GetBenchmarkOutputDirectory();
+                Directory.CreateDirectory(outputDir);
+                ExportBenchmarkSeedsCsv(seeds, outputDir);
+
+                var csv = new StringBuilder();
+                csv.AppendLine(BenchmarkCsvHeader);
+
+                var totalTimer = System.Diagnostics.Stopwatch.StartNew();
+                int successCount = 0;
+
+                for (int i = 0; i < seeds.Length; i++)
+                {
+                    int seed = seeds[i];
+                    GenerationStats stats;
+                    int attempts;
+                    bool success;
+
+                    if (isCustom)
+                    {
+                        var (customStats, customAttempts) = await wfcGeneration.GenerateDemoWithRetry(
+                            seed,
+                            benchmarkMaxAttempts,
+                            spawnPrefabs: false);
+                        stats = customStats;
+                        attempts = customAttempts;
+                        success = customStats.generation_success && customStats.connectivity_complete;
+                    }
+                    else
+                    {
+                        WFCPureResult result = await pureGenerator.GenerateBenchmark(seed, benchmarkMaxAttempts);
+                        stats = result.Stats;
+                        attempts = result.Attempts;
+                        success = result.Success;
+                    }
+
+                    if (success)
+                        successCount++;
+
+                    csv.AppendLine(FormatBenchmarkRow(version, attempts, success, stats));
+
+                    if (i % benchmarkYieldEvery == 0)
+                    {
+                        SetInfoText(
+                            $"Benchmark {version}… {i + 1}/{seeds.Length}\n" +
+                            $"Success: {successCount}/{i + 1} ({(float)successCount / (i + 1):P1})");
+                        await UniTask.Yield();
+                    }
+                }
+
+                totalTimer.Stop();
+
+                string resultFile = Path.Combine(outputDir, isCustom
+                    ? "wfc_custom_benchmark.csv"
+                    : "wfc_pure_benchmark.csv");
+                File.WriteAllText(resultFile, csv.ToString(), Encoding.UTF8);
+
+                TryWriteComparisonCsv(outputDir);
+
+                float successRate = seeds.Length > 0 ? (float)successCount / seeds.Length : 0f;
+                SetInfoText(
+                    $"Benchmark {version} xong!\n" +
+                    $"Loops: {seeds.Length} | Success: {successCount} ({successRate:P1})\n" +
+                    $"Total: {totalTimer.Elapsed.TotalSeconds:F1}s | Avg: {totalTimer.Elapsed.TotalMilliseconds / seeds.Length:F2}ms/seed\n" +
+                    $"CSV: {resultFile}");
+            }
+            finally
+            {
+                isGenerating = false;
+                SetButtonsInteractable(true);
+            }
+        }
+
+        private int[] EnsureBenchmarkSeeds()
+        {
+            if (benchmarkSeeds != null && benchmarkSeeds.Length == benchmarkLoopCount)
+                return benchmarkSeeds;
+
+            benchmarkSeeds = new int[benchmarkLoopCount];
+            for (int i = 0; i < benchmarkLoopCount; i++)
+                benchmarkSeeds[i] = DeriveBenchmarkSeed(benchmarkBaseSeed, i);
+
+            return benchmarkSeeds;
+        }
+
+        /// <summary>Hash deterministic — cùng baseSeed + index → cùng seed cho Custom và Pure.</summary>
+        private static int DeriveBenchmarkSeed(int baseSeed, int index)
+        {
+            unchecked
+            {
+                uint h = (uint)baseSeed;
+                h ^= (uint)index * 0x9E3779B9u;
+                h = (h ^ (h >> 16)) * 0x85EBCA6Bu;
+                h = (h ^ (h >> 13)) * 0xC2B2AE35u;
+                h ^= h >> 16;
+                return (int)(h & 0x7FFFFFFF);
+            }
+        }
+
+        private static string BenchmarkCsvHeader =>
+            "version,attempts,success," + GenerationStats.CsvHeader;
+
+        private static string FormatBenchmarkRow(string version, int attempts, bool success, GenerationStats stats)
+        {
+            return $"{version},{attempts},{(success ? 1 : 0)},{stats.ToCsvRow()}";
+        }
+
+        private static string GetBenchmarkOutputDirectory()
+        {
+#if UNITY_EDITOR
+            return Path.Combine(Application.dataPath, "WFC_Benchmark");
+#else
+            return Path.Combine(Application.persistentDataPath, "WFC_Benchmark");
+#endif
+        }
+
+        private static void ExportBenchmarkSeedsCsv(int[] seeds, string outputDir)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("index,seed");
+            for (int i = 0; i < seeds.Length; i++)
+                sb.AppendLine($"{i},{seeds[i]}");
+
+            File.WriteAllText(Path.Combine(outputDir, "wfc_benchmark_seeds.csv"), sb.ToString(), Encoding.UTF8);
+        }
+
+        private static void TryWriteComparisonCsv(string outputDir)
+        {
+            string customPath = Path.Combine(outputDir, "wfc_custom_benchmark.csv");
+            string purePath = Path.Combine(outputDir, "wfc_pure_benchmark.csv");
+            if (!File.Exists(customPath) || !File.Exists(purePath))
+                return;
+
+            var customBySeed = ParseBenchmarkCsvBySeed(customPath);
+            var pureBySeed = ParseBenchmarkCsvBySeed(purePath);
+            if (customBySeed.Count == 0 || pureBySeed.Count == 0)
+                return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine(ComparisonCsvHeader);
+
+            foreach (var pair in customBySeed)
+            {
+                if (!pureBySeed.TryGetValue(pair.Key, out string pureRow))
+                    continue;
+
+                sb.AppendLine(BuildComparisonRow(pair.Key, pair.Value, pureRow));
+            }
+
+            File.WriteAllText(Path.Combine(outputDir, "wfc_benchmark_comparison.csv"), sb.ToString(), Encoding.UTF8);
+        }
+
+        private static string ComparisonCsvHeader =>
+            "seed," +
+            "custom_success,custom_attempts,custom_generation_success,custom_connectivity_complete," +
+            "custom_rooms_placed,custom_rooms_target,custom_mst_edges_success,custom_mst_edges_total," +
+            "custom_contradictions,custom_wfc_iterations,custom_dungeon_density,custom_dead_end_count,custom_branch_count," +
+            "custom_ms_total,custom_ms_place_rooms,custom_ms_connect_corridors,custom_ms_wfc_fill," +
+            "pure_success,pure_attempts,pure_generation_success,pure_connectivity_complete," +
+            "pure_rooms_placed,pure_rooms_target,pure_mst_edges_success,pure_mst_edges_total," +
+            "pure_contradictions,pure_wfc_iterations,pure_dungeon_density,pure_dead_end_count,pure_branch_count," +
+            "pure_ms_total,pure_ms_place_rooms,pure_ms_connect_corridors,pure_ms_wfc_fill," +
+            "delta_ms_total,delta_dungeon_density,delta_dead_end_count,delta_branch_count,delta_contradictions";
+
+        private static System.Collections.Generic.Dictionary<int, string> ParseBenchmarkCsvBySeed(string path)
+        {
+            var map = new System.Collections.Generic.Dictionary<int, string>();
+            string[] lines = File.ReadAllLines(path);
+            if (lines.Length <= 1)
+                return map;
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                string[] cols = line.Split(',');
+                if (cols.Length < 4)
+                    continue;
+
+                if (!int.TryParse(cols[3], out int seed))
+                    continue;
+
+                map[seed] = line;
+            }
+
+            return map;
+        }
+
+        private static string BuildComparisonRow(int seed, string customLine, string pureLine)
+        {
+            string[] c = customLine.Split(',');
+            string[] p = pureLine.Split(',');
+            if (c.Length < 27 || p.Length < 27)
+                return string.Empty;
+
+            float customMsTotal = ParseFloat(c[27]);
+            float pureMsTotal = ParseFloat(p[27]);
+            float customDensity = ParseFloat(c[20]);
+            float pureDensity = ParseFloat(p[20]);
+            int customDeadEnds = ParseInt(c[21]);
+            int pureDeadEnds = ParseInt(p[21]);
+            int customBranches = ParseInt(c[22]);
+            int pureBranches = ParseInt(p[22]);
+            int customContradictions = ParseInt(c[13]);
+            int pureContradictions = ParseInt(p[13]);
+
+            return string.Join(",",
+                seed,
+                c[2], c[1], c[23], c[15],
+                c[4], c[5], c[7], c[6],
+                c[13], c[14], c[20], c[21], c[22],
+                c[27], c[24], c[25], c[26],
+                p[2], p[1], p[23], p[15],
+                p[4], p[5], p[7], p[6],
+                p[13], p[14], p[20], p[21], p[22],
+                p[27], p[24], p[25], p[26],
+                (pureMsTotal - customMsTotal).ToString("F2"),
+                (pureDensity - customDensity).ToString("F3"),
+                pureDeadEnds - customDeadEnds,
+                pureBranches - customBranches,
+                pureContradictions - customContradictions);
+        }
+
+        private static float ParseFloat(string value) =>
+            float.TryParse(value, out float result) ? result : 0f;
+
+        private static int ParseInt(string value) =>
+            int.TryParse(value, out int result) ? result : 0;
+
         private int ResolveSeed()
         {
             if (seedInputField == null || string.IsNullOrWhiteSpace(seedInputField.text))
-                return Random.Range(0, int.MaxValue);
+                return UnityEngine.Random.Range(0, int.MaxValue);
 
             string text = seedInputField.text.Trim();
             if (int.TryParse(text, out int parsed))
                 return parsed;
 
-            return Random.Range(0, int.MaxValue);
+            return UnityEngine.Random.Range(0, int.MaxValue);
         }
 
         private static string FormatPureInfo(WFCPureResult result)
@@ -226,6 +518,8 @@ namespace WFC_2D_Demo
         {
             if (WFC_CustomBtn != null) WFC_CustomBtn.interactable = interactable;
             if (WFC_PureBtn != null) WFC_PureBtn.interactable = interactable;
+            if (WFC_CustomLoopBtn != null) WFC_CustomLoopBtn.interactable = interactable;
+            if (WFC_PureLoopBtn != null) WFC_PureLoopBtn.interactable = interactable;
             if (ResetBtn != null) ResetBtn.interactable = interactable;
         }
     }

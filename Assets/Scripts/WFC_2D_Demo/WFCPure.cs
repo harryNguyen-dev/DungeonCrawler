@@ -66,7 +66,7 @@ namespace WFC_2D_Demo
             {
                 attempts++;
                 int attemptSeed = attempts == 1 ? seed : Random.Range(0, int.MaxValue);
-                lastResult = await GenerateOnce(attemptSeed);
+                lastResult = await GenerateOnce(attemptSeed, render: true);
                 lastResult.Attempts = attempts;
 
                 if (lastResult.Success)
@@ -79,12 +79,33 @@ namespace WFC_2D_Demo
             return lastResult;
         }
 
+        /// <summary>Headless benchmark — không render UI, không delay iteration.</summary>
+        public async UniTask<WFCPureResult> GenerateBenchmark(int seed, int maxAttempts = 1)
+        {
+            int attempts = 0;
+            WFCPureResult lastResult = default;
+
+            while (attempts < maxAttempts)
+            {
+                attempts++;
+                int attemptSeed = attempts == 1 ? seed : Random.Range(0, int.MaxValue);
+                lastResult = await GenerateOnce(attemptSeed, render: false);
+                lastResult.Attempts = attempts;
+
+                if (lastResult.Success)
+                    return lastResult;
+            }
+
+            lastResult.Attempts = attempts;
+            return lastResult;
+        }
+
         public void Clear()
         {
             renderer.ResetAllEmpty();
         }
 
-        private async UniTask<WFCPureResult> GenerateOnce(int seed)
+        private async UniTask<WFCPureResult> GenerateOnce(int seed, bool render)
         {
             wfc.Initialize(gridSize, allTiles);
             var rand = new System.Random(seed);
@@ -93,13 +114,16 @@ namespace WFC_2D_Demo
             var stats = new GenerationStats { seed = seed };
             var totalTimer = Stopwatch.StartNew();
 
-            renderer.EnsureGrid(gridSize);
-            renderer.ResetAllEmpty();
+            if (render)
+            {
+                renderer.EnsureGrid(gridSize);
+                renderer.ResetAllEmpty();
+            }
 
-            FillEdgeCellsWithEmpty();
+            FillEdgeCellsWithEmpty(render);
 
             var wfcTimer = Stopwatch.StartNew();
-            (stats.wfc_iterations, stats.contradictions) = await RunPureCollapseLoop();
+            (stats.wfc_iterations, stats.contradictions) = await RunPureCollapseLoop(render);
             wfcTimer.Stop();
             stats.ms_wfc_fill = (float)wfcTimer.Elapsed.TotalMilliseconds;
 
@@ -108,7 +132,8 @@ namespace WFC_2D_Demo
 
             quality.CalculateQualityMetrics(wfc, ref stats);
 
-            renderer.RenderFullGrid(wfc.Grid, gridSize);
+            if (render)
+                renderer.RenderFullGrid(wfc.Grid, gridSize);
 
             return new WFCPureResult
             {
@@ -119,7 +144,7 @@ namespace WFC_2D_Demo
             };
         }
 
-        private void FillEdgeCellsWithEmpty()
+        private void FillEdgeCellsWithEmpty(bool render)
         {
             if (allTiles == null || allTiles.Length == 0 || allTiles[0] == null)
             {
@@ -144,7 +169,8 @@ namespace WFC_2D_Demo
                     t.IsCollapsed = true;
                     t.PossibleTiles = new List<WFCData> { empty };
                     edgeTiles.Add(t);
-                    renderer.UpdateCell(t);
+                    if (render)
+                        renderer.UpdateCell(t);
                 }
             }
 
@@ -157,10 +183,11 @@ namespace WFC_2D_Demo
             return tile?.CollapsedTile != null && tile.CollapsedTile.tileType != TileType.Empty;
         }
 
-        private async UniTask<(int wfcIterations, int contradictions)> RunPureCollapseLoop()
+        private async UniTask<(int wfcIterations, int contradictions)> RunPureCollapseLoop(bool render)
         {
             int wfcIterations = 0;
             int contradictions = 0;
+            bool useDelay = render && iterationDelayMs > 0;
 
             while (true)
             {
@@ -176,14 +203,18 @@ namespace WFC_2D_Demo
                     nextTile.CollapsedTile = fallback;
                     nextTile.IsCollapsed = true;
                     nextTile.PossibleTiles = new List<WFCData> { fallback };
-                    renderer.UpdateCell(nextTile);
+                    if (render)
+                        renderer.UpdateCell(nextTile);
                     wfc.Propagation(nextTile);
                     continue;
                 }
 
-                wfc.CollapseTile(nextTile, renderer.UpdateCell);
+                if (render)
+                    wfc.CollapseTile(nextTile, renderer.UpdateCell);
+                else
+                    wfc.CollapseTile(nextTile, null);
                 wfc.Propagation(nextTile);
-                if (iterationDelayMs > 0 && ShouldDelayAfterCollapse(nextTile))
+                if (useDelay && ShouldDelayAfterCollapse(nextTile))
                     await UniTask.Delay(iterationDelayMs);
             }
 
