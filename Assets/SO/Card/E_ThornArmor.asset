@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: E01
   CardName: Spiked Armor
-  CardDescription: Reflects a portion of incoming damage back to any attacker that
-    touches you.
+  CardDescription: Reflect damage back to attackers.
   Effect: 6
   CardTier: 2
   CardTierWeight: 15

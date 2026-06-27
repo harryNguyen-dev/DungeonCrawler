@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: C02
   CardName: Juggernaut
-  CardDescription: Increases maximum health capacity to endure more hits.
+  CardDescription: Permanently increases max health.
   Effect: 3
   CardTier: 0
   CardTierWeight: 60

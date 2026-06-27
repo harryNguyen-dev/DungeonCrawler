@@ -278,7 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267220505da4b5347a9d8f053ed21139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WFC.WFCGeneration
-  iterationDelayMs: 10
+  iterationDelayMs: 50
   gridSize: 10
   cellSize: 40
   allTiles:
@@ -308,7 +308,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7d25b2ed122ab4248a4c7b82f9fb1b8f, type: 2}
   - {fileID: 11400000, guid: e21d431983d9e364cb24f0d880f93276, type: 2}
   - {fileID: 11400000, guid: 4a1530ddcbb0cd3438ef1d7df023399c, type: 2}
-  roomsToPlace: 15
+  roomsToPlace: 12
   roomEdgeMargin: 1
   spawnParent: {fileID: 0}
   generationCameraTarget: {fileID: 0}
@@ -664,7 +664,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &746953361
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1450,7 +1450,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1319990023
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2224,7 +2224,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1559203598
 RectTransform:
   m_ObjectHideFlags: 0

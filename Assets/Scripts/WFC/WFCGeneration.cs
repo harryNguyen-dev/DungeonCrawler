@@ -193,37 +193,42 @@ namespace WFC
 
                 if (LastStats.generation_success && LastStats.connectivity_complete)
                 {
-                    success = true;
-                    Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
-                    GlobalEvents.RaiseDungeonGenerationProgress(0.98f);
-                    SetDungeonVisualsVisible(true);
                     Tile startRoomTile = GetRandomStartRoom();
                     if (startRoomTile != null)
                     {
-                        // Tính toán vị trí thực tế trong không gian 3D của Unity để spawn Player hoặc Đánh dấu
+                        success = true;
+                        Debug.Log($"<color=green>Dungeon generated successfully on attempt {attempts}!</color>");
+                        GlobalEvents.RaiseDungeonGenerationProgress(0.98f);
+                        SetDungeonVisualsVisible(true);
+
                         Vector3 worldPosition = new Vector3(startRoomTile.GridPosition.x * cellSize, 0, startRoomTile.GridPosition.y * cellSize);
                         Debug.Log($"Vị trí World của Start Room: {worldPosition}");
 
-                        // Bạn có thể lưu vị trí này lại hoặc gọi Event truyền vị trí này đi
                         GlobalVariable.PlayerSpawnPosition = worldPosition;
                         startRoomTile.SetStartRoom();
                         CenterCameraOnStartRoom(startRoomTile);
+
+                        int actualRoomCount = CountAllRoomTiles();
+                        int totalCombatRooms = Mathf.Max(0, actualRoomCount - 1);
+                        DungeonEncounterTracker.Reset(totalCombatRooms);
+                        Debug.Log("[WFC] Placed rooms (from RoomPlacer): " + placedRooms.Count);
+                        Debug.Log("[WFC] Total room count (actual on grid): " + actualRoomCount);
+                        GlobalVariable.TotalRoomCount = totalCombatRooms;
+                        Debug.Log("[WFC] combat rooms (boss on last entered): " + totalCombatRooms);
+                        GlobalEvents.RaiseDungeonGenerationProgress(1f);
+                        GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
+                        GlobalVariable.CurrentSeed = LastStats.seed;
+                        return;
                     }
 
-                    int actualRoomCount = CountAllRoomTiles();
-                    int totalCombatRooms = Mathf.Max(0, actualRoomCount - 1);
-                    DungeonEncounterTracker.Reset(totalCombatRooms);
-                    Debug.Log("[WFC] Placed rooms (from RoomPlacer): " + placedRooms.Count);
-                    Debug.Log("[WFC] Total room count (actual on grid): " + actualRoomCount);
-                    GlobalVariable.TotalRoomCount = totalCombatRooms;
-                    Debug.Log("[WFC] combat rooms (boss on last entered): " + totalCombatRooms);
-                    GlobalEvents.RaiseDungeonGenerationProgress(1f);
-                    GlobalEvents.RaiseDungeonGenerated(LastStats.seed);
-                    GlobalVariable.CurrentSeed = LastStats.seed;
-                    return;
+                    Debug.LogWarning(
+                        $"Attempt {attempts}: dungeon hợp lệ nhưng không có Start Room (seed={LastGenerationSeed}). " +
+                        "Retry với seed tiếp theo trong danh sách maps...");
                 }
-
-                Debug.LogWarning($"Attempt {attempts} failed (seed={LastGenerationSeed}). Retrying...");
+                else
+                {
+                    Debug.LogWarning($"Attempt {attempts} failed (seed={LastGenerationSeed}). Retrying...");
+                }
                 ClearSpawnedTiles();
                 InitializeGrid();
                 AdvanceSeedFallback();
@@ -599,7 +604,8 @@ namespace WFC
             bool spawnPrefabs = false,
             Action<Tile> onTileCollapsed = null,
             Action<List<(Tile from, Tile to)>> onPrimBuilt = null,
-            Action<Tile, Tile, bool> onCorridorEdgeStarting = null)
+            Action<Tile, Tile, bool> onCorridorEdgeStarting = null,
+            Action onAttemptStart = null)
         {
             int attempts = 0;
             _spawnPrefabs = spawnPrefabs;
@@ -614,6 +620,7 @@ namespace WFC
                     attempts++;
                     int attemptSeed = attempts == 1 ? seed : UnityEngine.Random.Range(0, int.MaxValue);
 
+                    onAttemptStart?.Invoke();
                     ClearSpawnedTiles();
                     InitializeGrid();
                     randomSeed = attemptSeed;

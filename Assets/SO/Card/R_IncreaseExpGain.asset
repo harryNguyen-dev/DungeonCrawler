@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: R04
   CardName: Scholar
-  CardDescription: Increases EXP gained from killing enemies to trigger level-ups
-    faster.
+  CardDescription: Gain more EXP from kills.
   Effect: 9
   CardTier: 1
   CardTierWeight: 30

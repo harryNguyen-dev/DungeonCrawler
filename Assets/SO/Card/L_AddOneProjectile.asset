@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: L01
   CardName: Twin Split
-  CardDescription: Releases an additional parallel energy wave with every single
-    slash.
+  CardDescription: Fire one extra projectile per attack.
   Effect: 11
   CardTier: 3
   CardTierWeight: 5

@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: R03
   CardName: Rejuvenate
-  CardDescription: Boosts the efficiency of all incoming healing sources during this
-    run.
+  CardDescription: All healing becomes more effective.
   Effect: 8
   CardTier: 1
   CardTierWeight: 30

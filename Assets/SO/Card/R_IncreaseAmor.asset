@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: R02
   CardName: Ironclad
-  CardDescription: Grants flat armor to mitigate incoming damage from enemy charges.
+  CardDescription: Gain armor to reduce damage taken.
   Effect: 5
   CardTier: 1
   CardTierWeight: 30

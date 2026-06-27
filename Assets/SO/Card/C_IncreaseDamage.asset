@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: C01
   CardName: Sharp Edge
-  CardDescription: Increases base flat damage for every energy wave slash.
+  CardDescription: Permanently increases attack damage.
   Effect: 1
   CardTier: 0
   CardTierWeight: 60

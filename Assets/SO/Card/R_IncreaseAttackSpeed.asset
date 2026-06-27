@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: R01
   CardName: Flurry
-  CardDescription: Reduces attack cooldown, allowing you to swing your blade much
-    faster.
+  CardDescription: Attack faster.
   Effect: 2
   CardTier: 1
   CardTierWeight: 30

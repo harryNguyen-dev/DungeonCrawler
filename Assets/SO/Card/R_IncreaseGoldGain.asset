@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: R05
   CardName: Greed
-  CardDescription: Increases gold dropped in this session to spend on permanent upgrades.
+  CardDescription: Enemies drop more gold.
   Effect: 10
   CardTier: 1
   CardTierWeight: 30

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: C04
   CardName: March
-  CardDescription: Increases movement speed, making it easier to kite enemy cubes.
+  CardDescription: Move faster.
   Effect: 7
   CardTier: 0
   CardTierWeight: 60

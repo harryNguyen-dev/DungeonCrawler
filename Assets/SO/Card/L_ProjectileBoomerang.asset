@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: L02
   CardName: Boomerang
-  CardDescription: Energy waves reverse direction at max range and fly back toward
-    your position.
+  CardDescription: Projectiles return to you after reaching max range.
   Effect: 15
   CardTier: 3
   CardTierWeight: 5

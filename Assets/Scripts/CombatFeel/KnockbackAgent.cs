@@ -10,6 +10,7 @@ namespace CombatFeel
         private readonly NavMeshAgent agent;
         private readonly Transform ownerTransform;
         private int sequenceId;
+        private bool restoreKinematic;
 
         public bool IsActive { get; private set; }
 
@@ -43,6 +44,8 @@ namespace CombatFeel
                 shouldRestoreAgent = true;
 
                 agent.enabled = false;
+                restoreKinematic = rb.isKinematic;
+                rb.isKinematic = false;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.AddForce(flatDirection * force, ForceMode.Impulse);
@@ -75,8 +78,13 @@ namespace CombatFeel
                 return;
             }
 
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            if (!rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+
+            rb.isKinematic = restoreKinematic;
 
             Vector3 targetPosition = ownerTransform.position;
             if (NavMesh.SamplePosition(ownerTransform.position, out NavMeshHit hit, 1.5f, NavMesh.AllAreas))

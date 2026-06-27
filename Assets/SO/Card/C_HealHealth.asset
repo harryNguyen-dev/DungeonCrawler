@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SO.Card
   CardID: C03
   CardName: Rations
-  CardDescription: Instantly restores a chunk of health to keep you in the fight.
+  CardDescription: Instantly restores health.
   Effect: 4
   CardTier: 0
   CardTierWeight: 60

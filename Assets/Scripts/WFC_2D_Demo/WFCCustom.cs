@@ -408,7 +408,6 @@ namespace WFC_2D_Demo
             bool spawnPrefabs = false)
         {
             renderer.EnsureGrid(generation.GridSize);
-            renderer.ResetAllEmpty();
 
             var (stats, attempts) = await generation.GenerateDemoWithRetry(
                 seed,
@@ -416,7 +415,8 @@ namespace WFC_2D_Demo
                 spawnPrefabs: spawnPrefabs,
                 onTileCollapsed: renderer.UpdateCell,
                 onPrimBuilt: renderer.DrawPrimLines,
-                onCorridorEdgeStarting: renderer.HighlightPrimEdge);
+                onCorridorEdgeStarting: renderer.HighlightPrimEdge,
+                onAttemptStart: renderer.ResetAllEmpty);
 
             renderer.RenderFullGrid(generation.Grid, generation.GridSize);
 
