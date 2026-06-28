@@ -1,3 +1,4 @@
+using Components;
 using EnemyController;
 using Global;
 using UnityEngine;
@@ -8,18 +9,32 @@ namespace PlayerController
     {
         [SerializeField] private float moveRotateSpeed = 15f;
 
-        /// <summary>Hướng ngắm tới enemy sống gần nhất trên mặt phẳng ngang.</summary>
+        /// <summary>Hướng ngắm tới enemy sống gần nhất; nếu không có thì rương gần nhất.</summary>
         public bool TryGetAimDirection(out Vector3 aimDirection)
         {
             aimDirection = Vector3.zero;
+            Vector3 origin = transform.position;
 
-            var entities = GlobalEntities.Instance;
-            if (entities == null || entities.AvailableEnemies.Count == 0)
+            Transform nearest = TryFindNearestEnemy(origin, out float nearestSqrDist);
+            if (nearest == null)
+                nearest = TryFindNearestChest(origin, nearestSqrDist);
+
+            if (nearest == null)
                 return false;
 
+            aimDirection = nearest.position - origin;
+            aimDirection.y = 0f;
+            return aimDirection.sqrMagnitude > 0.0001f;
+        }
+
+        private static Transform TryFindNearestEnemy(Vector3 origin, out float nearestSqrDist)
+        {
+            nearestSqrDist = float.MaxValue;
             Transform nearest = null;
-            float nearestSqrDist = float.MaxValue;
-            Vector3 origin = transform.position;
+
+            var entities = GlobalEntities.Instance;
+            if (entities == null)
+                return null;
 
             foreach (var enemy in entities.AvailableEnemies)
             {
@@ -37,12 +52,30 @@ namespace PlayerController
                 nearest = enemy.transform;
             }
 
-            if (nearest == null)
-                return false;
+            return nearest;
+        }
 
-            aimDirection = nearest.position - origin;
-            aimDirection.y = 0f;
-            return aimDirection.sqrMagnitude > 0.0001f;
+        private static Transform TryFindNearestChest(Vector3 origin, float nearestSqrDist)
+        {
+            Transform nearest = null;
+            var chests = Object.FindObjectsByType<Chest>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+
+            foreach (var chest in chests)
+            {
+                if (chest == null || chest.IsDestroyed) continue;
+
+                Vector3 offset = chest.transform.position - origin;
+                offset.y = 0f;
+                float sqrDist = offset.sqrMagnitude;
+                if (sqrDist >= nearestSqrDist) continue;
+
+                nearestSqrDist = sqrDist;
+                nearest = chest.transform;
+            }
+
+            return nearest;
         }
 
         public void FaceTowards(Vector3 worldDirection, float rotateSpeed)

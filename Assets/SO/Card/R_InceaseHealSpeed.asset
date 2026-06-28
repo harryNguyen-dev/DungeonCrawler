@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: R03
   CardName: Rejuvenate
   CardDescription: All healing becomes more effective.
+  CardIcon: {fileID: 21300000, guid: 2799248adbb22ae429f088a972d96de7, type: 3}
   Effect: 8
   CardTier: 1
   CardTierWeight: 30

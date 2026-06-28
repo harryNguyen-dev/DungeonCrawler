@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: C01
   CardName: Sharp Edge
   CardDescription: Permanently increases attack damage.
+  CardIcon: {fileID: 21300000, guid: 7bb43b0ea138cf3498b56daf1217f2b7, type: 3}
   Effect: 1
   CardTier: 0
   CardTierWeight: 60

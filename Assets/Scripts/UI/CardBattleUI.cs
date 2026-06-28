@@ -11,6 +11,7 @@ namespace CustomUI
     {
         private const int CardsToPick = 3;
         private const string CardDescChildName = "CardDesTxt";
+        private const string CardIconChildName = "Icon";
 
         [SerializeField] private GameObject cardContainer;
         [SerializeField] private GameObject cardPrefab;
@@ -82,6 +83,13 @@ namespace CustomUI
             {
                 descText.text = $"{cardData.CardName}\n\n{cardData.CardDescription}";
                 descText.color = textColor;
+            }
+
+            var iconTransform = cardInstance.transform.Find(CardIconChildName);
+            if (iconTransform != null && iconTransform.TryGetComponent<Image>(out var iconImage))
+            {
+                iconImage.sprite = cardData.CardIcon;
+                iconImage.enabled = cardData.CardIcon != null;
             }
         }
 

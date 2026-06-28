@@ -5,12 +5,15 @@ namespace PlayerController
     [RequireComponent(typeof(PlayerStats))]
     [RequireComponent(typeof(PlayerEvents))]
     [RequireComponent(typeof(Rotate))]
+    [RequireComponent(typeof(CapsuleCollider))]
     public class Movement : MonoBehaviour
     {
         private PlayerStats playerStats;
         private PlayerEvents events;
         private PlayerAnimation playerAnimation;
         private Rotate playerRotate;
+        private CapsuleCollider bodyCollider;
+        private Rigidbody bodyRigidbody;
         private float moveSpeed;
 
         private void Awake()
@@ -19,6 +22,21 @@ namespace PlayerController
             events = GetComponent<PlayerEvents>();
             playerAnimation = GetComponent<PlayerAnimation>();
             playerRotate = GetComponent<Rotate>();
+            bodyCollider = GetComponent<CapsuleCollider>();
+            bodyRigidbody = GetComponent<Rigidbody>();
+            ConfigureBodyRigidbody();
+        }
+
+        private void ConfigureBodyRigidbody()
+        {
+            if (bodyRigidbody == null)
+                return;
+
+            bodyRigidbody.isKinematic = true;
+            bodyRigidbody.useGravity = false;
+            bodyRigidbody.constraints =
+                RigidbodyConstraints.FreezeRotation |
+                RigidbodyConstraints.FreezePositionY;
         }
 
         private void OnEnable()
@@ -70,6 +88,21 @@ namespace PlayerController
             Move();
         }
 
+        private void LateUpdate()
+        {
+            LockToGroundPlane();
+        }
+
+        private void LockToGroundPlane()
+        {
+            var pos = transform.position;
+            if (Mathf.Abs(pos.y) > 0.001f)
+            {
+                pos.y = 0f;
+                transform.position = pos;
+            }
+        }
+
         private void Move()
         {
             Vector2 inputVector = InputManager.Instance.GetMovementVector();
@@ -80,7 +113,12 @@ namespace PlayerController
 
             if (moveDir.sqrMagnitude > 0.0001f)
             {
-                transform.position += moveDir.normalized * moveSpeed * Time.deltaTime;
+                var delta = moveDir.normalized * moveSpeed * Time.deltaTime;
+                transform.position = PlayerMovementCollision.ResolveMovement(
+                    transform.position,
+                    delta,
+                    bodyCollider,
+                    bodyCollider);
                 playerRotate?.FaceMovementDirection(moveDir);
             }
 

@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: R05
   CardName: Greed
   CardDescription: Enemies drop more gold.
+  CardIcon: {fileID: 21300000, guid: af30c55d2ce3b1544a5097020ae7c5ce, type: 3}
   Effect: 10
   CardTier: 1
   CardTierWeight: 30

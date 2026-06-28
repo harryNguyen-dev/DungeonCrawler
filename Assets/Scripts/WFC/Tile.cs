@@ -31,7 +31,12 @@ namespace WFC {
         {
             DespawnObject();
 
-            if (!spawnPrefab || CollapsedTile == null || CollapsedTile.prefab == null) return;
+            if (!spawnPrefab || CollapsedTile == null) return;
+
+            // Empty cells are logical-only (WFC + minimap); no geometry prefab needed.
+            if (CollapsedTile.tileType == TileType.Empty) return;
+
+            if (CollapsedTile.prefab == null) return;
 
             Vector3 position = new Vector3(GridPosition.x * cellSize, 0, GridPosition.y * cellSize);
             SpawnedObject = Object.Instantiate(CollapsedTile.prefab, position, Quaternion.identity, parent);

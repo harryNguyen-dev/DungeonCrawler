@@ -16,11 +16,13 @@ namespace PlayerController.Skill
         }
 
         private PlayerStats stats;
+        private HeroVisualController heroVisual;
         private readonly Dictionary<string, ActiveBuff> activeBuffs = new();
 
         private void Awake()
         {
             stats = GetComponent<PlayerStats>();
+            heroVisual = GetComponent<HeroVisualController>();
         }
 
         public bool TryApplyBuff(string sourceId, BuffSkillConfig config)
@@ -40,6 +42,7 @@ namespace PlayerController.Skill
                 existing.Cts?.Cancel();
                 existing.Cts?.Dispose();
                 existing.Cts = new CancellationTokenSource();
+                UpdateSkillEffectLoop(sourceId, true);
                 RunBuffTimer(sourceId, config.duration, existing.Cts.Token).Forget();
                 return true;
             }
@@ -51,6 +54,7 @@ namespace PlayerController.Skill
             buff.EndTime = Time.time + config.duration;
             buff.Cts = new CancellationTokenSource();
             activeBuffs[sourceId] = buff;
+            UpdateSkillEffectLoop(sourceId, true);
             RunBuffTimer(sourceId, config.duration, buff.Cts.Token).Forget();
             return true;
         }
@@ -79,6 +83,16 @@ namespace PlayerController.Skill
             buff.Cts?.Cancel();
             buff.Cts?.Dispose();
             activeBuffs.Remove(sourceId);
+            UpdateSkillEffectLoop(sourceId, false);
+        }
+
+        private void UpdateSkillEffectLoop(string sourceId, bool active)
+        {
+            var skill = stats?.ActiveSkill;
+            if (skill == null || skill.skillId != sourceId)
+                return;
+
+            heroVisual?.SetSkillEffectLoopActive(active);
         }
 
         private void OnDestroy()

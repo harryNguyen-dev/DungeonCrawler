@@ -154,9 +154,7 @@ namespace Global
             SetPlayerCombatEnabled(canAttack);
             BindCameraToPlayer();
 
-            Vector3 offset = Vector3.up * 2.5f;
-            Vector3 spawnPoint = GlobalVariable.PlayerSpawnPosition;
-            PlayerInstance.transform.position = spawnPoint + offset;
+            PlayerInstance.transform.position = GlobalVariable.PlayerSpawnPosition;
             GlobalEvents.RaisePlayerJoin();
         }
 

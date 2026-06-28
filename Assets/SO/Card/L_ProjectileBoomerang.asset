@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: L02
   CardName: Boomerang
   CardDescription: Projectiles return to you after reaching max range.
+  CardIcon: {fileID: 21300000, guid: 07f71deb80474ad40844174473786b7f, type: 3}
   Effect: 15
   CardTier: 3
   CardTierWeight: 5

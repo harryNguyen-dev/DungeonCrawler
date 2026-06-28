@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: C02
   CardName: Juggernaut
   CardDescription: Permanently increases max health.
+  CardIcon: {fileID: 21300000, guid: 5898f53ce35e91346a57733cd3985e6e, type: 3}
   Effect: 3
   CardTier: 0
   CardTierWeight: 60

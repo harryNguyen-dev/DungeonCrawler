@@ -7,99 +7,97 @@ namespace CombatFeel
 {
     public sealed class HitFlash
     {
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+
+        private static readonly Color FrozenTint = new(0.55f, 0.85f, 1f, 1f);
+        private static readonly Color FrozenEmission = new(0.15f, 0.45f, 0.95f, 1f);
+
+        private readonly struct MaterialColors
+        {
+            public readonly bool HasBaseColor;
+            public readonly Color BaseColor;
+            public readonly bool HasColor;
+            public readonly Color Color;
+            public readonly bool HasEmission;
+            public readonly Color Emission;
+
+            public MaterialColors(Material mat)
+            {
+                HasBaseColor = mat.HasProperty(BaseColorId);
+                BaseColor = HasBaseColor ? mat.GetColor(BaseColorId) : default;
+
+                HasColor = mat.HasProperty(ColorId);
+                Color = HasColor ? mat.GetColor(ColorId) : default;
+
+                HasEmission = mat.HasProperty(EmissionColorId);
+                Emission = HasEmission ? mat.GetColor(EmissionColorId) : default;
+            }
+
+            public void ApplyTo(Material mat)
+            {
+                if (HasBaseColor)
+                    mat.SetColor(BaseColorId, BaseColor);
+                if (HasColor)
+                    mat.SetColor(ColorId, Color);
+                if (HasEmission)
+                    mat.SetColor(EmissionColorId, Emission);
+            }
+
+            public MaterialColors WithFrozenTint()
+            {
+                return new MaterialColors(
+                    HasBaseColor, MultiplyColors(BaseColor, FrozenTint),
+                    HasColor, MultiplyColors(Color, FrozenTint),
+                    HasEmission, FrozenEmission);
+            }
+
+            private MaterialColors(
+                bool hasBaseColor, Color baseColor,
+                bool hasColor, Color color,
+                bool hasEmission, Color emission)
+            {
+                HasBaseColor = hasBaseColor;
+                BaseColor = baseColor;
+                HasColor = hasColor;
+                Color = color;
+                HasEmission = hasEmission;
+                Emission = emission;
+            }
+        }
+
         private readonly GameObject ownerObject;
         private readonly List<Renderer> renderers = new();
-        private readonly List<Color[]> originalColors = new();
-        private int sequenceId;
+        private readonly List<MaterialColors[]> originalColors = new();
+
+        private int flashSequenceId;
+        private int freezeSequenceId;
+        private bool isFrozen;
 
         public HitFlash(GameObject ownerObject)
         {
             this.ownerObject = ownerObject;
             RefreshRenderers();
         }
+
         /// <summary>
-        /// Kích hoạt hiệu ứng đóng băng (Đổi sang màu xanh dương đậm trong một khoảng thời gian)
+        /// Kích hoạt hiệu ứng đóng băng (tint xanh dương trong một khoảng thời gian)
         /// </summary>
         public async UniTaskVoid HitFrozen(float duration)
         {
             if (renderers.Count == 0 || ownerObject == null) return;
 
-            // Tăng sequenceId để hủy bỏ các hiệu ứng flash/frozen trước đó đang chạy dở
-            int currentSequence = ++sequenceId;
+            int currentFreeze = ++freezeSequenceId;
+            isFrozen = true;
+            ApplyFrozenTint();
 
-            // Định nghĩa màu xanh dương nhạt
-            Color darkBlue = new Color(0.6f, 0.85f, 1f, 1f); 
-
-            // Bước 1: Đổi toàn bộ sang màu xanh dương đậm
-            for (int r = 0; r < renderers.Count; r++)
-            {
-                if (renderers[r] == null) continue;
-                Material[] mats = renderers[r].materials;
-                for (int m = 0; m < mats.Length; m++)
-                {
-                    if (mats[m].HasProperty("_Color"))
-                    {
-                        mats[m].color = darkBlue;
-                    }
-                }
-            }
-
-            // Bước 2: Chờ hết thời gian bị đóng băng
             await UniTask.Delay(TimeSpan.FromSeconds(duration), delayTiming: PlayerLoopTiming.Update);
 
-            // Kiểm tra xem quái có chết (bị hủy) hoặc có hiệu ứng khác đè lên không
-            if (ownerObject == null || currentSequence != sequenceId) return;
+            if (ownerObject == null || currentFreeze != freezeSequenceId) return;
 
-            // Bước 3: Trả lại màu gốc ban đầu
+            isFrozen = false;
             ResetToOriginalColors();
-        }
-        /// <summary>
-        /// Hàm phụ trợ dùng chung để đưa màu sắc của toàn bộ renderers về lại màu gốc ban đầu
-        /// </summary>
-        private void ResetToOriginalColors()
-        {
-            for (int r = 0; r < renderers.Count; r++)
-            {
-                if (renderers[r] == null) continue;
-                Material[] mats = renderers[r].materials;
-                for (int m = 0; m < mats.Length; m++)
-                {
-                    if (mats[m].HasProperty("_Color"))
-                    {
-                        mats[m].color = originalColors[r][m];
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Hàm này giúp quét lại các Renderer. 
-        /// Sau này nếu bạn đổi model hoặc bật/tắt các bộ phận của quái thì gọi hàm này.
-        /// </summary>
-        public void RefreshRenderers()
-        {
-            if (ownerObject == null) return;
-
-            renderers.Clear();
-            originalColors.Clear();
-
-            // Quét tất cả MeshRenderer (Cube hiện tại) và SkinnedMeshRenderer (Model xịn sau này)
-            ownerObject.GetComponentsInChildren<Renderer>(true, renderers);
-
-            // Lưu lại màu gốc của từng Material trên từng Renderer
-            foreach (var renderer in renderers)
-            {
-                Material[] mats = renderer.materials;
-                Color[] colors = new Color[mats.Length];
-                for (int i = 0; i < mats.Length; i++)
-                {
-                    if (mats[i].HasProperty("_Color"))
-                    {
-                        colors[i] = mats[i].color;
-                    }
-                }
-                originalColors.Add(colors);
-            }
         }
 
         /// <summary>
@@ -109,42 +107,86 @@ namespace CombatFeel
         {
             if (renderers.Count == 0 || ownerObject == null) return;
 
-            // Sử dụng sequenceId để chống dẫm chân nhau khi bị bắn liên tục
-            int currentSequence = ++sequenceId;
+            int currentFlash = ++flashSequenceId;
+            ApplyAbsoluteColor(flashColor);
 
-            // Bước 1: Đổi toàn bộ sang màu Flash
-            for (int r = 0; r < renderers.Count; r++)
-            {
-                if (renderers[r] == null) continue;
-                Material[] mats = renderers[r].materials;
-                for (int m = 0; m < mats.Length; m++)
-                {
-                    if (mats[m].HasProperty("_Color"))
-                    {
-                        mats[m].color = flashColor;
-                    }
-                }
-            }
-
-            // Bước 2: Chờ một khoảng thời gian siêu ngắn (Ví dụ: 0.1 giây)
             await UniTask.Delay(TimeSpan.FromSeconds(duration), delayTiming: PlayerLoopTiming.Update);
 
-            // Kiểm tra xem quái có bị hủy hoặc có phát bắn mới đè lên không
-            if (ownerObject == null || currentSequence != sequenceId) return;
+            if (ownerObject == null || currentFlash != flashSequenceId) return;
 
-            // Bước 3: Trả lại màu gốc ban đầu
+            if (isFrozen)
+                ApplyFrozenTint();
+            else
+                ResetToOriginalColors();
+        }
+
+        /// <summary>
+        /// Đưa màu sắc về lại màu gốc và hủy trạng thái đóng băng.
+        /// </summary>
+        public void ResetToOriginalColors()
+        {
+            isFrozen = false;
+            freezeSequenceId++;
+
+            for (int r = 0; r < renderers.Count; r++)
+            {
+                if (renderers[r] == null) continue;
+                Material[] mats = renderers[r].materials;
+                for (int m = 0; m < mats.Length; m++)
+                    originalColors[r][m].ApplyTo(mats[m]);
+            }
+        }
+
+        /// <summary>
+        /// Quét lại các Renderer sau khi spawn từ pool hoặc đổi model.
+        /// </summary>
+        public void RefreshRenderers()
+        {
+            if (ownerObject == null) return;
+
+            renderers.Clear();
+            originalColors.Clear();
+
+            ownerObject.GetComponentsInChildren<Renderer>(true, renderers);
+
+            foreach (var renderer in renderers)
+            {
+                Material[] mats = renderer.materials;
+                var colors = new MaterialColors[mats.Length];
+                for (int i = 0; i < mats.Length; i++)
+                    colors[i] = new MaterialColors(mats[i]);
+                originalColors.Add(colors);
+            }
+        }
+
+        private void ApplyFrozenTint()
+        {
+            for (int r = 0; r < renderers.Count; r++)
+            {
+                if (renderers[r] == null) continue;
+                Material[] mats = renderers[r].materials;
+                for (int m = 0; m < mats.Length; m++)
+                    originalColors[r][m].WithFrozenTint().ApplyTo(mats[m]);
+            }
+        }
+
+        private void ApplyAbsoluteColor(Color color)
+        {
             for (int r = 0; r < renderers.Count; r++)
             {
                 if (renderers[r] == null) continue;
                 Material[] mats = renderers[r].materials;
                 for (int m = 0; m < mats.Length; m++)
                 {
-                    if (mats[m].HasProperty("_Color"))
-                    {
-                        mats[m].color = originalColors[r][m];
-                    }
+                    if (mats[m].HasProperty(BaseColorId))
+                        mats[m].SetColor(BaseColorId, color);
+                    else if (mats[m].HasProperty(ColorId))
+                        mats[m].SetColor(ColorId, color);
                 }
             }
         }
+
+        private static Color MultiplyColors(Color a, Color b) =>
+            new(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a);
     }
 }

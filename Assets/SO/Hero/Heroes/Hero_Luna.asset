@@ -15,7 +15,7 @@ MonoBehaviour:
   heroId: hero_luna
   displayName: Luna
   description: Luna
-  icon: {fileID: 21300000, guid: 4906ab499d540fd46a1f11931339b237, type: 3}
+  icon: {fileID: 21300000, guid: ff39f811a9f05f24989f5d3f3d0aa397, type: 3}
   sortOrder: 2
   maxHealth: 170
   moveSpeed: 11

@@ -15,7 +15,7 @@ MonoBehaviour:
   skillId: skill_luna_frost_veil
   displayName: Frost Veil
   description: Frost Veil
-  icon: {fileID: 21300000, guid: ae2a1d53a7f187e49a916dc1d0b0a535, type: 3}
+  icon: {fileID: 21300000, guid: c5747d9e96833374194a1821909a0229, type: 3}
   deliveryType: 4
   cooldown: 8
   damageMode: 0

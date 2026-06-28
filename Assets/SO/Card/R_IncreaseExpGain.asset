@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: R04
   CardName: Scholar
   CardDescription: Gain more EXP from kills.
+  CardIcon: {fileID: 21300000, guid: 7b715a8759a97db4395fa93abc7d9595, type: 3}
   Effect: 9
   CardTier: 1
   CardTierWeight: 30

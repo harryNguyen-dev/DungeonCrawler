@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: R02
   CardName: Ironclad
   CardDescription: Gain armor to reduce damage taken.
+  CardIcon: {fileID: 21300000, guid: 6dcded2f394afb543beeff8a5aeb67c2, type: 3}
   Effect: 5
   CardTier: 1
   CardTierWeight: 30

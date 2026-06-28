@@ -53,6 +53,7 @@ namespace SO
         public string CardID;
         public string CardName;
         public string CardDescription;
+        public Sprite CardIcon;
 
         public CardEffect Effect = CardEffect.None;
         public CardTier CardTier = CardTier.Common;

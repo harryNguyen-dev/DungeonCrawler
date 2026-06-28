@@ -19,6 +19,6 @@ MonoBehaviour:
   projectilePrefab: {fileID: 705700206895292680, guid: 0b1a6d8d707a8f24b93b185e278380cc, type: 3}
   intrinsicEffects:
   - EffectType: 0
-    Value: 5
+    Value: 2
   - EffectType: 2
     Value: 6

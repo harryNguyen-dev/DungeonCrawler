@@ -92,12 +92,14 @@ namespace EnemyController
             bossSetupPending = false;
             isDead = false;
             ResetStatusEffectCancellation();
+            hitFlash?.RefreshRenderers();
             ResetHealth();
         }
 
         public void OnReturnedToPool()
         {
             CancelStatusEffects();
+            hitFlash?.ResetToOriginalColors();
             isDead = false;
             ResetHealth();
         }

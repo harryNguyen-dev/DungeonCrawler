@@ -15,6 +15,7 @@ MonoBehaviour:
   CardID: E01
   CardName: Spiked Armor
   CardDescription: Reflect damage back to attackers.
+  CardIcon: {fileID: 21300000, guid: facf5f2b14b03a141a2d512cc0564546, type: 3}
   Effect: 6
   CardTier: 2
   CardTierWeight: 15
