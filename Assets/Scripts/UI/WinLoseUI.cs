@@ -17,6 +17,10 @@ namespace CustomUI
         [SerializeField] private Button replayButton;
         [SerializeField] private Button ReviveButton;
 
+        private const float ReviveButtonDisabledAlpha = 0.35f;
+
+        private CanvasGroup reviveButtonCanvasGroup;
+
         [Header("Stars")]
         [SerializeField] private Image starWin1;
         [SerializeField] private Image starWin2;
@@ -58,7 +62,7 @@ namespace CustomUI
                 replayButton.onClick.AddListener(RestartRun);
 
             if (ReviveButton != null)
-                ReviveButton.onClick.AddListener(OnRevivePlaceholder);
+                ReviveButton.onClick.AddListener(OnRevive);
         }
 
         private void UnwireButtons()
@@ -73,7 +77,7 @@ namespace CustomUI
                 replayButton.onClick.RemoveListener(RestartRun);
 
             if (ReviveButton != null)
-                ReviveButton.onClick.RemoveListener(OnRevivePlaceholder);
+                ReviveButton.onClick.RemoveListener(OnRevive);
         }
 
         private void ShowPanel(RunSummary summary)
@@ -90,6 +94,30 @@ namespace CustomUI
 
             if (losePanel != null)
                 losePanel.SetActive(!summary.IsWin);
+
+            RefreshReviveButton(summary.IsWin);
+        }
+
+        private void RefreshReviveButton(bool isWin)
+        {
+            if (ReviveButton == null)
+                return;
+
+            EnsureReviveButtonCanvasGroup();
+
+            var canRevive = !isWin && GameManager.Instance != null && GameManager.Instance.CanRevive;
+            ReviveButton.interactable = canRevive;
+            reviveButtonCanvasGroup.alpha = canRevive ? 1f : ReviveButtonDisabledAlpha;
+        }
+
+        private void EnsureReviveButtonCanvasGroup()
+        {
+            if (reviveButtonCanvasGroup != null)
+                return;
+
+            reviveButtonCanvasGroup = ReviveButton.GetComponent<CanvasGroup>();
+            if (reviveButtonCanvasGroup == null)
+                reviveButtonCanvasGroup = ReviveButton.gameObject.AddComponent<CanvasGroup>();
         }
 
         private void HidePanels()
@@ -129,9 +157,13 @@ namespace CustomUI
             SceneManagerCustom.LoadLobby();
         }
 
-        private void OnRevivePlaceholder()
+        private void OnRevive()
         {
-            Debug.Log("[WinLoseUI] Revive (watch ads) — not implemented yet.");
+            if (GameManager.Instance == null || !GameManager.Instance.TryRevivePlayer())
+                return;
+
+            GameAudio.PlayUiConfirm();
+            HidePanels();
         }
     }
 }

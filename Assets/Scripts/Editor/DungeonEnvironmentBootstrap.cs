@@ -43,17 +43,17 @@ namespace EditorTools
         {
             RenderSettings.skybox = skybox;
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.15f, 0.16f, 0.20f);
-            RenderSettings.ambientEquatorColor = new Color(0.18f, 0.19f, 0.24f);
-            RenderSettings.ambientGroundColor = new Color(0.10f, 0.10f, 0.12f);
-            RenderSettings.ambientIntensity = 2.2f;
-            RenderSettings.subtractiveShadowColor = new Color(0.28f, 0.32f, 0.38f);
+            RenderSettings.ambientSkyColor = new Color(0.20f, 0.21f, 0.26f);
+            RenderSettings.ambientEquatorColor = new Color(0.24f, 0.25f, 0.30f);
+            RenderSettings.ambientGroundColor = new Color(0.14f, 0.14f, 0.17f);
+            RenderSettings.ambientIntensity = 2.7f;
+            RenderSettings.subtractiveShadowColor = new Color(0.38f, 0.42f, 0.48f);
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogColor = new Color(0.06f, 0.07f, 0.10f);
-            RenderSettings.fogDensity = 0.012f;
+            RenderSettings.fogColor = new Color(0.09f, 0.10f, 0.14f);
+            RenderSettings.fogDensity = 0.009f;
             RenderSettings.defaultReflectionMode = DefaultReflectionMode.Skybox;
-            RenderSettings.reflectionIntensity = 0.6f;
+            RenderSettings.reflectionIntensity = 0.7f;
         }
 
         static void EnsureEnvironmentLighting(Material skybox)
@@ -108,7 +108,7 @@ namespace EditorTools
                 lightGo.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
             }
 
-            mainLight.intensity = 0.4f;
+            mainLight.intensity = 0.55f;
             mainLight.useColorTemperature = true;
             mainLight.colorTemperature = 4200f;
             mainLight.color = new Color(0.75f, 0.88f, 1f);

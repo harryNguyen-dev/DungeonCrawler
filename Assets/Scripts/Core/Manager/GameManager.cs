@@ -7,6 +7,7 @@ namespace Core
         public static GameManager Instance;
 
         private bool isGameOver;
+        private bool reviveUsed;
         private bool bossKilled;
         private int totalRooms;
         private int clearedRooms;
@@ -66,6 +67,7 @@ namespace Core
         {
             Time.timeScale = 1f;
             isGameOver = false;
+            reviveUsed = false;
             bossKilled = false;
             totalRooms = 0;
             clearedRooms = 0;
@@ -146,6 +148,23 @@ namespace Core
 
             Debug.Log("GAME OVER!");
             ShowEndScreen(false);
+        }
+
+        public bool CanRevive =>
+            isGameOver && !reviveUsed && Global.GlobalEntities.Instance?.PlayerHealth != null;
+
+        public bool TryRevivePlayer()
+        {
+            if (!CanRevive)
+                return false;
+
+            var health = Global.GlobalEntities.Instance.PlayerHealth;
+            reviveUsed = true;
+            isGameOver = false;
+            Time.timeScale = 1f;
+            health.Revive();
+            Debug.Log("[GameManager] Player revived at half health with temporary invulnerability.");
+            return true;
         }
 
         private void ShowEndScreen(bool isWin)

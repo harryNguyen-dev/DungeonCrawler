@@ -166,6 +166,24 @@ namespace Core
            => PlayAudio(clip, tag, Camera.main ? Camera.main.transform.position : Vector3.zero);
 
         /// <summary>
+        /// Plays a one-shot with optional volume scale and pitch (relative to category volume).
+        /// </summary>
+        public void PlayAudio(AudioClip clip, string tag, float volumeScale, float pitch = 1f)
+            => PlayAudio(clip, tag, Camera.main ? Camera.main.transform.position : Vector3.zero, volumeScale, pitch);
+
+        public void PlayAudio(AudioClip clip, string tag, Vector3 worldPos, float volumeScale, float pitch = 1f)
+        {
+            if (clip == null) return;
+            if (maxConcurrentAudio > 0 && _currentAudioCount >= maxConcurrentAudio) return;
+
+            var vol = GetEffectiveVolume(tag) * Mathf.Clamp01(volumeScale);
+            SoundEffectsPool.PlayClip(clip, worldPos, vol, pitch);
+
+            _currentAudioCount++;
+            ReduceAudioCountAsync(clip.length).Forget();
+        }
+
+        /// <summary>
         /// Stops all currently playing audio, including ambient and loading audio.
         /// This function is useful when the game ends or the player dies,
         /// ensuring that no audio is left playing.

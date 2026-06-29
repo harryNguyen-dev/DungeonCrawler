@@ -15,17 +15,17 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0.06, g: 0.07, b: 0.1, a: 1}
+  m_FogColor: {r: 0.09, g: 0.1, b: 0.14, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.012
+  m_FogDensity: 0.009
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.15, g: 0.16, b: 0.2, a: 1}
-  m_AmbientEquatorColor: {r: 0.18, g: 0.19, b: 0.24, a: 1}
-  m_AmbientGroundColor: {r: 0.1, g: 0.1, b: 0.12, a: 1}
-  m_AmbientIntensity: 2.2
+  m_AmbientSkyColor: {r: 0.2, g: 0.21, b: 0.26, a: 1}
+  m_AmbientEquatorColor: {r: 0.24, g: 0.25, b: 0.3, a: 1}
+  m_AmbientGroundColor: {r: 0.14, g: 0.14, b: 0.17, a: 1}
+  m_AmbientIntensity: 2.7
   m_AmbientMode: 1
-  m_SubtractiveShadowColor: {r: 0.28, g: 0.32, b: 0.38, a: 1}
+  m_SubtractiveShadowColor: {r: 0.38, g: 0.42, b: 0.48, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 9e6a1c4d3b0f5a8271604958d7c3e2f6, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -35,7 +35,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 0.6
+  m_ReflectionIntensity: 0.7
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_UseRadianceAmbientProbe: 0
@@ -1406,16 +1406,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.DungeonEnvironmentLighting
   skyboxMaterial: {fileID: 2100000, guid: 9e6a1c4d3b0f5a8271604958d7c3e2f6, type: 2}
-  ambientSky: {r: 0.15, g: 0.16, b: 0.2, a: 1}
-  ambientEquator: {r: 0.18, g: 0.19, b: 0.24, a: 1}
-  ambientGround: {r: 0.1, g: 0.1, b: 0.12, a: 1}
-  ambientIntensity: 2.2
+  ambientSky: {r: 0.2, g: 0.21, b: 0.26, a: 1}
+  ambientEquator: {r: 0.24, g: 0.25, b: 0.3, a: 1}
+  ambientGround: {r: 0.14, g: 0.14, b: 0.17, a: 1}
+  ambientIntensity: 2.7
   enableFog: 1
-  fogColor: {r: 0.06, g: 0.07, b: 0.1, a: 1}
-  fogDensity: 0.012
-  reflectionIntensity: 0.6
+  fogColor: {r: 0.09, g: 0.1, b: 0.14, a: 1}
+  fogDensity: 0.009
+  reflectionIntensity: 0.7
   mainLight: {fileID: 0}
-  mainLightIntensity: 0.4
+  mainLightIntensity: 0.55
   mainLightTemperature: 4200
   mainLightColorFilter: {r: 0.75, g: 0.88, b: 1, a: 1}
 --- !u!4 &458081176
@@ -5739,7 +5739,7 @@ Light:
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 0.75, g: 0.88, b: 1, a: 1}
-  m_Intensity: 0.4
+  m_Intensity: 0.55
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

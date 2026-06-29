@@ -12,6 +12,14 @@ namespace Core
 
         static GameAudioCatalogSO _catalog;
 
+        const float GoldPickupBurstWindow = 0.3f;
+        const float GoldPickupMinInterval = 0.06f;
+        const int GoldPickupMaxBurstSounds = 3;
+
+        static float _goldPickupBurstStart;
+        static float _lastGoldPickupSoundTime;
+        static int _goldPickupBurstCount;
+
         public static void SetCatalog(GameAudioCatalogSO catalog) => _catalog = catalog;
 
         public static AudioClip LoadingClip => _catalog != null ? _catalog.sfxLoading : null;
@@ -42,7 +50,31 @@ namespace Core
 
         public static void PlayEnemyHit(Vector3 position) => PlayAt(_catalog?.enemyHit, TagVfx, position);
         public static void PlayEnemyDeath(Vector3 position) => PlayAt(_catalog?.enemyDeath, TagVfx, position);
-        public static void PlayGoldPickup() => Play2D(_catalog?.goldPickup, TagVfx);
+        public static void PlayGoldPickup()
+        {
+            var clip = _catalog?.goldPickup;
+            if (clip == null) return;
+
+            var now = Time.unscaledTime;
+            if (now - _goldPickupBurstStart > GoldPickupBurstWindow)
+            {
+                _goldPickupBurstStart = now;
+                _goldPickupBurstCount = 0;
+            }
+
+            if (_goldPickupBurstCount >= GoldPickupMaxBurstSounds)
+                return;
+
+            if (now - _lastGoldPickupSoundTime < GoldPickupMinInterval)
+                return;
+
+            _goldPickupBurstCount++;
+            _lastGoldPickupSoundTime = now;
+
+            var volumeScale = 1f / Mathf.Sqrt(_goldPickupBurstCount);
+            var pitch = 1f + (_goldPickupBurstCount - 1) * 0.05f;
+            Play2DScaled(clip, TagVfx, volumeScale, pitch);
+        }
         public static void PlayCardReveal() => Play2D(_catalog?.cardReveal, TagVfx);
         public static void PlayCardSelect() => Play2D(_catalog?.cardSelect, TagVfx);
         public static void PlayRoomEnter() => Play2D(_catalog?.roomEnter, TagVfx);
@@ -54,6 +86,12 @@ namespace Core
         {
             if (clip == null) return;
             AudioManager.Singleton?.PlayAudio(clip, tag);
+        }
+
+        static void Play2DScaled(AudioClip clip, string tag, float volumeScale, float pitch = 1f)
+        {
+            if (clip == null) return;
+            AudioManager.Singleton?.PlayAudio(clip, tag, volumeScale, pitch);
         }
 
         static void PlayAt(AudioClip clip, string tag, Vector3 position)

@@ -8,22 +8,22 @@ namespace Core
     {
         [Header("Sky & Ambient")]
         [SerializeField] Material skyboxMaterial;
-        [SerializeField] Color ambientSky = new(0.15f, 0.16f, 0.20f);
-        [SerializeField] Color ambientEquator = new(0.18f, 0.19f, 0.24f);
-        [SerializeField] Color ambientGround = new(0.10f, 0.10f, 0.12f);
-        [SerializeField] float ambientIntensity = 2.2f;
+        [SerializeField] Color ambientSky = new(0.20f, 0.21f, 0.26f);
+        [SerializeField] Color ambientEquator = new(0.24f, 0.25f, 0.30f);
+        [SerializeField] Color ambientGround = new(0.14f, 0.14f, 0.17f);
+        [SerializeField] float ambientIntensity = 2.7f;
 
         [Header("Fog")]
         [SerializeField] bool enableFog = true;
-        [SerializeField] Color fogColor = new(0.06f, 0.07f, 0.10f);
-        [SerializeField] float fogDensity = 0.012f;
+        [SerializeField] Color fogColor = new(0.09f, 0.10f, 0.14f);
+        [SerializeField] float fogDensity = 0.009f;
 
         [Header("Reflection")]
-        [SerializeField] float reflectionIntensity = 0.6f;
+        [SerializeField] float reflectionIntensity = 0.7f;
 
         [Header("Key Light")]
         [SerializeField] Light mainLight;
-        [SerializeField] float mainLightIntensity = 0.4f;
+        [SerializeField] float mainLightIntensity = 0.55f;
         [SerializeField] float mainLightTemperature = 4200f;
         [SerializeField] Color mainLightColorFilter = new(0.75f, 0.88f, 1f);
 
@@ -42,7 +42,7 @@ namespace Core
             RenderSettings.ambientEquatorColor = ambientEquator;
             RenderSettings.ambientGroundColor = ambientGround;
             RenderSettings.ambientIntensity = ambientIntensity;
-            RenderSettings.subtractiveShadowColor = new Color(0.28f, 0.32f, 0.38f);
+            RenderSettings.subtractiveShadowColor = new Color(0.38f, 0.42f, 0.48f);
 
             RenderSettings.fog = enableFog;
             RenderSettings.fogMode = FogMode.Exponential;
