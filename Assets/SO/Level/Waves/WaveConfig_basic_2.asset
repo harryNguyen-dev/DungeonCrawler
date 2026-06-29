@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WaveConfig_basic_2
   m_EditorClassIdentifier: Assembly-CSharp::SO.WaveConfigSO
   waveCount: 2
-  enemiesPerWave: 10
+  enemiesPerWave: 6
   spawnDelayMs: 500
   delayBetweenWavesMs: 500
   roomEnterDelayMs: 500

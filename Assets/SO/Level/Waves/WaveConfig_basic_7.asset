@@ -10,19 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5c826209f6d6274e98faebb4d7a71c9, type: 3}
-  m_Name: WaveConfig_basic_3
+  m_Name: WaveConfig_basic_7
   m_EditorClassIdentifier: Assembly-CSharp::SO.WaveConfigSO
   waveCount: 2
-  enemiesPerWave: 7
-  spawnDelayMs: 500
+  enemiesPerWave: 11
+  spawnDelayMs: 450
   delayBetweenWavesMs: 500
-  roomEnterDelayMs: 500
+  roomEnterDelayMs: 450
   enemyPool:
   - prefab: {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
-    weight: 50
+    weight: 20
     healthMultiplier: 1
     damageMultiplier: 1
   - prefab: {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
-    weight: 50
+    weight: 20
     healthMultiplier: 1.2
     damageMultiplier: 0.9
+  - prefab: {fileID: 7300521822030121898, guid: fd08bae9289e1d74b8c735be9709ba39, type: 3}
+    weight: 20
+    healthMultiplier: 1
+    damageMultiplier: 1
+  - prefab: {fileID: 7300521822030121898, guid: d97a8d1847edbc54cb1fc94afcc4d3d0, type: 3}
+    weight: 20
+    healthMultiplier: 1
+    damageMultiplier: 1
+  - prefab: {fileID: 7300521822030121898, guid: 3321688a488f8d346803067249606818, type: 3}
+    weight: 20
+    healthMultiplier: 1
+    damageMultiplier: 1

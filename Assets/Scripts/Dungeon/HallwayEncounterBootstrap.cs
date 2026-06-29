@@ -34,8 +34,22 @@ public static class HallwayEncounterBootstrap
             spawnB.transform.SetParent(zoneGo.transform, false);
             spawnB.transform.localPosition = new Vector3(0f, 0.18f, 3f);
 
+            var spawnC = new GameObject("SpawnPoint (3)");
+            spawnC.transform.SetParent(zoneGo.transform, false);
+            spawnC.transform.localPosition = new Vector3(-2f, 0.18f, 1.5f);
+
+            var spawnD = new GameObject("SpawnPoint (4)");
+            spawnD.transform.SetParent(zoneGo.transform, false);
+            spawnD.transform.localPosition = new Vector3(2f, 0.18f, 1.5f);
+
             var controller = zoneGo.AddComponent<RoomController>();
-            controller.SetSpawnPoints(new[] { spawnA.transform, spawnB.transform });
+            controller.SetSpawnPoints(new[]
+            {
+                spawnA.transform,
+                spawnB.transform,
+                spawnC.transform,
+                spawnD.transform
+            });
 
             return controller;
         }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WaveConfig_Hallway_2
   m_EditorClassIdentifier: Assembly-CSharp::SO.WaveConfigSO
   waveCount: 1
-  enemiesPerWave: 3
+  enemiesPerWave: 2
   spawnDelayMs: 500
   delayBetweenWavesMs: 500
   roomEnterDelayMs: 300
@@ -22,3 +22,7 @@ MonoBehaviour:
     weight: 50
     healthMultiplier: 1
     damageMultiplier: 1
+  - prefab: {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
+    weight: 50
+    healthMultiplier: 1.2
+    damageMultiplier: 0.9

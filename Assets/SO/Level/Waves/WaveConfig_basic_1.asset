@@ -13,16 +13,12 @@ MonoBehaviour:
   m_Name: WaveConfig_basic_1
   m_EditorClassIdentifier: Assembly-CSharp::SO.WaveConfigSO
   waveCount: 2
-  enemiesPerWave: 7
+  enemiesPerWave: 5
   spawnDelayMs: 500
   delayBetweenWavesMs: 500
   roomEnterDelayMs: 500
   enemyPool:
   - prefab: {fileID: 7300521822030121898, guid: 557444d9047ef8c4bae5d1972edfbe64, type: 3}
-    weight: 50
+    weight: 100
     healthMultiplier: 1
     damageMultiplier: 1
-  - prefab: {fileID: 7300521822030121898, guid: 4c1b8a0722e93e847b39172719c06707, type: 3}
-    weight: 50
-    healthMultiplier: 1.2
-    damageMultiplier: 0.9

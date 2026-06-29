@@ -24,13 +24,13 @@ MonoBehaviour:
   - 130281
   roomsToPlaceOverride: 7
   combatWavePool:
-  - {fileID: 11400000, guid: b8bce39ed3a3f4840a27673ddaf2ec82, type: 2}
-  - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
-  - {fileID: 11400000, guid: 44c3dcb1d167b5a458d78f155c1e39ce, type: 2}
-  - {fileID: 11400000, guid: e216f914a4aad004c9f2e99470e6ff1b, type: 2}
+  - {fileID: 11400000, guid: c5010000000000050000000000000005, type: 2}
+  - {fileID: 11400000, guid: c5010000000000060000000000000006, type: 2}
+  - {fileID: 11400000, guid: c5010000000000070000000000000007, type: 2}
   hallwayWavePool:
-  - {fileID: 11400000, guid: a9b8c7d6e5f432109876543210fedcba, type: 2}
-  hallwaySpawnChance: 0.4
+  - {fileID: 11400000, guid: c5010000000000040000000000040004, type: 2}
+  - {fileID: 11400000, guid: c5010000000000050000000000050005, type: 2}
+  hallwaySpawnChance: 0.44
   boss: {fileID: 11400000, guid: f87aa8d408c058e418418aa35ad33332, type: 2}
   enemyHealthScale: 1.56
   enemyDamageScale: 1.35

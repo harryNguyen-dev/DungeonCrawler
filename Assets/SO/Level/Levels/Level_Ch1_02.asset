@@ -28,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f1e2d3c4b5a697887766554433221100, type: 2}
   hallwayWavePool:
   - {fileID: 11400000, guid: a9b8c7d6e5f432109876543210fedcba, type: 2}
-  hallwaySpawnChance: 0.5
+  hallwaySpawnChance: 0.38
   boss: {fileID: 11400000, guid: f87aa8d408c058e418418aa35ad33332, type: 2}
   oneStarMinRooms: 1
   twoStarRoomRatio: 0.5

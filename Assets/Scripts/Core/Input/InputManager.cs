@@ -13,6 +13,8 @@ public class InputManager : MonoBehaviour
     private bool uiAttackHeld;
     private bool uiDashPressedThisFrame;
     private bool uiSkillPressedThisFrame;
+    private Vector2 uiCameraDragDelta;
+    private bool uiCameraDragging;
 
     private void Awake()
     {
@@ -110,6 +112,19 @@ public class InputManager : MonoBehaviour
     public void SetUiDashPressed() => uiDashPressedThisFrame = true;
 
     public void SetUiSkillPressed() => uiSkillPressedThisFrame = true;
+
+    public void AddUiCameraDragDelta(Vector2 delta) => uiCameraDragDelta += delta;
+
+    public Vector2 ConsumeCameraDragDelta()
+    {
+        Vector2 delta = uiCameraDragDelta;
+        uiCameraDragDelta = Vector2.zero;
+        return delta;
+    }
+
+    public void SetUiCameraDragging(bool dragging) => uiCameraDragging = dragging;
+
+    public bool IsUiCameraDragging() => uiCameraDragging;
 
     /// <summary>True while the Normal Attack UI button is held.</summary>
     public bool IsAttacking() => uiAttackHeld;
